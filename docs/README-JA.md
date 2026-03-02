@@ -1,258 +1,393 @@
 <div align="center">
-<img src="https://github.com/rainxchzed/Github-Store/blob/main/composeApp/src/commonMain/composeResources/drawable/app-icon.png" width="200" alt="プロジェクトのロゴ"/>
+</br>
+<img src="../composeApp/src/commonMain/composeResources/drawable/app-icon.png" width="200" />
+
 </div>
 
-<h1 align="center">GitHub Store</h1>
+<div align="center">
+
+# GitHub Store
+
+</div>
+
+</br>
 
 <p align="center">
-  <a href="https://opensource.org/licenses/Apache-2.0"><img alt="ライセンス" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/></a>
-  <a href="https://kotlinlang.org"><img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-Multiplatform-7F52FF.svg"/></a>
-  <a href="#"><img alt="プラットフォーム" src="https://img.shields.io/badge/Platforms-Android%20%7C%20Desktop-brightgreen"/></a>
-  <a href="https://github.com/rainxchzed/Github-Store/releases">
-    <img alt="リリース" src="https://img.shields.io/github/v/release/rainxchzed/Github-Store?label=Release&logo=github"/>
-  </a>
-  <a href="https://github.com/rainxchzed/Github-Store/stargazers">
-    <img alt="GitHub スター" src="https://img.shields.io/github/stars/rainxchzed/Github-Store?style=social"/>
-  </a>
-  <img alt="Compose Multiplatform" src="https://img.shields.io/badge/Compose-Multiplatform-4285F4?logo=jetpackcompose&logoColor=white"/>
-  <img alt="Koin" src="https://img.shields.io/badge/DI-Koin-3C5A99?logo=kotlin&logoColor=white"/>
-</p>
+  <img alt="API" src="https://img.shields.io/badge/Api%2024+-50f270?logo=android&logoColor=black&style=for-the-badge"/></a>
+  <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-Multiplatform-a503fc?logo=kotlin&logoColor=white&style=for-the-badge"/></a>
+  <img alt="Compose Multiplatform" src="https://img.shields.io/static/v1?style=for-the-badge&message=Compose+Multiplatform&color=4285F4&logo=Jetpack+Compose&logoColor=FFFFFF&label="/></a>
+  <img alt="material" src="https://custom-icon-badges.demolab.com/badge/material%20you-lightblue?style=for-the-badge&logoColor=333&logo=material-you"/></a>
+  </br>
+  </br>
 
-<p align="center">
-<a href="/docs/README-RU.md" target="_blank"> Русский </a> | <a href="/README.md" target="_blank"> English </a> | <a href="/docs/README-ES.md" target="_blank"> Español </a> | <a href="/docs/README-FR.md" target="_blank"> Français </a> | <a href="/docs/README-KR.md" target="_blank"> 한국어 </a> | <a href="/docs/README-ZH.md" target="_blank">中文</a> | <a href="/docs/README-JA.md" target="_blank">日本語</a> | <a href="/docs/README-PL.md" target="_blank">Polski</a>
-</p>
+<img src="https://img.shields.io/github/downloads/rainxchzed/GitHub-Store/total?color=aeff4d&style=for-the-badge&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHRpdGxlPmRvd25sb2FkPC90aXRsZT48cGF0aCBkPSJNNSwyMEgxOVYxOEg1TTE5LDlIMTVWM0g5VjlINUwxMiwxNkwxOSw5WiIgZmlsbD0id2hpdGUiIC8+PC9zdmc+&label=Downloads&labelColor=4b731a"/>
 
-<p align="center">
-GitHub Store は、GitHub のリリース向けのクロスプラットフォーム版「Play ストア」です。
-実際にインストール可能なバイナリを提供するリポジトリを見つけ、
-1 か所からインストール・追跡・更新を行えます。
-</p>
-
-<p align="center">
-  <img src="../screenshots/banner.png" />
-</p>
-
----
-
-### すべてのスクリーンショットは [screenshots/](screenshots/) フォルダにあります。
-
-<img src="/screenshots/preview.gif" align="right" width="320"/>
-
-## ✨ GitHub Store とは？
-
-GitHub Store は Kotlin Multiplatform（Android + Desktop）で作られたアプリで、
-GitHub Releases をアプリストアのような体験に変換します。
-
-- 実際にインストール可能なアセット（APK、EXE、DMG、AppImage、DEB、RPM など）を提供する
-  リポジトリのみを表示します。
-- 使用中のプラットフォームを検出し、適切なインストーラを表示します。
-- 常に最新の公開リリースをインストールし、変更履歴を表示。
-  Android では更新通知も可能です。
-- 統計情報、README、開発者情報を含む洗練された詳細画面を提供します。
-
----
-
-## 🔃 ダウンロード
-
-<a href="https://github.com/rainxchzed/Github-Store/releases">
-   <image src="https://i.ibb.co/q0mdc4Z/get-it-on-github.png" height="80"/>
- </a>
-
-<a href="https://f-droid.org/en/packages/zed.rainxch.githubstore/">
-   <image src="https://f-droid.org/badge/get-it-on.png" height="80"/>
+<a href="https://github.com/rainxchzed/Github-Store/stargazers">
+<img src="https://img.shields.io/github/stars/rainxchzed/Github-Store?color=ffff00&style=for-the-badge&labelColor=a1a116&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHRpdGxlPnN0YXI8L3RpdGxlPjxwYXRoIGQ9Ik0xMiwxNy4yN0wxOC4xOCwyMUwxNi41NCwxMy45N0wyMiw5LjI0TDE0LjgxLDguNjJMMTIsMkw5LjE5LDguNjJMMiw5LjI0TDcuNDUsMTMuOTdMNS44MiwyMUwxMiwxNy4yN1oiIGZpbGw9IndoaXRlIiAvPjwvc3ZnPg=="/>
 </a>
+
+<img src="https://img.shields.io/badge/65K+-Users-8ce2ff?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHRpdGxlPmFjY291bnQtZ3JvdXA8L3RpdGxlPjxwYXRoIGQ9Ik0xMiwxMi43NUM3LDEyLjc1IDMsMTMuMzUgMywxNi4yNVYxOEgyMVYxNi4yNUMyMSwxMy4zNSAxNywxMi43NSAxMiwxMi43NU0xNyw3QTE3LDE3IDAgMCwxIDE3LDdNMjEsMTYuMjVWMThIMjRWMTYuMjVDMjQsMTQuNDMgMjEuNSwxMy44NyAxOSwxMy41QzIwLjEyLDE0LjEgMjEsMTUgMjEsMTYuMjVNMiw3QTIsMiAwIDAsMSA0LDVIMjBBMiwyIDAgMCwxIDIyLDdBMiwyIDAgMCwxIDIwLDlINEEyLDIgMCAwLDEgMiw3TTEyLDEwQTMsMyAwIDAsMSA5LDdBMywzIDAgMCwxIDEyLDRBMywzIDAgMCwxIDE1LDdBMywzIDAgMCwxIDEyLDEwWiIgZmlsbD0id2hpdGUiIC8+PC9zdmc+&labelColor=0782ab"/>
+
+</br>
+</br>
+
+<a href="https://github.com/rainxchzed/Github-Store/releases/latest">
+  <img src="https://img.shields.io/github/v/release/rainxchzed/Github-Store?color=a1168e&include_prereleases&logo=github&style=for-the-badge&labelColor=700f63"/>
+</a>
+
+<a href="https://f-droid.org/packages/zed.rainxch.githubstore">
+  <img src="https://img.shields.io/f-droid/v/zed.rainxch.githubstore?color=a1168e&include_prereleases&logo=FDROID&style=for-the-badge&labelColor=700f63"/>
+</a>
+
+</br>
+</br>
+
+
+<p align="center">
+  <a href="https://trendshift.io/repositories/15655" target="_blank"><img src="https://trendshift.io/api/badge/repositories/15655" alt="rainxchzed%2FGithub-Store | Trendshift" style="width: 250px; height: 54px;" width="250" height="55" />
+
+<a href="https://hellogithub.com/en/repository/rainxchzed/Github-Store" target="_blank">
+  <img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=rainxchzed%2FGithub-Store&claim_uid=&theme=dark" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" />
+</a>
+</p>
+
+</p>
+
+<p align="center">
+<a href="/README.md">English</a> | <a href="/docs/README-ES.md">Español</a> | <a href="/docs/README-FR.md">Français</a> | <a href="/docs/README-IT.md">Italiano</a> | <a href="/docs/README-RU.md">Русский</a> | <a href="/docs/README-PL.md">Polski</a> | <a href="/docs/README-TR.md">Türkçe</a> | <a href="/docs/README-ZH.md">中文</a> | <a href="/docs/README-JA.md"><b>日本語</b></a> | <a href="/docs/README-KR.md">한국어</a> | <a href="/docs/README-BN.md">বাংলা</a> | <a href="/docs/README-HI.md">हिन्दी</a>
+</p>
+
+<div align="center">
+
+# 🗺️ プロジェクト概要
+
+GitHub Storeは、GitHubリリース向けのクロスプラットフォームアプリストアであり、オープンソースソフトウェアの発見とインストールを簡素化するために設計されています。インストール可能なバイナリ（APK、EXE、DMG、AppImage、DEB、RPM）を自動検出し、ワンクリックインストール、アップデートの追跡、リポジトリ情報をクリーンなアプリストア風のインターフェースで提供します。
+
+Kotlin MultiplatformとCompose Multiplatformで構築されており、AndroidおよびDesktopプラットフォームに対応しています。
+
+</div>
+
+> [!CAUTION]
+> 無料でオープンソースのAndroidが脅威にさらされています。GoogleはAndroidを閉鎖的なプラットフォームに変え、好きなアプリをインストールする基本的な自由を制限しようとしています。あなたの声を届けましょう – [keepandroidopen.org](https://keepandroidopen.org/)
+
+<p align="middle">
+    <img src="../screenshots/banner.jpeg" width="99%" />
+    <img src="../screenshots/01.jpg" width="18%" />
+    <img src="../screenshots/02.jpg" width="18%" />
+    <img src="../screenshots/03.jpg" width="18%" />
+    <img src="../screenshots/04.jpg" width="18%" />
+    <img src="../screenshots/05.jpg" width="18%" />
+</p>
+
+<div align="center">
+
+# 📔 Wiki とリソース
+
+GitHub Storeの[Wiki](https://github.com/rainxchzed/Github-Store/wiki)でよくある質問や便利な情報をご覧ください
+
+🌐 **ウェブサイト:** [github-store.org](https://github-store.org)
+💬 **Discord:** [コミュニティに参加](https://discord.gg/x9Cvh2Z9qS)
+📜 **プライバシーポリシー:** [github-store.org/privacy-policy](https://github-store.org/privacy-policy/)
+
+</div>
+
+---
+
+<div align="center">
+
+### 📋 法的通知
+
+GitHub Storeは、GitHub, Inc.とは関係のない独立したオープンソースプロジェクトです。
+この名前はアプリの機能（GitHubリリースの発見）を表すものであり、商標の所有を示すものではありません。
+GitHub®はGitHub, Inc.の登録商標です。
+
+</div>
+
+---
+
+<div align="center">
+
+# 🔃 ダウンロード
+
+</div>
+
+<p align="center">
+<a href="https://github.com/rainxchzed/Github-Store/releases">
+   <img src="https://i.ibb.co/q0mdc4Z/get-it-on-github.png" height="80"/>
+</a>
+<a href="https://f-droid.org/en/packages/zed.rainxch.githubstore/">
+   <img src="https://f-droid.org/badge/get-it-on.png" height="80"/>
+</a>
+<a href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/rainxchzed/Github-Store/">
+  <img src="https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png" height="60" alt="Get it on Obtainium">
+</a>
+</p>
+
+<p align="center">
+  <a href="https://discord.gg/x9Cvh2Z9qS">
+  <img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join Discord">
+</a>
+</p>
 
 > [!IMPORTANT]
-> macOS では、Apple が GitHub Store を検証できないという警告が表示される場合があります。
-> これは App Store 外で配布され、まだノータライズされていないためです。
-> 「システム設定 → プライバシーとセキュリティ → このまま開く」から許可できます。
+> **macOSユーザーの方へ:** AppleがGitHub Storeを検証できないという警告が表示される場合があります。これはアプリがApp Store外で配布されており、まだ公証されていないためです。システム設定 → プライバシーとセキュリティ → このまま開く から許可してください。
 
 ---
 
-## 🏆 紹介実績
+<div align="center">
 
+# 🏆 メディア掲載
+
+</div>
+
+<p align="center">
 <a href="https://www.youtube.com/@howtomen">
-  <img src="https://img.shields.io/badge/Featured%20by-HowToMen-red?logo=youtube" alt="HowToMen により紹介">
+  <img src="https://img.shields.io/badge/HowToMen-red?style=for-the-badge&logo=youtube&logoColor=white" alt="HowToMenで紹介">
 </a>
-
-- **HowToMen**：[2026 年 ベスト Android アプリ TOP 20（登録者数 86 万人）](https://www.youtube.com/watch?v=7favc9MDedQ)
-- **F-Droid**：[アプリストアカテゴリ第 1 位](https://f-droid.org/en/categories/app-store-updater/)
+</br>
+<strong>HowToMen:</strong> <a href="https://www.youtube.com/watch?v=7favc9MDedQ">Top 20 Mejores Apps para Android 2026</a> | <a href="https://www.youtube.com/watch?v=VR-MEwPDw4k">Top 12 Tiendas de Apps Mejores que Google Play Store</a>
+</br>
+<strong>HelloGitHub:</strong> <a href="https://hellogithub.com/en/repository/rainxchzed/Github-Store">注目プロジェクト</a>
+</p>
 
 ---
+
+<img src="../screenshots/preview.gif" align="right" width="320" />
 
 ## 🚀 機能
 
 - **スマートな発見**
-    - 「Trending」「Recently Updated」「New」セクションを時間ベースで表示。
-    - 有効なインストール可能アセットを持つリポジトリのみを表示。
-    - プラットフォームを考慮したランキングで、関連性の高いアプリを優先表示。
+    - 「Trending」「Hot Release」「Most Popular」のホームセクション。時間ベースのフィルター付き。
+    - 有効なインストール可能ファイルを持つリポジトリのみ表示。
+    - プラットフォームを考慮したトピックスコアリングにより、Android/Desktopユーザーに関連するアプリを優先表示。
+    - 関連性ランキングとパフォーマンスが向上した刷新された検索機能。
 
-- **最新リリースのインストール**
-    - 各リポジトリに対して `/releases/latest` を使用。
-    - 最新リリースのアセットのみを表示。
-    - 「Install latest」1 回の操作と、利用可能なインストーラ一覧。
+- **リリースブラウザとインストール**
+    - リリースセレクターで最新だけでなく任意のリリースを閲覧・インストール可能。
+    - 各リポジトリの全リリースを取得。
+    - ワンクリック「最新バージョンをインストール」アクション、さらに全リリースとインストーラーのドロップダウンリスト。
+    - 自動互換性チェック付きの手動インストールオプション。
 
 - **充実した詳細画面**
-    - アプリ名、バージョン、「Install latest」ボタン。
-    - スター数、フォーク数、未解決 Issue。
-    - レンダリングされた README（このアプリについて）。
-    - Markdown 対応の最新リリースノート。
-    - プラットフォーム別・ファイルサイズ付きのインストーラ一覧。
+    - アプリ名、バージョン、「最新バージョンをインストール」ボタン、共有アクション。
+    - スター数、フォーク数、オープンissue数。
+    - レンダリングされたREADMEコンテンツ（「このアプリについて」）。
+    - 選択したリリースのMarkdown形式のリリースノート。
+    - プラットフォームタグとファイルサイズ付きのインストーラーリスト。
+    - ディープリンク対応 — URLから直接リポジトリ詳細を開くことが可能。
+    - 開発者プロフィール画面で、開発者のリポジトリとアクティビティを閲覧可能。
 
-- **クロスプラットフォーム UX**
-    - Android：APK をシステムインストーラで開き、ローカル DB で管理。
-    - Desktop（Windows / macOS / Linux）：
-      ダウンロードフォルダに保存し、既定のアプリで開きます。
+- **アプリ管理**
+    - GitHub Storeからインストール済みアプリを直接開く、アンインストール、ダウングレード。
+    - Android: APKアーキテクチャマッチング（armv7/armv8）、パッケージモニタリング、アップデート追跡。
+    - Desktop（Windows/macOS/Linux）: ユーザーのダウンロードフォルダにインストーラーをダウンロードし、デフォルトハンドラーで開く。
 
-- **外観とテーマ**
-    - 全プラットフォームで **Material 3 Expressive** を使用。
-    - Android では Material You のダイナミックカラーに対応。
-    - OLED デバイス向けの AMOLED ブラックモード（任意）。
+- **スター付きリポジトリ**
+    - GitHubでスターを付けたリポジトリをアプリ内で保存・閲覧。
 
-- **安全性と検査（Android）**
-    - API 制限を緩和するための GitHub OAuth（Device Flow）ログイン（任意）。
-    - インストール前に APK の権限やトラッカーを確認できる
-      「Open in AppManager」アクション。
+- **ネットワークとパフォーマンス**
+    - 設定可能なネットワークルーティングのための動的プロキシサポート。
+    - より高速な読み込みとAPI使用量削減のための改善されたキャッシュシステム。
 
----
-
-## 🔍 アプリが GitHub Store に表示される条件
-
-GitHub Store は、非公開インデックスや手動キュレーションを行いません。  
-以下の条件を満たすと自動的に表示されます。
-
-1. **GitHub 上の公開リポジトリ**
-    - 可視性は `public` である必要があります。
-
-2. **少なくとも 1 つの公開リリース**
-    - GitHub Releases で作成されていること（タグのみは不可）。
-    - 最新リリースがドラフトやプレリリースでないこと。
-
-3. **最新リリースにインストール可能なアセットが存在**
-    - 対応拡張子を含むファイルが少なくとも 1 つ必要です：
-        - Android：`.apk`
-        - Windows：`.exe`, `.msi`
-        - macOS：`.dmg`, `.pkg`
-        - Linux：`.deb`, `.rpm`, `.AppImage`
-    - GitHub が自動生成するソースコードアーカイブは無視されます。
-
-4. **検索 / トピックで発見可能**
-    - GitHub Search API を使用して取得されます。
-    - トピック、言語、説明がランキングに影響します。
-    - いくつかのスターがあると表示されやすくなります。
+- **クロスプラットフォームUX**
+    - Android: ネイティブスプラッシュスクリーン、セッション期限切れ処理、アダプティブアイコン。
+    - Desktop: LinuxでのAppImageサポートを優先し、DEBおよびRPM形式にも対応。
+    - 12言語にローカライズ: 英語、スペイン語、フランス語、日本語、韓国語、ポーランド語、ロシア語、中国語、ベンガル語、ヒンディー語、イタリア語、トルコ語。
 
 ---
 
-## 🧭 GitHub Store の仕組み（概要）
+## 🔍 私のアプリはどうやってGitHub Storeに表示されますか？
+
+GitHub Storeはプライベートなインデックス作成や手動キュレーションルールを一切使用していません。
+以下の条件を満たしていれば、あなたのプロジェクトは自動的に表示される可能性があります:
+
+1. **GitHubのパブリックリポジトリ**
+    - 公開設定が`public`であること。
+
+2. **最新リリースにインストール可能なファイルがあること**
+    - 最新リリースに、互換性のある拡張子のファイルが少なくとも1つ含まれていること:
+        - Android: `.apk`
+        - Windows: `.exe`, `.msi`
+        - macOS: `.dmg`, `.pkg`
+        - Linux: `.deb`, `.rpm`, `.AppImage`
+    - GitHub Storeは自動生成されるソースコードアーティファクト（`Source code (zip)` / `Source code (tar.gz)`）を無視します。
+
+3. **検索 / トピックで発見可能であること**
+    - リポジトリはGitHubのパブリック検索APIを通じて取得されます。
+    - トピック、言語、説明がランキングに役立ちます:
+        - Androidアプリ: `android`、`mobile`、`apk`などのトピック。
+        - Desktopアプリ: `desktop`、`windows`、`linux`、`macos`、`compose-desktop`、`electron`などのトピック。
+    - ある程度のスター数があると、Trending/Hot Release/Most Popularセクションに表示される可能性が高まります。
+
+あなたのリポジトリがこれらの条件を満たしていれば、GitHub Storeは検索を通じて発見し、
+手動での登録なしに自動的に表示することができます。
+
+---
+
+## 🧭 GitHub Storeの仕組み（概要）
 
 1. **検索**
-    - プラットフォームに応じた `/search/repositories` クエリを使用。
-    - トピック・言語・説明に基づく簡易スコアリング。
-    - アーカイブ済みリポジトリは除外。
+    - GitHubの`/search/repositories`エンドポイントをプラットフォームに最適化されたクエリで使用。
+    - トピック、言語、説明に基づくシンプルなスコアリングを適用。
+    - アーカイブされたリポジトリやシグナルの少ないリポジトリをフィルタリング。
 
-2. **リリースとアセットの確認**
-    - `/repos/{owner}/{repo}/releases/latest` を呼び出し。
-    - 対応アセットが存在するかをチェック。
-    - 見つからない場合は結果から除外。
+2. **リリースとファイルの確認**
+    - 候補リポジトリに対して`/repos/{owner}/{repo}/releases/latest`を呼び出し。
+    - `assets`配列でプラットフォーム固有のファイル拡張子を確認。
+    - 適切なファイルが見つからない場合、そのリポジトリは結果から除外。
+    - リリースセレクターを使用して全リリースを閲覧することも可能。
 
 3. **詳細画面**
-    - リポジトリ情報、スター、フォーク、Issue。
-    - 最新リリースのタグ、日付、変更履歴、アセット。
-    - README を「このアプリについて」として表示。
+    - リポジトリ情報: 名前、オーナー、説明、スター数、フォーク数、issue数。
+    - リリースブラウザ: タグ、日付、変更履歴、ファイル付きで任意のリリースを閲覧。
+    - README: メインブランチから読み込み、「このアプリについて」としてレンダリング。
+    - 開発者プロフィールへのリンクと共有アクション。
+    - ディープリンクによる直接ナビゲーションに対応。
 
-4. **インストールフロー**
-    - 「Install latest」をタップすると：
-        - 最適なアセットを選択。
-        - ダウンロード。
-        - OS のインストーラへ委譲。
-        - Android ではローカル DB に記録。
-
----
-
-## ⚙️ 技術スタック
-
-- **最小 Android SDK：24**
-
-- **言語・プラットフォーム**
-    - Kotlin Multiplatform（Android + JVM Desktop）
-    - Compose Multiplatform UI（Material 3）
-
-- **非同期・状態管理**
-    - Kotlin Coroutines + Flow
-    - AndroidX Lifecycle
-
-- **ネットワーク・データ**
-    - Ktor 3
-    - Kotlinx Serialization JSON
-    - Kotlinx Datetime
-    - Room + KSP（Android）
-
-- **DI**
-    - Koin 4
-
-- **ナビゲーション**
-    - JetBrains Navigation Compose
-
-- **認証・セキュリティ**
-    - GitHub OAuth（Device Code Flow）
-    - Androidx DataStore
-
-- **メディア・Markdown**
-    - Coil 3
-    - multiplatform-markdown-renderer-m3
-
-- **ログ・ツール**
-    - Kermit
-    - Compose Hot Reload
-    - ProGuard / R8
+4. **インストールプロセス**
+    - ユーザーが「最新バージョンをインストール」をタップするか、特定のリリースを選択した場合:
+        - 現在のプラットフォームに最適なファイルを選択（Androidではアーキテクチャマッチング付き）。
+        - キャッシュサポート付きでダウンロードをストリーミング。
+        - OSインストーラーに処理を委譲（AndroidではAPKインストーラー、Desktopではデフォルトハンドラー）。
+        - Androidでは、インストールをローカルデータベースに記録し、パッケージモニタリングでインストール済みアプリリストの同期を維持。
+        - 管理対象アプリの開く、アンインストール、ダウングレードアクションをサポート。
 
 ---
 
-## ✅ GitHub Store を使う理由
+## ✅ メリット / なぜGitHub Storeを使うのか？
 
-- **リリース探しに時間を使わなくて済む**
-- **インストール済みアプリの管理**
-- **常に最新バージョン**
-- **Android と Desktop で統一された体験**
-- **オープンソースで拡張しやすい**
+- **GitHubリリースの検索が不要に**
+  あなたのプラットフォーム向けのバイナリを実際に配布しているリポジトリだけを表示します。
+
+- **インストール済みアプリを把握**
+  GitHub Store経由でインストールしたアプリを追跡（Android）し、新しいリリースが利用可能になるとハイライト表示。GitHubを再度検索することなくアップデートできます。
+
+- **常に最新**
+  インストールはデフォルトで最新の公開リリースを使用し、リリースセレクターで過去の任意のリリースを閲覧・インストールすることも可能です。
+
+- **全プラットフォームで統一された体験**
+  AndroidとDesktopで同じインターフェースとロジックを使用し、プラットフォームネイティブのインストール動作を提供します。
+
+- **オープンソースで拡張可能**
+  KMPで書かれており、ネットワーク、ドメインロジック、UIの明確な分離により、フォーク、拡張、適応が容易です。
 
 ---
 
-## 💖 プロジェクトを支援する
+## 🔐 GitHub Store APK署名証明書
 
-GitHub Store は完全無料で、今後も無料のままです。  
-このプロジェクトが役に立った場合、以下の方法で支援できます：
+GitHub Storeの全公式リリースは、以下の証明書フィンガープリントで署名されています:
 
-<a href="https://github.com/sponsors/rainxchzed">
-  <img src="https://img.shields.io/badge/Sponsor-GitHub-pink?logo=github" alt="GitHub でスポンサー">
-</a>
+SHA-256:
+`B7:F2:8E:19:8E:48:C1:93:B0:38:C6:5D:92:DD:F7:BC:07:7B:0D:B5:9E:BC:9B:25:0A:6D:AC:48:C1:18:03:CA`
+
+---
+
+## 🔑 GitHub OAuth設定
+
+**概要**
+1. GitHub OAuth Appを作成
+2. **Client ID**をコピー
+3. `local.properties`に設定
+
+<details>
+<summary><strong>完全なセットアップガイドを表示</strong></summary>
+
+  <br/>
+
+### 1 - GitHub OAuth Appを作成
+以下に移動:
+**GitHub → Settings → Developer settings → OAuth Apps → New OAuth App**
+
+| フィールド                       | 値                                          |
+| ------------------------------ | ------------------------------------------- |
+| **Application name**           | 任意の名前（例: *GitHub Store Dev*）          |
+| **Homepage URL** | `https://github.com/username/repo_name`                   |
+| **Authorization callback URL** | `githubstore://callback`                    |
+
+その後、**Create application**をクリックします。
+
+### 2 - Client IDをコピー
+アプリ作成後、GitHubに表示されるもの:
+- **Client ID** ← これが必要です
+- **Client Secret** ← ❗ このプロジェクトでは不要です
+
+### 3 - プロジェクトに追加
+プロジェクトの`local.properties`ファイル（プロジェクトルート）を開き、以下を追加:
+```properties
+GITHUB_CLIENT_ID=YOUR_CLIENT_ID_HERE
+```
+
+### 4 - 同期して実行
+プロジェクトを同期してアプリを実行します。これでGitHubでのログインが可能になります。
+
+### ❗ 重要な注意事項
+- `local.properties`は**Gitにコミットされない**ため、Client IDはローカルに保持されます。
+- このプロジェクトは**Client ID**のみ必要です（Client Secretは不要）。
+- 各開発者は開発用に自分のOAuth Appを作成する必要があります。
+
+</details>
+
+---
+
+## ☕ プロジェクトを支援する
+
+**GitHub Store**は**48,000人以上のアクティブユーザー**と**GitHub上で5,500以上のスター**を達成しました — そして広告なし、トラッキングなし、プレミアム機能なしの**100%無料**です。
+
+高校を卒業しながら、完全に一人で構築・メンテナンスしています。あなたのサポート（$3でも）は以下の助けになります:
+
+✅ **アプリをバグフリーに保つ** — issueに対応し、素早く修正をリリース
+✅ **コミュニティから要望された機能を追加** — ユーザーが本当に必要としているものを実装
+✅ **インフラを維持** — サーバー、API、デプロイメントコスト
+
+### 💖 サポート方法
 
 <a href="https://www.buymeacoffee.com/rainxchzed">
-  <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buy-me-a-coffee&logoColor=black" alt="コーヒーをおごる">
+  <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-☕%20$3-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee">
 </a>
 
-支援によって可能になること：
-- 20,000 人以上のユーザー向けアプリの保守
-- 新機能の開発
-- 開発者向けの無料ツールの作成
+<a href="https://github.com/sponsors/rainxchzed">
+  <img src="https://img.shields.io/badge/GitHub%20Sponsors-💖%20Monthly-pink?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Sponsors">
+</a>
 
-また、リポジトリに ⭐ を付けて共有することもできます！
+**今すぐスポンサーできなくても大丈夫です！** 以下の方法でも貢献できます:
+- ⭐ **このリポジトリにスターを付ける** — 他の人がGitHub Storeを発見する助けに
+- 🐛 **バグを報告する** — みんなのためにアプリを改善
+- 📢 **友達にシェアする** — 他の開発者にも広めましょう
+- 💬 **[Discord](https://discord.gg/x9Cvh2Z9qS)に参加する** — あなたのフィードバックがロードマップを形作ります
+
+金銭的かどうかに関わらず、あらゆる形のサポートは大きな意味を持ち、このプロジェクトを存続させます。ありがとうございます！
 
 ---
 
 ## ⚠️ 免責事項
 
-GitHub Store は、第三者開発者が GitHub に公開した
-リリースアセットの発見とダウンロードを支援するだけです。
+GitHub Storeは、外部の開発者がGitHubで公開しているリリースファイルの発見とダウンロードを
+支援するだけです。
+それらのダウンロードの内容、セキュリティ、動作は、それぞれの作者と配布者の責任であり、
+このプロジェクトの責任ではありません。
 
-本アプリを使用することで、ダウンロードしたソフトウェアを
-自己責任でインストール・実行することに同意したものとみなされます。
+GitHub Storeを使用することにより、ダウンロードしたソフトウェアのインストールと実行は
+すべて自己責任で行うことを理解し同意するものとします。
+このプロジェクトは、いかなるインストーラーが安全であるか、マルウェアフリーであるか、
+または特定の目的に適しているかについて、レビュー、検証、保証を行いません。
 
 ---
 
+## スター履歴
+
+<a href="https://www.star-history.com/#rainxchzed/Github-Store&type=timeline&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=rainxchzed/Github-Store&type=timeline&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=rainxchzed/Github-Store&type=timeline&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=rainxchzed/Github-Store&type=timeline&legend=top-left" />
+ </picture>
+</a>
+
+![Alt](https://repobeats.axiom.co/api/embed/20367dca127572e9c47db33850979d78df2c6a8b.svg "Repobeats analytics image")
+
 ## 📄 ライセンス
 
-GitHub Store は **Apache License, Version 2.0** のもとで公開されています。
+GitHub Storeは**Apache License, Version 2.0**の下で配布されます。
 
 ```
 Copyright 2025 rainxchzed
@@ -261,7 +396,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this project except in compliance with the License.
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
