@@ -1,9 +1,10 @@
 package zed.rainxch.search.presentation.utils
 
-import zed.rainxch.githubstore.core.presentation.res.*
 import org.jetbrains.compose.resources.StringResource
 import zed.rainxch.domain.model.SortOrder
-import zed.rainxch.domain.model.SortOrder.*
+import zed.rainxch.domain.model.SortOrder.Ascending
+import zed.rainxch.domain.model.SortOrder.Descending
+import zed.rainxch.githubstore.core.presentation.res.Res
 
 fun SortOrder.label(): StringResource = when (this) {
     Descending -> Res.string.sort_order_descending

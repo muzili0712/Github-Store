@@ -4,9 +4,8 @@ import zed.rainxch.core.presentation.model.DiscoveryRepository
 import zed.rainxch.domain.model.ProgrammingLanguage
 import zed.rainxch.domain.model.SearchPlatform
 import zed.rainxch.domain.model.SortBy
-import zed.rainxch.search.presentation.utils.ParsedGithubLink
-
 import zed.rainxch.domain.model.SortOrder
+import zed.rainxch.search.presentation.utils.ParsedGithubLink
 
 data class SearchState(
     val query: String = "",

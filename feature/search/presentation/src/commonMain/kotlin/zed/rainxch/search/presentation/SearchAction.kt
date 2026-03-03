@@ -4,7 +4,6 @@ import zed.rainxch.core.domain.model.GithubRepoSummary
 import zed.rainxch.domain.model.ProgrammingLanguage
 import zed.rainxch.domain.model.SearchPlatform
 import zed.rainxch.domain.model.SortBy
-
 import zed.rainxch.domain.model.SortOrder
 
 sealed interface SearchAction {
