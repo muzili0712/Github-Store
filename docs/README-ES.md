@@ -71,12 +71,12 @@ Construida con Kotlin Multiplatform y Compose Multiplatform para plataformas And
 > Android libre y de codigo abierto esta bajo amenaza. Google convertira Android en una plataforma cerrada, restringiendo tu libertad esencial de instalar las aplicaciones que elijas. Haz que tu voz se escuche – [keepandroidopen.org](https://keepandroidopen.org/).
 
 <p align="middle">
-    <img src="../screenshots/banner.jpeg" width="99%" />
-    <img src="../screenshots/01.jpg" width="18%" />
-    <img src="../screenshots/02.jpg" width="18%" />
-    <img src="../screenshots/03.jpg" width="18%" />
-    <img src="../screenshots/04.jpg" width="18%" />
-    <img src="../screenshots/05.jpg" width="18%" />
+    <img src="../media-resources/banner.jpeg" width="99%" />
+    <img src="../media-resources/01.jpg" width="18%" />
+    <img src="../media-resources/02.jpg" width="18%" />
+    <img src="../media-resources/03.jpg" width="18%" />
+    <img src="../media-resources/04.jpg" width="18%" />
+    <img src="../media-resources/05.jpg" width="18%" />
 </p>
 
 <div align="center">
@@ -151,8 +151,6 @@ GitHub® es una marca registrada de GitHub, Inc.
 </p>
 
 ---
-
-<img src="../screenshots/preview.gif" align="right" width="320" />
 
 ## 🚀 Funcionalidades
 

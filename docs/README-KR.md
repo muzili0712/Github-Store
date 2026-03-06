@@ -71,12 +71,12 @@ Kotlin Multiplatform과 Compose Multiplatform으로 구축되어 Android 및 Des
 > 무료 오픈소스 Android가 위협받고 있습니다. Google은 Android를 폐쇄적인 플랫폼으로 전환하여, 원하는 앱을 설치할 수 있는 필수적인 자유를 제한하려 합니다. 여러분의 목소리를 내주세요 – [keepandroidopen.org](https://keepandroidopen.org/).
 
 <p align="middle">
-    <img src="../screenshots/banner.jpeg" width="99%" />
-    <img src="../screenshots/01.jpg" width="18%" />
-    <img src="../screenshots/02.jpg" width="18%" />
-    <img src="../screenshots/03.jpg" width="18%" />
-    <img src="../screenshots/04.jpg" width="18%" />
-    <img src="../screenshots/05.jpg" width="18%" />
+    <img src="../media-resources/banner.jpeg" width="99%" />
+    <img src="../media-resources/01.jpg" width="18%" />
+    <img src="../media-resources/02.jpg" width="18%" />
+    <img src="../media-resources/03.jpg" width="18%" />
+    <img src="../media-resources/04.jpg" width="18%" />
+    <img src="../media-resources/05.jpg" width="18%" />
 </p>
 
 <div align="center">
@@ -151,8 +151,6 @@ GitHub®는 GitHub, Inc.의 등록 상표입니다.
 </p>
 
 ---
-
-<img src="../screenshots/preview.gif" align="right" width="320" />
 
 ## 🚀 기능
 

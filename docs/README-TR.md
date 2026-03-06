@@ -71,12 +71,12 @@ Kotlin Multiplatform ve Compose Multiplatform ile Android ve Masaustu platformla
 > Ozgur ve Acik Kaynak Android tehdit altinda. Google, Android'i kapali bir platforma donusturerek istediginiz uygulamalari yukleme ozgurlugunuzu kisitlayacak. Sesinizi duyurun – [keepandroidopen.org](https://keepandroidopen.org/).
 
 <p align="middle">
-    <img src="../screenshots/banner.jpeg" width="99%" />
-    <img src="../screenshots/01.jpg" width="18%" />
-    <img src="../screenshots/02.jpg" width="18%" />
-    <img src="../screenshots/03.jpg" width="18%" />
-    <img src="../screenshots/04.jpg" width="18%" />
-    <img src="../screenshots/05.jpg" width="18%" />
+    <img src="../media-resources/banner.jpeg" width="99%" />
+    <img src="../media-resources/01.jpg" width="18%" />
+    <img src="../media-resources/02.jpg" width="18%" />
+    <img src="../media-resources/03.jpg" width="18%" />
+    <img src="../media-resources/04.jpg" width="18%" />
+    <img src="../media-resources/05.jpg" width="18%" />
 </p>
 
 <div align="center">
@@ -151,8 +151,6 @@ GitHub®, GitHub, Inc. sirketinin tescilli ticari markasıdir.
 </p>
 
 ---
-
-<img src="../screenshots/preview.gif" align="right" width="320" />
 
 ## 🚀 Ozellikler
 
