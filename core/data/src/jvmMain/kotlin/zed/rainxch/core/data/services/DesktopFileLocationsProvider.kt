@@ -62,27 +62,29 @@ class DesktopFileLocationsProvider(
     }
 
     override fun userDownloadsDir(): String {
+        val appSubdirName = "GitHub Store Downloads"
         val downloadsDir = when (platform) {
             Platform.WINDOWS -> {
                 val userProfile = System.getenv("USERPROFILE")
                     ?: System.getProperty("user.home")
-                File(userProfile, "Downloads")
+                File(userProfile, "Downloads").resolve(appSubdirName)
             }
             Platform.MACOS -> {
                 val home = System.getProperty("user.home")
-                File(home, "Downloads")
+                File(home, "Downloads").resolve(appSubdirName)
             }
             Platform.LINUX -> {
                 val xdgDownloads = getXdgDownloadsDir()
-                if (xdgDownloads != null) {
+                val baseDir = if (xdgDownloads != null) {
                     File(xdgDownloads)
                 } else {
                     val home = System.getProperty("user.home")
                     File(home, "Downloads")
                 }
+                baseDir.resolve(appSubdirName)
             }
             else -> {
-                File(System.getProperty("user.home"), "Downloads")
+                File(System.getProperty("user.home"), "Downloads").resolve(appSubdirName)
             }
         }
 

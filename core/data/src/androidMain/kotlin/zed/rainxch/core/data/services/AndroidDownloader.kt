@@ -21,7 +21,7 @@ import zed.rainxch.core.domain.network.Downloader
 
 class AndroidDownloader(
     private val context: Context,
-    private val files: zed.rainxch.core.data.services.FileLocationsProvider
+    private val files: FileLocationsProvider
 ) : Downloader {
 
     private val downloadManager by lazy {
