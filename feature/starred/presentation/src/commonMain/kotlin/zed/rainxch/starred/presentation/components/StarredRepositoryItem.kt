@@ -25,9 +25,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +44,7 @@ import com.skydoves.landscapist.coil3.CoilImage
 import zed.rainxch.githubstore.core.presentation.res.*
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import zed.rainxch.core.presentation.components.ExpressiveCard
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.formatCount
 import zed.rainxch.starred.presentation.model.StarredRepositoryUi
@@ -55,9 +58,9 @@ fun StarredRepositoryItem(
     onDevProfileClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        onClick = onItemClick
+    ExpressiveCard(
+        onClick = onItemClick,
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -110,7 +113,8 @@ fun StarredRepositoryItem(
                 FilledIconToggleButton(
                     checked = repository.isFavorite,
                     onCheckedChange = { onToggleFavoriteClick() },
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
+                    shape = MaterialShapes.Cookie6Sided.toShape()
                 ) {
                     Icon(
                         imageVector = if (repository.isFavorite) {
