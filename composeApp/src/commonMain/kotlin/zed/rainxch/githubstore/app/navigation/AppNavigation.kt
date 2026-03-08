@@ -238,6 +238,17 @@ fun AppNavigation(
                         },
                         onNavigateToDevProfile = { username ->
                             navController.navigate(GithubStoreGraph.DeveloperProfileScreen(username))
+                        },
+                        onNavigateToSponsor = {
+                            navController.navigate(GithubStoreGraph.SponsorScreen)
+                        }
+                    )
+                }
+
+                composable<GithubStoreGraph.SponsorScreen> {
+                    zed.rainxch.profile.presentation.SponsorScreen(
+                        onNavigateBack = {
+                            navController.navigateUp()
                         }
                     )
                 }

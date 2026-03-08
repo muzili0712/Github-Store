@@ -463,4 +463,42 @@
     <string name="clear_cache">Pulisci cache</string>
     <string name="current_size">Dimensione attuale:</string>
     <string name="clear">Pulisci</string>
+
+    <string name="sponsor_title">Supporta GitHub Store</string>
+    <string name="sponsor_button">Supporta il progetto</string>
+    <string name="sponsor_hero_title">Costruito con amore,\nmantenuto con il caffè</string>
+    <string name="sponsor_hero_subtitle">GitHub Store ha raggiunto oltre 130.000 download e 7.700 stelle su GitHub — 100% gratuito, senza pubblicità né tracciamento.</string>
+
+    <string name="sponsor_personal_note">Ho costruito e mantengo questo progetto completamente da solo mentre finisco il liceo. Il tuo supporto — anche piccolo — aiuta a mantenere l'app senza bug e a finanziare l'infrastruttura.</string>
+
+    <string name="sponsor_kodee_title">Vota GitHub Store!</string>
+    <string name="sponsor_kodee_subtitle">GitHub Store è nominato ai Golden Kodee Awards al KotlinConf 2026.</string>
+
+    <string name="sponsor_kodee_register">1. Registrati</string>
+    <string name="sponsor_kodee_vote">2. Vota</string>
+    <string name="sponsor_kodee_deadline">Le votazioni chiudono il 22 marzo</string>
+
+    <string name="sponsor_kodee_step1">1. Registrati sulla piattaforma (Continua con Google)</string>
+    <string name="sponsor_kodee_step2">2. Tocca Vota qui sotto</string>
+    <string name="sponsor_kodee_step3">3. Trova Usmon Narzullayev e premi Vota</string>
+
+    <string name="sponsor_github_sponsors">GitHub Sponsors</string>
+    <string name="sponsor_github_sponsors_desc">Supporto ricorrente o singolo via GitHub</string>
+
+    <string name="sponsor_buy_me_coffee">Buy Me a Coffee</string>
+    <string name="sponsor_buy_me_coffee_desc">Supporto rapido una tantum</string>
+
+    <string name="sponsor_other_ways_title">ALTRI MODI PER AIUTARE</string>
+
+    <string name="sponsor_star_repo">Metti una stella al repository</string>
+    <string name="sponsor_star_repo_desc">Aiuta altri a scoprire GitHub Store</string>
+
+    <string name="sponsor_report_bugs">Segnala bug</string>
+    <string name="sponsor_report_bugs_desc">Rende l'app migliore per tutti</string>
+
+    <string name="sponsor_share">Condividi con amici</string>
+    <string name="sponsor_share_desc">Diffondi la parola tra gli sviluppatori</string>
+
+    <string name="sponsor_thank_you">Ogni supporto — finanziario o meno — mantiene vivo questo progetto. Grazie!</string>
+
 </resources>

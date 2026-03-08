@@ -426,4 +426,41 @@
     <string name="clear_cache">キャッシュをクリア</string>
     <string name="current_size">現在のサイズ:</string>
     <string name="clear">クリア</string>
+
+    <string name="sponsor_title">GitHub Store を支援</string>
+    <string name="sponsor_button">プロジェクトを支援</string>
+    <string name="sponsor_hero_title">愛を込めて作り、\nコーヒーで維持</string>
+    <string name="sponsor_hero_subtitle">GitHub Store は 13万以上のダウンロードと 7700 以上の GitHub スターを達成しました。完全無料、広告なし、追跡なし。</string>
+
+    <string name="sponsor_personal_note">私は高校を卒業しながら、このプロジェクトを一人で開発・維持しています。小さな支援でも、バグ修正やインフラ費用、機能開発に役立ちます。</string>
+
+    <string name="sponsor_kodee_title">GitHub Store に投票！</string>
+    <string name="sponsor_kodee_subtitle">KotlinConf 2026 の Golden Kodee Awards にノミネートされています。投票は2分で完了します。</string>
+
+    <string name="sponsor_kodee_register">1. 登録</string>
+    <string name="sponsor_kodee_vote">2. 投票</string>
+    <string name="sponsor_kodee_deadline">投票締切：3月22日</string>
+
+    <string name="sponsor_kodee_step1">1. 賞のプラットフォームに登録（Googleで続行）</string>
+    <string name="sponsor_kodee_step2">2. 下の「投票」をタップ</string>
+    <string name="sponsor_kodee_step3">3. Usmon Narzullayev を見つけて投票</string>
+
+    <string name="sponsor_github_sponsors">GitHub Sponsors</string>
+    <string name="sponsor_github_sponsors_desc">GitHub 経由の定期または一回支援</string>
+
+    <string name="sponsor_buy_me_coffee">Buy Me a Coffee</string>
+    <string name="sponsor_buy_me_coffee_desc">簡単な一回支援</string>
+
+    <string name="sponsor_other_ways_title">他の支援方法</string>
+
+    <string name="sponsor_star_repo">リポジトリにスター</string>
+    <string name="sponsor_star_repo_desc">他の人が GitHub Store を見つけやすくなります</string>
+
+    <string name="sponsor_report_bugs">バグを報告</string>
+    <string name="sponsor_report_bugs_desc">アプリをより良くします</string>
+
+    <string name="sponsor_share">友達と共有</string>
+    <string name="sponsor_share_desc">他の開発者に広める</string>
+
+    <string name="sponsor_thank_you">金銭的であれそうでなくても、すべての支援がこのプロジェクトを支えています。ありがとうございます！</string>
 </resources>

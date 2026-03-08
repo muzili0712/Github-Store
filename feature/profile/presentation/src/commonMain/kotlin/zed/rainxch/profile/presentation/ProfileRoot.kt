@@ -47,6 +47,7 @@ fun ProfileRoot(
     onNavigateToAuthentication: () -> Unit,
     onNavigateToStarredRepos: () -> Unit,
     onNavigateToFavouriteRepos: () -> Unit,
+    onNavigateToSponsor: () -> Unit,
     viewModel: ProfileViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -117,6 +118,10 @@ fun ProfileRoot(
 
                 is ProfileAction.OnRepositoriesClick -> {
                     onNavigateToDevProfile(action.username)
+                }
+
+                ProfileAction.OnSponsorClick -> {
+                    onNavigateToSponsor()
                 }
 
                 else -> {

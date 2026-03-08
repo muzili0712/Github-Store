@@ -281,6 +281,10 @@ class ProfileViewModel(
                 /* Handed in composable */
             }
 
+            ProfileAction.OnSponsorClick -> {
+                /* Handed in composable */
+            }
+
             is ProfileAction.OnFontThemeSelected -> {
                 viewModelScope.launch {
                     themesRepository.setFontTheme(action.fontTheme)
