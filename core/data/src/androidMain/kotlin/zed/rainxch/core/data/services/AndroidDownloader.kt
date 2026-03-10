@@ -28,6 +28,7 @@ class AndroidDownloader(
 ) : Downloader {
 
     private val activeDownloads = ConcurrentHashMap<String, Call>()
+    private val activeFileNames = ConcurrentHashMap<String, String>()
 
     private fun buildClient(): OkHttpClient {
         Authenticator.setDefault(null)
@@ -81,21 +82,25 @@ class AndroidDownloader(
             "Invalid file name: $rawName"
         }
 
-        val destination = File(dir, safeName)
+        check(!activeFileNames.containsKey(safeName)) {
+            "A download for '$safeName' is already in progress"
+        }
 
+        val downloadId = UUID.randomUUID().toString()
+
+        val destination = File(dir, safeName)
         if (destination.exists()) {
             Logger.d { "Deleting existing file before download: ${destination.absolutePath}" }
             destination.delete()
         }
 
-        Logger.d { "Starting download: $url" }
+        Logger.d { "Starting download: $url (id=$downloadId)" }
 
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
+        val request = Request.Builder().url(url).build()
         val call = client.newCall(request)
-        activeDownloads[safeName] = call
+
+        activeDownloads[downloadId] = call
+        activeFileNames[safeName] = downloadId
 
         try {
             call.execute().use { response ->
@@ -132,13 +137,13 @@ class AndroidDownloader(
                     throw IllegalStateException("File not ready after download: ${destination.absolutePath}")
                 }
             }
-
         } catch (e: Exception) {
             destination.delete()
             Logger.e(e) { "Download failed" }
             throw e
         } finally {
-            activeDownloads.remove(safeName)
+            activeDownloads.remove(downloadId)
+            activeFileNames.remove(safeName)
         }
     }.flowOn(Dispatchers.IO)
 
@@ -178,16 +183,19 @@ class AndroidDownloader(
 
     override suspend fun cancelDownload(fileName: String): Boolean =
         withContext(Dispatchers.IO) {
-
             var cancelled = false
             var deleted = false
 
-            activeDownloads[fileName]?.let { call: Call ->
-                if (!call.isCanceled()) {
-                    call.cancel()
-                    cancelled = true
+            val downloadId = activeFileNames[fileName]
+            if (downloadId != null) {
+                activeDownloads[downloadId]?.let { call: Call ->
+                    if (!call.isCanceled()) {
+                        call.cancel()
+                        cancelled = true
+                    }
+                    activeDownloads.remove(downloadId)
                 }
-                activeDownloads.remove(fileName)
+                activeFileNames.remove(fileName)
             }
 
             val file = File(files.appDownloadsDir(), fileName)

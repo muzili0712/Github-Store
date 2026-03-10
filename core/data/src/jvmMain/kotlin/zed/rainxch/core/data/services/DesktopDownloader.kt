@@ -26,8 +26,8 @@ class DesktopDownloader(
     private val files: FileLocationsProvider,
     private val proxyManager: ProxyManager = ProxyManager
 ) : Downloader {
-
     private val activeDownloads = ConcurrentHashMap<String, Call>()
+    private val nameToId = ConcurrentHashMap<String, String>()
 
     private fun buildClient(): OkHttpClient {
         Authenticator.setDefault(null)
@@ -80,8 +80,13 @@ class DesktopDownloader(
             "Invalid file name: $rawName"
         }
 
-        val destination = File(dir, safeName)
+        val downloadId = UUID.randomUUID().toString()
+        val previous = nameToId.putIfAbsent(safeName, downloadId)
+        if (previous != null) {
+            throw IllegalStateException("A download for '$safeName' is already in progress")
+        }
 
+        val destination = File(dir, safeName)
         if (destination.exists()) {
             Logger.d { "Deleting existing file before download: ${destination.absolutePath}" }
             destination.delete()
@@ -89,12 +94,9 @@ class DesktopDownloader(
 
         Logger.d { "Starting download: $url" }
 
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
+        val request = Request.Builder().url(url).build()
         val call = client.newCall(request)
-        activeDownloads[safeName] = call
+        activeDownloads[downloadId] = call
 
         try {
             call.execute().use { response ->
@@ -136,7 +138,8 @@ class DesktopDownloader(
             Logger.e(e) { "Download failed" }
             throw e
         } finally {
-            activeDownloads.remove(safeName)
+            activeDownloads.remove(downloadId)
+            nameToId.remove(safeName)
         }
     }.flowOn(Dispatchers.IO)
 
@@ -151,7 +154,6 @@ class DesktopDownloader(
             }
 
             val file = File(files.userDownloadsDir(), safeName)
-
             if (file.exists()) {
                 Logger.d { "Deleting existing file before download: ${file.absolutePath}" }
                 file.delete()
@@ -166,26 +168,24 @@ class DesktopDownloader(
     override suspend fun getDownloadedFilePath(fileName: String): String? =
         withContext(Dispatchers.IO) {
             val file = File(files.userDownloadsDir(), fileName)
-
-            if (file.exists() && file.length() > 0) {
-                file.absolutePath
-            } else {
-                null
-            }
+            if (file.exists() && file.length() > 0) file.absolutePath else null
         }
 
     override suspend fun cancelDownload(fileName: String): Boolean =
         withContext(Dispatchers.IO) {
-
             var cancelled = false
             var deleted = false
 
-            activeDownloads[fileName]?.let { call: Call ->
-                if (!call.isCanceled()) {
-                    call.cancel()
-                    cancelled = true
+            val downloadId = nameToId[fileName]
+            if (downloadId != null) {
+                activeDownloads[downloadId]?.let { call ->
+                    if (!call.isCanceled()) {
+                        call.cancel()
+                        cancelled = true
+                    }
                 }
-                activeDownloads.remove(fileName)
+                activeDownloads.remove(downloadId)
+                nameToId.remove(fileName)
             }
 
             val file = File(files.userDownloadsDir(), fileName)
