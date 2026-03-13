@@ -102,15 +102,14 @@ GitHub® is a registered trademark of GitHub, Inc.
 
 ---
 
-<div align="center">
+<p align="center">
 
 # 🔃 Download
-
-</div>
+</p>
 
 <p align="center">
 <a href="https://github.com/OpenHub-Store/GitHub-Store/releases">
-   <img src="https://i.ibb.co/q0mdc4Z/get-it-on-github.png" height="80"/>
+   <img src="https://i.ibb.co/q0mdc4Z/get-it-on-github.png" height="70"/>
 </a>
 
 <a href="https://f-droid.org/en/packages/zed.rainxch.githubstore/">
