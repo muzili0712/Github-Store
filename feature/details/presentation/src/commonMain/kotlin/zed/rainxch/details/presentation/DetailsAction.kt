@@ -13,6 +13,10 @@ sealed interface DetailsAction {
 
     data object OnDismissDowngradeWarning : DetailsAction
 
+    data object OnDismissSigningKeyWarning : DetailsAction
+
+    data object OnOverrideSigningKeyWarning : DetailsAction
+
     data object UninstallApp : DetailsAction
     data object OnRequestUninstall : DetailsAction
     data object OnDismissUninstallConfirmation : DetailsAction

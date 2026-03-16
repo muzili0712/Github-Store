@@ -47,6 +47,7 @@ import zed.rainxch.details.presentation.model.DownloadStage
 import zed.rainxch.details.presentation.model.InstallLogItem
 import zed.rainxch.details.presentation.model.LogResult
 import zed.rainxch.details.presentation.model.LogResult.Error
+import zed.rainxch.details.presentation.model.SigningKeyWarning
 import zed.rainxch.details.presentation.model.SupportedLanguages
 import zed.rainxch.details.presentation.model.TranslationState
 import zed.rainxch.githubstore.core.presentation.res.Res
@@ -358,6 +359,55 @@ class DetailsViewModel(
                     it.copy(
                         downgradeWarning = null,
                     )
+                }
+            }
+
+            DetailsAction.OnDismissSigningKeyWarning -> {
+                _state.update {
+                    it.copy(
+                        signingKeyWarning = null,
+                        downloadStage = DownloadStage.IDLE,
+                    )
+                }
+                currentAssetName = null
+            }
+
+            DetailsAction.OnOverrideSigningKeyWarning -> {
+                val warning = _state.value.signingKeyWarning ?: return
+                _state.update { it.copy(signingKeyWarning = null) }
+                viewModelScope.launch {
+                    try {
+                        val ext = warning.pendingAssetName.substringAfterLast('.', "").lowercase()
+                        installer.install(warning.pendingFilePath, ext)
+
+                        if (platform == Platform.ANDROID) {
+                            saveInstalledAppToDatabase(
+                                assetName = warning.pendingAssetName,
+                                assetUrl = warning.pendingDownloadUrl,
+                                assetSize = warning.pendingSizeBytes,
+                                releaseTag = warning.pendingReleaseTag,
+                                isUpdate = warning.pendingIsUpdate,
+                                filePath = warning.pendingFilePath,
+                            )
+                        }
+
+                        _state.value = _state.value.copy(downloadStage = DownloadStage.IDLE)
+                        currentAssetName = null
+                        appendLog(
+                            assetName = warning.pendingAssetName,
+                            size = warning.pendingSizeBytes,
+                            tag = warning.pendingReleaseTag,
+                            result = if (warning.pendingIsUpdate) LogResult.Updated else LogResult.Installed,
+                        )
+                    } catch (t: Throwable) {
+                        logger.error("Install after override failed: ${t.message}")
+                        _state.value =
+                            _state.value.copy(
+                                downloadStage = DownloadStage.IDLE,
+                                installError = t.message,
+                            )
+                        currentAssetName = null
+                    }
                 }
             }
 
@@ -1012,6 +1062,8 @@ class DetailsViewModel(
                         sizeBytes = sizeBytes,
                         releaseTag = releaseTag,
                     )
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    throw e
                 } catch (t: Throwable) {
                     logger.error("Install failed: ${t.message}")
                     t.printStackTrace()
@@ -1040,20 +1092,28 @@ class DetailsViewModel(
         releaseTag: String,
     ) {
         _state.value = _state.value.copy(downloadStage = DownloadStage.INSTALLING)
-        val apkInfo = installer.getApkInfoExtractor().extractPackageInfo(filePath)
-        if (apkInfo != null) {
-            ApkPackageInfo(
-                packageName = apkInfo.packageName,
-                appName = apkInfo.appName,
-                versionName = apkInfo.versionName,
-                versionCode = apkInfo.versionCode,
-                signingFingerprint = apkInfo.signingFingerprint,
-            )
-        } else {
-            logger.error("Failed to extract APK info for $assetName")
-        }
 
-        apkInfo?.let {
+        val ext = assetName.substringAfterLast('.', "").lowercase()
+        val isApk = ext == "apk"
+
+        if (isApk) {
+            val apkInfo = installer.getApkInfoExtractor().extractPackageInfo(filePath)
+            if (apkInfo == null) {
+                logger.error("Failed to extract APK info for $assetName")
+                _state.value = _state.value.copy(
+                    downloadStage = DownloadStage.IDLE,
+                    installError = "Failed to verify APK package info",
+                )
+                currentAssetName = null
+                appendLog(
+                    assetName = assetName,
+                    size = sizeBytes,
+                    tag = releaseTag,
+                    result = Error("Failed to extract APK info"),
+                )
+                return
+            }
+
             val result =
                 checkFingerprints(
                     apkPackageInfo = apkInfo,
@@ -1061,18 +1121,34 @@ class DetailsViewModel(
 
             result
                 .onFailure {
+                    val existingApp =
+                        installedAppsRepository.getAppByPackage(apkInfo.packageName)
+                    _state.update { state ->
+                        state.copy(
+                            signingKeyWarning =
+                                SigningKeyWarning(
+                                    packageName = apkInfo.packageName,
+                                    expectedFingerprint = existingApp?.signingFingerprint ?: "",
+                                    actualFingerprint = apkInfo.signingFingerprint ?: "",
+                                    pendingDownloadUrl = downloadUrl,
+                                    pendingAssetName = assetName,
+                                    pendingSizeBytes = sizeBytes,
+                                    pendingReleaseTag = releaseTag,
+                                    pendingIsUpdate = isUpdate,
+                                    pendingFilePath = filePath,
+                                ),
+                        )
+                    }
                     appendLog(
                         assetName = assetName,
                         size = sizeBytes,
                         tag = releaseTag,
-                        result = Error("Fingerprints does not match!"),
+                        result = Error("Signing key changed"),
                     )
-
                     return
                 }
         }
 
-        val ext = assetName.substringAfterLast('.', "").lowercase()
         installer.install(filePath, ext)
 
         if (platform == Platform.ANDROID) {

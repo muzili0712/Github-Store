@@ -76,6 +76,9 @@ import zed.rainxch.githubstore.core.presentation.res.Res
 import zed.rainxch.githubstore.core.presentation.res.add_to_favourites
 import zed.rainxch.githubstore.core.presentation.res.cancel
 import zed.rainxch.githubstore.core.presentation.res.confirm_uninstall_message
+import zed.rainxch.githubstore.core.presentation.res.install_anyway
+import zed.rainxch.githubstore.core.presentation.res.signing_key_changed_message
+import zed.rainxch.githubstore.core.presentation.res.signing_key_changed_title
 import zed.rainxch.githubstore.core.presentation.res.confirm_uninstall_title
 import zed.rainxch.githubstore.core.presentation.res.dismiss
 import zed.rainxch.githubstore.core.presentation.res.downgrade_requires_uninstall
@@ -182,6 +185,53 @@ fun DetailsRoot(
                 TextButton(
                     onClick = {
                         viewModel.onAction(DetailsAction.OnDismissDowngradeWarning)
+                    },
+                ) {
+                    Text(
+                        text = stringResource(Res.string.cancel),
+                    )
+                }
+            },
+        )
+    }
+
+    // Signing key changed warning dialog
+    state.signingKeyWarning?.let { warning ->
+        AlertDialog(
+            onDismissRequest = {
+                viewModel.onAction(DetailsAction.OnDismissSigningKeyWarning)
+            },
+            title = {
+                Text(
+                    text = stringResource(Res.string.signing_key_changed_title),
+                )
+            },
+            text = {
+                Text(
+                    text =
+                        stringResource(
+                            Res.string.signing_key_changed_message,
+                            warning.expectedFingerprint.take(19),
+                            warning.actualFingerprint.take(19),
+                        ),
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.onAction(DetailsAction.OnOverrideSigningKeyWarning)
+                    },
+                ) {
+                    Text(
+                        text = stringResource(Res.string.install_anyway),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.onAction(DetailsAction.OnDismissSigningKeyWarning)
                     },
                 ) {
                     Text(

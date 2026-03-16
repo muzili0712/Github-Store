@@ -856,12 +856,8 @@ class AppsViewModel(
             _events.send(
                 AppsEvent.ShowSuccess(
                     "Imported ${result.imported} apps" +
-                        if (result.skipped > 0) {
-                            ", ${result.skipped} skipped"
-                        } else {
-                            "" +
-                                if (result.failed > 0) ", ${result.failed} failed" else ""
-                        },
+                        (if (result.skipped > 0) ", ${result.skipped} skipped" else "") +
+                        (if (result.failed > 0) ", ${result.failed} failed" else ""),
                 ),
             )
         } catch (e: Exception) {

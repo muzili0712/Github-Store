@@ -155,6 +155,21 @@ class AutoUpdateWorker(
                 ?: throw IllegalStateException("Failed to extract APK info for ${app.appName}")
 
         val currentApp = installedAppsRepository.getAppByPackage(app.packageName)
+
+        // TOFU: Block auto-update if signing key changed
+        if (currentApp != null &&
+            currentApp.signingFingerprint != null &&
+            apkInfo.signingFingerprint != null &&
+            currentApp.signingFingerprint != apkInfo.signingFingerprint
+        ) {
+            Logger.e {
+                "AutoUpdateWorker: Signing key mismatch for ${app.appName}! " +
+                    "Expected: ${currentApp.signingFingerprint}, got: ${apkInfo.signingFingerprint}. " +
+                    "Skipping auto-update."
+            }
+            throw IllegalStateException("Signing key changed for ${app.appName}, blocking auto-update")
+        }
+
         if (currentApp != null) {
             installedAppsRepository.updateApp(
                 currentApp.copy(

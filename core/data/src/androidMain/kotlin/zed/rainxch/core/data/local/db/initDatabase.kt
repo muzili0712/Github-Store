@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import zed.rainxch.core.data.local.db.migrations.MIGRATION_1_2
 import zed.rainxch.core.data.local.db.migrations.MIGRATION_2_3
 import zed.rainxch.core.data.local.db.migrations.MIGRATION_3_4
+import zed.rainxch.core.data.local.db.migrations.MIGRATION_4_5
 
 fun initDatabase(context: Context): AppDatabase {
     val appContext = context.applicationContext
@@ -19,5 +20,6 @@ fun initDatabase(context: Context): AppDatabase {
             MIGRATION_1_2,
             MIGRATION_2_3,
             MIGRATION_3_4,
+            MIGRATION_4_5,
         ).build()
 }

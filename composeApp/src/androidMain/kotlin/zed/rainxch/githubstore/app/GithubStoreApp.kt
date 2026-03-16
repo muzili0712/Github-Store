@@ -144,6 +144,7 @@ class GithubStoreApp : Application() {
                         isPendingInstall = false,
                         installedVersionName = versionName,
                         installedVersionCode = versionCode,
+                        signingFingerprint = SELF_SHA256_FINGERPRINT,
                     )
 
                 repo.saveInstalledApp(selfApp)
@@ -156,6 +157,9 @@ class GithubStoreApp : Application() {
 
     companion object {
         private const val SELF_REPO_ID = 1101281251L
+        private const val SELF_SHA256_FINGERPRINT =
+            @Suppress("ktlint:standard:max-line-length")
+            "B7:F2:8E:19:8E:48:C1:93:B0:38:C6:5D:92:DD:F7:BC:07:7B:0D:B5:9E:BC:9B:25:0A:6D:AC:48:C1:18:03:CA"
         private const val SELF_REPO_OWNER = "OpenHub-Store"
         private const val SELF_REPO_NAME = "GitHub-Store"
         private const val SELF_AVATAR_URL =
