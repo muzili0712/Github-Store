@@ -18,4 +18,6 @@ data class CachedGithubRepoSummary(
     val releasesUrl: String,
     val updatedAt: String,
     val latestReleaseDate: String? = null,
+    val trendingScore: Double? = null,
+    val popularityScore: Int? = null,
 )

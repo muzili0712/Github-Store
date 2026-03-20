@@ -13,6 +13,7 @@ kotlin {
                 implementation(projects.feature.home.domain)
 
                 implementation(libs.liquid)
+                implementation(libs.kotlinx.collections.immutable)
 
                 implementation(compose.components.resources)
 

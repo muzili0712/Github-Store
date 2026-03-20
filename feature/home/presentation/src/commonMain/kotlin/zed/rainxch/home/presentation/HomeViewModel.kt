@@ -27,6 +27,7 @@ import zed.rainxch.core.presentation.model.DiscoveryRepositoryUi
 import zed.rainxch.core.presentation.utils.toUi
 import zed.rainxch.githubstore.core.presentation.res.*
 import zed.rainxch.home.domain.model.HomeCategory
+import zed.rainxch.home.domain.model.HomePlatform
 import zed.rainxch.home.domain.repository.HomeRepository
 
 class HomeViewModel(
@@ -144,17 +145,24 @@ class HomeViewModel(
                     val flow =
                         when (targetCategory) {
                             HomeCategory.TRENDING -> {
-                                homeRepository.getTrendingRepositories(nextPageIndex)
+                                homeRepository.getTrendingRepositories(
+                                    platform = HomePlatform.All,
+                                    page = nextPageIndex,
+                                )
                             }
 
                             HomeCategory.HOT_RELEASE -> {
                                 homeRepository.getHotReleaseRepositories(
-                                    nextPageIndex,
+                                    platform = HomePlatform.All,
+                                    page = nextPageIndex,
                                 )
                             }
 
                             HomeCategory.MOST_POPULAR -> {
-                                homeRepository.getMostPopular(nextPageIndex)
+                                homeRepository.getMostPopular(
+                                    platform = HomePlatform.All,
+                                    page = nextPageIndex,
+                                )
                             }
                         }
 

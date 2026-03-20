@@ -36,6 +36,7 @@ import zed.rainxch.core.domain.model.Platform
 import zed.rainxch.core.domain.model.RateLimitException
 import zed.rainxch.home.data.data_source.CachedRepositoriesDataSource
 import zed.rainxch.home.data.mappers.toGithubRepoSummary
+import zed.rainxch.home.domain.model.HomePlatform
 import zed.rainxch.home.domain.repository.HomeRepository
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
@@ -54,12 +55,15 @@ class HomeRepositoryImpl(
     ): String = "home:$category:${platform.name}:page$page"
 
     @OptIn(ExperimentalTime::class)
-    override fun getTrendingRepositories(page: Int): Flow<PaginatedDiscoveryRepositories> =
+    override fun getTrendingRepositories(
+        platform: HomePlatform,
+        page: Int,
+    ): Flow<PaginatedDiscoveryRepositories> =
         flow {
             if (page == 1) {
                 logger.debug("Attempting to load cached trending repositories...")
 
-                val cachedData = cachedDataSource.getCachedTrendingRepos()
+                val cachedData = cachedDataSource.getCachedTrendingRepos(platform)
 
                 if (cachedData != null && cachedData.repositories.isNotEmpty()) {
                     logger.debug("Using mirror cached data: ${cachedData.repositories.size} repos")
@@ -106,12 +110,15 @@ class HomeRepositoryImpl(
         }.flowOn(Dispatchers.IO)
 
     @OptIn(ExperimentalTime::class)
-    override fun getHotReleaseRepositories(page: Int): Flow<PaginatedDiscoveryRepositories> =
+    override fun getHotReleaseRepositories(
+        platform: HomePlatform,
+        page: Int,
+    ): Flow<PaginatedDiscoveryRepositories> =
         flow {
             if (page == 1) {
                 logger.debug("Attempting to load cached hot release repositories...")
 
-                val cachedData = cachedDataSource.getCachedHotReleaseRepos()
+                val cachedData = cachedDataSource.getCachedHotReleaseRepos(platform)
 
                 if (cachedData != null && cachedData.repositories.isNotEmpty()) {
                     logger.debug("Using mirror cached data: ${cachedData.repositories.size} repos")
@@ -158,12 +165,15 @@ class HomeRepositoryImpl(
         }.flowOn(Dispatchers.IO)
 
     @OptIn(ExperimentalTime::class)
-    override fun getMostPopular(page: Int): Flow<PaginatedDiscoveryRepositories> =
+    override fun getMostPopular(
+        platform: HomePlatform,
+        page: Int,
+    ): Flow<PaginatedDiscoveryRepositories> =
         flow {
             if (page == 1) {
                 logger.debug("Attempting to load cached most popular repositories...")
 
-                val cachedData = cachedDataSource.getCachedMostPopularRepos()
+                val cachedData = cachedDataSource.getCachedMostPopularRepos(platform)
 
                 if (cachedData != null && cachedData.repositories.isNotEmpty()) {
                     logger.debug("Using mirror cached data: ${cachedData.repositories.size} repos")

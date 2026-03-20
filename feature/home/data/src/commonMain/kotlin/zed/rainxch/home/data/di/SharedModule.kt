@@ -20,7 +20,6 @@ val homeModule =
 
         single<CachedRepositoriesDataSource> {
             CachedRepositoriesDataSourceImpl(
-                platform = get(),
                 logger = get(),
             )
         }
