@@ -70,6 +70,7 @@ import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
 import zed.rainxch.core.presentation.utils.toIcons
+import zed.rainxch.core.presentation.utils.toLabel
 import zed.rainxch.githubstore.core.presentation.res.*
 import zed.rainxch.home.domain.model.HomeCategory
 import zed.rainxch.home.presentation.components.LiquidGlassCategoryChips
@@ -429,15 +430,15 @@ private fun TopAppBar(
                         .clip(RoundedCornerShape(16.dp))
                         .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                         .clickable(onClick = onTogglePlatformPopup)
-                        .padding(vertical = 4.dp, horizontal = 12.dp),
+                        .padding(vertical = 4.dp, horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 icons.forEach { icon ->
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(18.dp),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }
@@ -501,10 +502,7 @@ private fun PlatformsPopup(
                         }
 
                         Text(
-                            text =
-                                platform.name
-                                    .lowercase()
-                                    .replaceFirstChar { it.uppercase() },
+                            text = platform.toLabel(),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onBackground,
