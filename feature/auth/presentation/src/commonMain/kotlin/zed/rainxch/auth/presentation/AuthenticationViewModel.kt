@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
@@ -108,18 +109,10 @@ class AuthenticationViewModel(
                 _events.trySend(AuthenticationEvents.OnNavigateToMain)
             }
 
-            AuthenticationAction.PollNow -> {
-                val loginState = _state.value.loginState
-                if (loginState is AuthLoginState.DevicePrompt && !_state.value.isPolling) {
-                    pollOnce(loginState.start.deviceCode)
-                }
-            }
-
-            AuthenticationAction.OnResumed -> {
-                val loginState = _state.value.loginState
-                if (loginState is AuthLoginState.DevicePrompt && !_state.value.isPolling) {
-                    pollOnce(loginState.start.deviceCode)
-                }
+            AuthenticationAction.PollNow,
+            AuthenticationAction.OnResumed,
+            -> {
+                tryPollIfReady()
             }
         }
     }
@@ -156,6 +149,13 @@ class AuthenticationViewModel(
                     )
                 }
             }
+    }
+
+    private fun tryPollIfReady() {
+        val loginState = _state.value.loginState
+        if (loginState is AuthLoginState.DevicePrompt && !_state.value.isPolling) {
+            pollOnce(loginState.start.deviceCode)
+        }
     }
 
     private fun startLogin() {
@@ -220,7 +220,7 @@ class AuthenticationViewModel(
         pollingJob?.cancel()
         pollingJob =
             viewModelScope.launch {
-                while (true) {
+                while (isActive) {
                     delay(POLL_INTERVAL_MS)
                     doPoll(deviceCode)
                 }
@@ -383,7 +383,8 @@ class AuthenticationViewModel(
                 )
 
                 _state.update {
-                    val currentRemaining = (it.loginState as? AuthLoginState.DevicePrompt)?.remainingSeconds ?: 0
+                    val currentRemaining =
+                        (it.loginState as? AuthLoginState.DevicePrompt)?.remainingSeconds ?: 0
 
                     it.copy(
                         loginState = AuthLoginState.DevicePrompt(start, currentRemaining),
@@ -393,7 +394,8 @@ class AuthenticationViewModel(
             } catch (e: Exception) {
                 logger.debug("Failed to copy to clipboard: ${e.message}")
                 _state.update {
-                    val currentRemaining = (it.loginState as? AuthLoginState.DevicePrompt)?.remainingSeconds ?: 0
+                    val currentRemaining =
+                        (it.loginState as? AuthLoginState.DevicePrompt)?.remainingSeconds ?: 0
 
                     it.copy(
                         loginState = AuthLoginState.DevicePrompt(start, currentRemaining),
