@@ -51,31 +51,65 @@ modules:
     build-commands:
       # Use local Gradle distribution (no network needed)
       - sed -i 's|distributionUrl=.*|distributionUrl=gradle-bin.zip|' gradle/wrapper/gradle-wrapper.properties
-      # Configure Gradle to use the offline Maven repository (pre-downloaded dependencies)
+      # Rewrite settings.gradle.kts files to use offline Maven repository
       - |
-        cat >> settings.gradle.kts << 'SETTINGS_EOF'
-        pluginManagement {
-            repositories.clear()
-            repositories {
-                maven { url = uri("/run/build/githubstore/offline-repository") }
-                gradlePluginPortal()
-            }
-        }
-        dependencyResolutionManagement {
-            repositories.clear()
-            repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-            repositories {
-                maven { url = uri("/run/build/githubstore/offline-repository") }
-            }
-        }
-        SETTINGS_EOF
+        python3 -c "
+        # 1. Rewrite root settings.gradle.kts
+        lines = open('settings.gradle.kts').readlines()
+        includes = [l for l in lines if l.strip().startswith('include(')]
+        with open('settings.gradle.kts', 'w') as f:
+            f.write('rootProject.name = \"GithubStore\"\n')
+            f.write('enableFeaturePreview(\"TYPESAFE_PROJECT_ACCESSORS\")\n\n')
+            f.write('pluginManagement {\n')
+            f.write('    includeBuild(\"build-logic\")\n')
+            f.write('    repositories {\n')
+            f.write('        maven { url = uri(\"/run/build/githubstore/offline-repository\") }\n')
+            f.write('        gradlePluginPortal()\n')
+            f.write('    }\n')
+            f.write('}\n\n')
+            f.write('dependencyResolutionManagement {\n')
+            f.write('    repositories {\n')
+            f.write('        maven { url = uri(\"/run/build/githubstore/offline-repository\") }\n')
+            f.write('    }\n')
+            f.write('}\n\n')
+            f.write('plugins {\n')
+            f.write('    id(\"org.gradle.toolchains.foojay-resolver-convention\") version \"1.0.0\"\n')
+            f.write('}\n\n')
+            for inc in includes:
+                f.write(inc)
+        print('Rewrote root settings.gradle.kts for offline build')
+
+        # 2. Rewrite build-logic/settings.gradle.kts
+        with open('build-logic/settings.gradle.kts', 'w') as f:
+            f.write('@file:Suppress(\"UnstableApiUsage\")\n\n')
+            f.write('rootProject.name = \"build-logic\"\n\n')
+            f.write('pluginManagement {\n')
+            f.write('    repositories {\n')
+            f.write('        maven { url = uri(\"/run/build/githubstore/offline-repository\") }\n')
+            f.write('        gradlePluginPortal()\n')
+            f.write('    }\n')
+            f.write('}\n\n')
+            f.write('dependencyResolutionManagement {\n')
+            f.write('    repositories {\n')
+            f.write('        maven { url = uri(\"/run/build/githubstore/offline-repository\") }\n')
+            f.write('        gradlePluginPortal()\n')
+            f.write('    }\n\n')
+            f.write('    versionCatalogs {\n')
+            f.write('        create(\"libs\") {\n')
+            f.write('            from(files(\"../gradle/libs.versions.toml\"))\n')
+            f.write('        }\n')
+            f.write('    }\n')
+            f.write('}\n\n')
+            f.write('include(\":convention\")\n')
+        print('Rewrote build-logic/settings.gradle.kts for offline build')
+        "
       # Disable Android targets (no Android SDK in Flatpak sandbox)
       - bash packaging/flatpak/disable-android-for-flatpak.sh
-      # Build uber JAR (fully offline — all deps from offline-repository)
+      # Build uber JAR — all deps resolved from offline-repository (local file:// Maven repo,
+      # no network needed even without --offline flag since sandbox has no network access)
       - ./gradlew :composeApp:packageUberJarForCurrentOS
           --no-daemon
           --no-configuration-cache
-          --offline
           -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=2g"
           -Dorg.gradle.parallel=false
       # Install the JAR
@@ -93,9 +127,12 @@ modules:
       - install -Dm644 composeApp/src/jvmMain/resources/logo/app_icon.png
           /app/share/icons/hicolor/512x512/apps/zed.rainxch.githubstore.png
     sources:
-      - type: git
-        url: https://github.com/OpenHub-Store/GitHub-Store.git
-        tag: 1.6.2
+      # NOTE: For Flathub submission, switch this to:
+      #   type: git
+      #   url: https://github.com/OpenHub-Store/GitHub-Store.git
+      #   tag: <release-tag>
+      - type: dir
+        path: ../../
       # Gradle distribution (referenced by gradle-wrapper.properties after sed patch)
       - type: file
         url: https://services.gradle.org/distributions/gradle-8.14.3-bin.zip
