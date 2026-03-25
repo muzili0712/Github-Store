@@ -440,6 +440,7 @@
     <string name="auth_hint_denied">আপনি অনুমোদনের অনুরোধ প্রত্যাখ্যান করেছেন। এটি অনিচ্ছাকৃত হলে আবার চেষ্টা করুন।</string>
     <string name="auth_check_status">আমি ইতিমধ্যেই অনুমোদন করেছি</string>
     <string name="auth_polling_status">যাচাই করা হচ্ছে…</string>
+    <string name="auth_rate_limited">অনুরোধ সীমাবদ্ধ — %1$d সেকেন্ডে পুনরায় চেষ্টা করা হবে</string>
 
     <!-- Read More / Show Less -->
     <string name="read_more">আরও পড়ুন</string>

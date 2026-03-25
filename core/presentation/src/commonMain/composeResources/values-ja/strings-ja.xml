@@ -405,6 +405,7 @@
     <string name="auth_hint_denied">認証リクエストを拒否しました。意図しない場合は再試行してください。</string>
     <string name="auth_check_status">すでに認証しました</string>
     <string name="auth_polling_status">確認中…</string>
+    <string name="auth_rate_limited">レート制限に達しました — %1$d秒後に再試行</string>
 
     <!-- Read More / Show Less -->
     <string name="read_more">もっと読む</string>

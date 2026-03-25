@@ -439,6 +439,7 @@
     <string name="auth_hint_denied">आपने प्राधिकरण अनुरोध अस्वीकार कर दिया। यदि यह अनजाने में हुआ तो पुनः प्रयास करें।</string>
     <string name="auth_check_status">मैं पहले ही अनुमति दे चुका हूँ</string>
     <string name="auth_polling_status">जाँच की जा रही है…</string>
+    <string name="auth_rate_limited">दर सीमा पार — %1$d सेकंड में पुनः प्रयास</string>
 
     <!-- Read More / Show Less -->
     <string name="read_more">और पढ़ें</string>

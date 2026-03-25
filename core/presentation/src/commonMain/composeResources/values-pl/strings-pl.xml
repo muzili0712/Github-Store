@@ -403,6 +403,7 @@
     <string name="auth_hint_denied">Odrzuciłeś żądanie autoryzacji. Spróbuj ponownie, jeśli było to niezamierzone.</string>
     <string name="auth_check_status">Już autoryzowałem</string>
     <string name="auth_polling_status">Sprawdzanie…</string>
+    <string name="auth_rate_limited">Osiągnięto limit — ponowna próba za %1$d s</string>
 
     <!-- Read More / Show Less -->
     <string name="read_more">Czytaj więcej</string>

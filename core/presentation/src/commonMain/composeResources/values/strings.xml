@@ -597,6 +597,9 @@
     <string name="liquid_glass_option_title">Liquid Glass Effect</string>
     <string name="liquid_glass_option_description">Enhance the interface with a smooth glass-like appearance</string>
 
+    <string name="scrollbar_option_title">Scrollbar</string>
+    <string name="scrollbar_option_description">Show scrollbar on scrollable lists (desktop)</string>
+
     <string name="hide_seen_title">Hide Seen Repositories</string>
     <string name="hide_seen_description">Hide repositories you have already viewed from discovery feeds</string>
     <string name="clear_seen_history">Clear Seen History</string>

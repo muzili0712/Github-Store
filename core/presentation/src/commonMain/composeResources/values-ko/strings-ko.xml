@@ -438,6 +438,7 @@
     <string name="auth_hint_denied">인증 요청을 거부했습니다. 의도하지 않은 경우 다시 시도하세요.</string>
     <string name="auth_check_status">이미 인증했습니다</string>
     <string name="auth_polling_status">확인 중…</string>
+    <string name="auth_rate_limited">요청 제한 초과 — %1$d초 후 다시 시도</string>
 
     <!-- Read More / Show Less -->
     <string name="read_more">더 보기</string>

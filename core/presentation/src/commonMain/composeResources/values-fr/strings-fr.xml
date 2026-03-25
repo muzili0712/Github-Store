@@ -405,6 +405,7 @@
     <string name="auth_hint_denied">Vous avez refusé la demande d\'autorisation. Réessayez si c\'était involontaire.</string>
     <string name="auth_check_status">J’ai déjà autorisé</string>
     <string name="auth_polling_status">Vérification…</string>
+    <string name="auth_rate_limited">Limite atteinte — nouvelle tentative dans %1$d s</string>
 
     <!-- Read More / Show Less -->
     <string name="read_more">Lire la suite</string>

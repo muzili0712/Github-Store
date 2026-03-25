@@ -406,6 +406,7 @@
     <string name="auth_hint_denied">您拒绝了授权请求。如果是误操作，请重试。</string>
     <string name="auth_check_status">我已经授权</string>
     <string name="auth_polling_status">正在检查…</string>
+    <string name="auth_rate_limited">请求过于频繁 — 将在 %1$d 秒后重试</string>
 
     <!-- Read More / Show Less -->
     <string name="read_more">阅读更多</string>
