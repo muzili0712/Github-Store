@@ -1,20 +1,21 @@
 package zed.rainxch.core.data.services
 
 import android.content.Context
+import android.os.Environment
 import java.io.File
 
 class AndroidFileLocationsProvider(
     private val context: Context,
 ) : zed.rainxch.core.data.services.FileLocationsProvider {
     override fun appDownloadsDir(): String {
-        val externalFilesRoot = context.getExternalFilesDir(null)
-        val dir = File(externalFilesRoot, "ghs_downloads")
+        val publicDownloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val dir = File(publicDownloads, "GitHub Store")
         if (!dir.exists()) dir.mkdirs()
         return dir.absolutePath
     }
 
     override fun userDownloadsDir(): String {
-        return "" // No-op
+        return appDownloadsDir()
     }
 
     override fun setExecutableIfNeeded(path: String) {
