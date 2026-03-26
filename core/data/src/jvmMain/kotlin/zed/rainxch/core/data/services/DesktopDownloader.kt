@@ -197,8 +197,6 @@ class DesktopDownloader(
     override suspend fun cancelDownload(fileName: String): Boolean =
         withContext(Dispatchers.IO) {
             var cancelled = false
-            var deleted = false
-
             val downloadId = nameToId[fileName]
             if (downloadId != null) {
                 activeDownloads[downloadId]?.let { call ->
@@ -209,14 +207,17 @@ class DesktopDownloader(
                 }
                 activeDownloads.remove(downloadId)
                 nameToId.remove(fileName)
+
+                // Only delete the file if we cancelled an active download (incomplete file)
+                if (cancelled) {
+                    val file = File(files.userDownloadsDir(), fileName)
+                    if (file.exists()) {
+                        file.delete()
+                    }
+                }
             }
 
-            val file = File(files.userDownloadsDir(), fileName)
-            if (file.exists()) {
-                deleted = file.delete()
-            }
-
-            cancelled || deleted
+            cancelled
         }
 
     companion object {

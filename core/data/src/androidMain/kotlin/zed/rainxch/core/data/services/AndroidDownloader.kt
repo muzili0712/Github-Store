@@ -210,7 +210,6 @@ class AndroidDownloader(
     override suspend fun cancelDownload(fileName: String): Boolean =
         withContext(Dispatchers.IO) {
             var cancelled = false
-            var deleted = false
 
             val downloadId = activeFileNames[fileName]
             if (downloadId != null) {
@@ -222,13 +221,16 @@ class AndroidDownloader(
                     activeDownloads.remove(downloadId)
                 }
                 activeFileNames.remove(fileName)
+
+                // Only delete the file if we cancelled an active download (incomplete file)
+                if (cancelled) {
+                    val file = File(files.appDownloadsDir(), fileName)
+                    if (file.exists()) {
+                        file.delete()
+                    }
+                }
             }
 
-            val file = File(files.appDownloadsDir(), fileName)
-            if (file.exists()) {
-                deleted = file.delete()
-            }
-
-            cancelled || deleted
+            cancelled
         }
 }
