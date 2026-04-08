@@ -80,6 +80,20 @@ Zero Material3. Full ownership. Beautiful by default.
 
 ---
 
+<div align="center">
+
+### 🎨 Powering the icons
+
+The next GitHub Store will use
+**[RikkaIcons](https://github.com/ArkPackages/RikkaIcons)** — semantic icon tokens for Compose Multiplatform.
+One API, any icon pack. Swap your entire icon set in one line.
+
+**[Browse the library →](https://github.com/ArkPackages/RikkaIcons)**
+
+</div>
+
+---
+
 <div align="center"><a href="https://github.com/Safouene1/support-palestine-banner/blob/master/Markdown-pages/Support.md"><img src="https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/banner-project.svg" alt="Support Palestine" style="width: 100%;"></a></div>
 
 > [!CAUTION]
