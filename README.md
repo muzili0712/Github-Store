@@ -94,7 +94,11 @@ One API, any icon pack. Swap your entire icon set in one line.
 
 ---
 
+</br> 
+
 <div align="center"><a href="https://github.com/Safouene1/support-palestine-banner/blob/master/Markdown-pages/Support.md"><img src="https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/banner-project.svg" alt="Support Palestine" style="width: 100%;"></a></div>
+
+</br> 
 
 > [!CAUTION]
 > Free and Open-Source Android is under threat. Google will turn Android into a locked-down platform, restricting your essential freedom to install apps of your choice. Make your voice heard – [keepandroidopen.org](https://keepandroidopen.org/).
@@ -349,30 +353,18 @@ Sync the project and run the app. You should now be able to sign in with GitHub.
 
 ---
 
-## ☕ Support the project
+## 💼 Business Inquiries
 
-GitHub Store is built and maintained by a high school student. Your support helps him:
+GitHub Store is open to partnerships, sponsorships, and integrations.
 
-✅ **Keep the app bug-free** — respond to issues and ship fixes quickly  
-✅ **Add community-requested features** — implement what users actually need  
+If you're interested in working together, reach out:
 
-### 💖 Ways to Support
+📧 **Email:** rainxch.dev@email.com
+💬 **Discord:** [Join our community](https://discord.gg/x9Cvh2Z9qS)
 
-<a href="https://www.buymeacoffee.com/rainxchzed">
-  <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-☕%20$3-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee">
-</a>
+---
 
-<a href="https://github.com/sponsors/rainxchzed">
-  <img src="https://img.shields.io/badge/GitHub%20Sponsors-💖%20Monthly-pink?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Sponsors">
-</a>
-
-**Can't sponsor right now?** That's okay! You can still help by:
-- ⭐ **Starring this repo** — helps others discover GitHub Store
-- 🐛 **Reporting bugs** — makes the app better for everyone
-- 📢 **Sharing with friends** — spread the word to other developers and tech and non-tech buddies!
-- 💬 **Joining our [Discord](https://discord.gg/x9Cvh2Z9qS)** — your feedback shapes the roadmap
-
-Every bit of support—financial or not—means the world and keeps this project alive. Thank you!
+⭐ **Like GitHub Store?** Star this repo to help others discover it.
 
 ---
 
