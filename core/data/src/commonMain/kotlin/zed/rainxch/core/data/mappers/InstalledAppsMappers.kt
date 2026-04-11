@@ -40,6 +40,8 @@ fun InstalledApp.toEntity(): InstalledAppEntity =
         includePreReleases = includePreReleases,
         assetFilterRegex = assetFilterRegex,
         fallbackToOlderReleases = fallbackToOlderReleases,
+        preferredAssetVariant = preferredAssetVariant,
+        preferredVariantStale = preferredVariantStale,
     )
 
 fun InstalledAppEntity.toDomain(): InstalledApp =
@@ -79,4 +81,6 @@ fun InstalledAppEntity.toDomain(): InstalledApp =
         includePreReleases = includePreReleases,
         assetFilterRegex = assetFilterRegex,
         fallbackToOlderReleases = fallbackToOlderReleases,
+        preferredAssetVariant = preferredAssetVariant,
+        preferredVariantStale = preferredVariantStale,
     )

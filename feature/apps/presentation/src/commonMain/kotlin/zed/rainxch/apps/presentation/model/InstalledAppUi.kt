@@ -38,4 +38,6 @@ data class InstalledAppUi(
     val includePreReleases: Boolean = false,
     val assetFilterRegex: String? = null,
     val fallbackToOlderReleases: Boolean = false,
+    val preferredAssetVariant: String? = null,
+    val preferredVariantStale: Boolean = false,
 )

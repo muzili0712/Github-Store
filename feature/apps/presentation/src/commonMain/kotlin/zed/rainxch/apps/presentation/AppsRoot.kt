@@ -88,6 +88,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import zed.rainxch.apps.presentation.components.AdvancedAppSettingsBottomSheet
 import zed.rainxch.apps.presentation.components.InstalledAppIcon
 import zed.rainxch.apps.presentation.components.LinkAppBottomSheet
+import zed.rainxch.apps.presentation.components.VariantPickerDialog
 import zed.rainxch.apps.presentation.model.AppItem
 import zed.rainxch.apps.presentation.model.AppSortRule
 import zed.rainxch.apps.presentation.model.UpdateAllProgress
@@ -102,6 +103,8 @@ import zed.rainxch.core.presentation.utils.ObserveAsEvents
 import zed.rainxch.githubstore.core.presentation.res.Res
 import zed.rainxch.githubstore.core.presentation.res.add_by_link
 import zed.rainxch.githubstore.core.presentation.res.advanced_settings_open
+import zed.rainxch.githubstore.core.presentation.res.variant_label_inline
+import zed.rainxch.githubstore.core.presentation.res.variant_stale_hint
 import zed.rainxch.githubstore.core.presentation.res.cancel
 import zed.rainxch.githubstore.core.presentation.res.check_for_updates
 import zed.rainxch.githubstore.core.presentation.res.checking
@@ -332,6 +335,14 @@ fun AppsScreen(
         // Per-app advanced settings (monorepo filter / fallback)
         if (state.advancedSettingsApp != null) {
             AdvancedAppSettingsBottomSheet(
+                state = state,
+                onAction = onAction,
+            )
+        }
+
+        // Variant picker dialog (shown for stale variants or explicit picks)
+        if (state.variantPickerApp != null) {
+            VariantPickerDialog(
                 state = state,
                 onAction = onAction,
             )
@@ -688,6 +699,18 @@ fun AppItemCard(
                             )
                         }
 
+                        app.preferredVariantStale -> {
+                            // Tap-to-fix label: route through the same OnUpdateApp
+                            // intercept that would have opened the picker anyway,
+                            // but also surface a tappable hint here for users
+                            // who notice the warning before tapping Update.
+                            Text(
+                                text = stringResource(Res.string.variant_stale_hint),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                        }
+
                         app.isUpdateAvailable -> {
                             Text(
                                 text =
@@ -700,6 +723,20 @@ fun AppItemCard(
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.primary,
                             )
+                            // Show the pinned variant tag inline so users can
+                            // see at a glance which APK they'll get when they
+                            // tap Update.
+                            if (!app.preferredAssetVariant.isNullOrBlank()) {
+                                Text(
+                                    text =
+                                        stringResource(
+                                            Res.string.variant_label_inline,
+                                            app.preferredAssetVariant,
+                                        ),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                         }
 
                         else -> {

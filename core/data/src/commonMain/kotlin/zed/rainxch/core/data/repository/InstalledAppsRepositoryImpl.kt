@@ -28,6 +28,7 @@ import zed.rainxch.core.domain.repository.InstalledAppsRepository
 import zed.rainxch.core.domain.repository.MatchingPreview
 import zed.rainxch.core.domain.system.Installer
 import zed.rainxch.core.domain.util.AssetFilter
+import zed.rainxch.core.domain.util.AssetVariant
 
 class InstalledAppsRepositoryImpl(
     private val database: AppDatabase,
@@ -132,18 +133,28 @@ class InstalledAppsRepositoryImpl(
      * Result of [resolveTrackedRelease] — a candidate release plus the asset
      * the installer should download for it. `null` when no release in the
      * window contains a usable asset (after filter + arch matching).
+     *
+     * [variantWasLost] is true when the user has a [InstalledApp.preferredAssetVariant]
+     * set but none of this release's assets matched it. The caller flips
+     * `preferredVariantStale` based on this so the UI can prompt the user
+     * to pick a new variant.
      */
     private data class ResolvedRelease(
         val release: GithubRelease,
         val primaryAsset: GithubAsset,
+        val variantWasLost: Boolean,
     )
 
     /**
      * Walks [releases] (already in newest-first order) and returns the first
      * release whose installable asset list — after applying [filter] — yields
-     * a primary asset for the current architecture. When [filter] is null,
-     * only the first release in the window is considered: this preserves the
-     * pre-existing behaviour for apps that don't track a monorepo.
+     * a usable asset. The picker tries, in order:
+     *   1. The user's [preferredVariant] (if set)
+     *   2. The platform installer's architecture-aware auto-pick
+     *
+     * When [filter] is null, only the first release in the window is
+     * considered: this preserves the pre-existing behaviour for apps that
+     * don't track a monorepo.
      *
      * When [filter] is non-null and [fallbackToOlderReleases] is false, the
      * walker still only inspects the first release. The semantics are:
@@ -155,6 +166,7 @@ class InstalledAppsRepositoryImpl(
         releases: List<GithubRelease>,
         filter: AssetFilter?,
         fallbackToOlderReleases: Boolean,
+        preferredVariant: String?,
     ): ResolvedRelease? {
         if (releases.isEmpty()) return null
 
@@ -173,8 +185,20 @@ class InstalledAppsRepositoryImpl(
                 else installableForPlatform.filter { filter.matches(it.name) }
 
             if (installableForApp.isEmpty()) continue
-            val primary = installer.choosePrimaryAsset(installableForApp) ?: continue
-            return ResolvedRelease(release, primary)
+
+            // Variant resolution: try the user's pinned variant first.
+            // Falling back to the auto-picker is intentional — we'd
+            // rather hand the user a working install than block updates,
+            // and the caller will mark `variantWasLost` so the UI can
+            // surface the discrepancy.
+            val variantMatch =
+                AssetVariant.resolvePreferredAsset(installableForApp, preferredVariant)
+            val primary = variantMatch
+                ?: installer.choosePrimaryAsset(installableForApp)
+                ?: continue
+            val variantWasLost = preferredVariant != null && variantMatch == null
+
+            return ResolvedRelease(release, primary, variantWasLost)
         }
 
         return null
@@ -216,6 +240,7 @@ class InstalledAppsRepositoryImpl(
                     releases = releases,
                     filter = compiledFilter,
                     fallbackToOlderReleases = app.fallbackToOlderReleases,
+                    preferredVariant = app.preferredAssetVariant,
                 )
 
             if (resolved == null) {
@@ -230,7 +255,7 @@ class InstalledAppsRepositoryImpl(
                 return false
             }
 
-            val (matchedRelease, primaryAsset) = resolved
+            val (matchedRelease, primaryAsset, variantWasLost) = resolved
             val normalizedInstalledTag = normalizeVersion(app.installedVersion)
             val normalizedLatestTag = normalizeVersion(matchedRelease.tagName)
 
@@ -246,7 +271,7 @@ class InstalledAppsRepositoryImpl(
                     "installedTag=${app.installedVersion}, " +
                     "matchedTag=${matchedRelease.tagName}, " +
                     "matchedAsset=${primaryAsset.name}, " +
-                    "isUpdate=$isUpdateAvailable"
+                    "isUpdate=$isUpdateAvailable, variantLost=$variantWasLost"
             }
 
             installedAppsDao.updateVersionInfo(
@@ -262,6 +287,14 @@ class InstalledAppsRepositoryImpl(
                 latestVersionCode = null,
                 latestReleasePublishedAt = matchedRelease.publishedAt,
             )
+
+            // Sync the staleness flag with what the resolver actually
+            // observed: flip on when the user's pinned variant has
+            // disappeared from the latest matching release, flip off
+            // (and only when previously set) when it's back in business.
+            if (variantWasLost != app.preferredVariantStale) {
+                installedAppsDao.updateVariantStaleness(packageName, variantWasLost)
+            }
 
             return isUpdateAvailable
         } catch (e: Exception) {
@@ -377,6 +410,31 @@ class InstalledAppsRepositoryImpl(
         } catch (e: Exception) {
             Logger.w {
                 "Saved new asset filter for $packageName but immediate " +
+                    "re-check failed: ${e.message}"
+            }
+        }
+    }
+
+    override suspend fun setPreferredVariant(
+        packageName: String,
+        variant: String?,
+    ) {
+        val normalized = variant?.trim()?.takeIf { it.isNotEmpty() }
+        installedAppsDao.updatePreferredVariant(
+            packageName = packageName,
+            variant = normalized,
+        )
+
+        // Re-run the update check so cached `latestAsset*` columns point
+        // at the variant the user just chose. Failures here are
+        // non-fatal: persistence is the authoritative step.
+        try {
+            checkForUpdates(packageName)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Logger.w {
+                "Saved new variant for $packageName but immediate " +
                     "re-check failed: ${e.message}"
             }
         }

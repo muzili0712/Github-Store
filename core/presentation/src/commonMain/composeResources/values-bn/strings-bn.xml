@@ -657,4 +657,18 @@
         <item quantity="one">%1$s-এ মিলেছে · %2$d অ্যাসেট</item>
         <item quantity="other">%1$s-এ মিলেছে · %2$d অ্যাসেট</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">পছন্দের ভ্যারিয়েন্ট</string>
+    <string name="variant_picker_description">আপডেটের জন্য কোন APK ভ্যারিয়েন্ট ইনস্টল হবে তা বেছে নিন। পছন্দ রিলিজ জুড়ে মনে রাখা হয়।</string>
+    <string name="variant_picker_no_assets">সর্বশেষ রিলিজে কোনো ইনস্টলযোগ্য অ্যাসেট নেই।</string>
+    <string name="variant_picker_load_failed">ভ্যারিয়েন্ট লোড করা যায়নি। আপনার সংযোগ যাচাই করে আবার চেষ্টা করুন।</string>
+    <string name="variant_picker_save_failed">আপনার পছন্দ সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।</string>
+    <string name="variant_picker_stale_title">ভ্যারিয়েন্ট পরিবর্তিত — আবার বেছে নিন</string>
+    <string name="variant_picker_stale_was">ছিল: %1$s</string>
+    <string name="variant_picker_auto_title">স্বয়ংক্রিয়</string>
+    <string name="variant_picker_auto_subtitle">GitHub Store-কে আপনার ডিভাইসের জন্য সেরা ভ্যারিয়েন্ট বাছাই করতে দিন</string>
+    <string name="variant_picker_pinned">পিন করা: %1$s</string>
+    <string name="variant_stale_hint">ভ্যারিয়েন্ট পরিবর্তিত — আবার বাছাই করতে আপডেট ট্যাপ করুন</string>
+    <string name="variant_label_inline">ভ্যারিয়েন্ট: %1$s</string>
 </resources>

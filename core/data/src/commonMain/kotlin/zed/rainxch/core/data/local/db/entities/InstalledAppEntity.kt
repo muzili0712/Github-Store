@@ -52,4 +52,24 @@ data class InstalledAppEntity(
      * monorepos where the latest release is for a *different* app.
      */
     val fallbackToOlderReleases: Boolean = false,
+    /**
+     * Stable identifier for the asset variant the user wants to track —
+     * for example `arm64-v8a`, `universal`, or `x86_64`. Derived from the
+     * picked asset filename by stripping the version segment, so it
+     * survives release-to-release version bumps.
+     *
+     * `null` means "use the platform installer's automatic picker"
+     * (today's behaviour). When non-null, [checkForUpdates] resolves the
+     * matching asset on every check; if no asset in the new release
+     * matches the variant, [preferredVariantStale] is flipped to true.
+     */
+    val preferredAssetVariant: String? = null,
+    /**
+     * Set to true by the update checker when the persisted
+     * [preferredAssetVariant] cannot be found in the latest release's
+     * assets — typically because the maintainer renamed or restructured
+     * the artefacts. The UI surfaces this with a "variant changed —
+     * pick again" prompt and clears it once the user picks a new variant.
+     */
+    val preferredVariantStale: Boolean = false,
 )

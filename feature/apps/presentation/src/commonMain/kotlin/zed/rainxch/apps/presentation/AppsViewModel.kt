@@ -36,6 +36,7 @@ import zed.rainxch.core.domain.repository.TweaksRepository
 import zed.rainxch.core.domain.system.Installer
 import zed.rainxch.core.domain.use_cases.SyncInstalledAppsUseCase
 import zed.rainxch.core.domain.util.AssetFilter
+import zed.rainxch.core.domain.util.AssetVariant
 import zed.rainxch.core.domain.utils.ShareManager
 import zed.rainxch.githubstore.core.presentation.res.*
 import java.io.File
@@ -213,7 +214,15 @@ class AppsViewModel(
             }
 
             is AppsAction.OnUpdateApp -> {
-                updateSingleApp(action.app)
+                // If the app's pinned variant has gone missing in the
+                // latest release we don't know what to download — open
+                // the picker first and resume the update after the user
+                // chooses. Saves them from a wrong-variant install.
+                if (action.app.preferredVariantStale) {
+                    openVariantPicker(action.app, resumeUpdateAfterPick = true)
+                } else {
+                    updateSingleApp(action.app)
+                }
             }
 
             is AppsAction.OnCancelUpdate -> {
@@ -377,6 +386,31 @@ class AppsViewModel(
 
             AppsAction.OnAdvancedRefreshPreview -> {
                 refreshAdvancedPreview()
+            }
+
+            is AppsAction.OnOpenVariantPicker -> {
+                openVariantPicker(action.app, action.resumeUpdateAfterPick)
+            }
+
+            AppsAction.OnDismissVariantPicker -> {
+                _state.update {
+                    it.copy(
+                        variantPickerApp = null,
+                        variantPickerOptions = persistentListOf(),
+                        variantPickerCurrentVariant = null,
+                        variantPickerError = null,
+                        variantPickerLoading = false,
+                        variantPickerResumeUpdateAfterPick = false,
+                    )
+                }
+            }
+
+            is AppsAction.OnVariantSelected -> {
+                saveVariantSelection(action.variant)
+            }
+
+            AppsAction.OnResetVariantToAuto -> {
+                saveVariantSelection(null)
             }
 
             AppsAction.OnExportApps -> {
@@ -565,6 +599,113 @@ class AppsViewModel(
             }
     }
 
+    /**
+     * Opens the variant picker for [app]. Fetches the current latest
+     * matching release (honouring the per-app filter / fallback) so the
+     * dialog can show real, current asset names — not the cached ones
+     * which might be stale or wrong. When [resumeUpdateAfterPick] is
+     * true, dispatch the update flow as soon as the user picks.
+     */
+    private fun openVariantPicker(
+        app: InstalledAppUi,
+        resumeUpdateAfterPick: Boolean,
+    ) {
+        _state.update {
+            it.copy(
+                variantPickerApp = app,
+                variantPickerLoading = true,
+                variantPickerOptions = persistentListOf(),
+                variantPickerCurrentVariant = app.preferredAssetVariant,
+                variantPickerError = null,
+                variantPickerResumeUpdateAfterPick = resumeUpdateAfterPick,
+            )
+        }
+        viewModelScope.launch {
+            try {
+                val preview =
+                    installedAppsRepository.previewMatchingAssets(
+                        owner = app.repoOwner,
+                        repo = app.repoName,
+                        regex = app.assetFilterRegex,
+                        includePreReleases = app.includePreReleases,
+                        fallbackToOlderReleases = app.fallbackToOlderReleases,
+                    )
+                _state.update {
+                    it.copy(
+                        variantPickerLoading = false,
+                        variantPickerOptions =
+                            preview.matchedAssets
+                                .map { asset -> asset.toUi() }
+                                .toImmutableList(),
+                        variantPickerError =
+                            if (preview.matchedAssets.isEmpty()) "no_assets" else null,
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logger.error("Failed to load variant picker for ${app.packageName}: ${e.message}")
+                _state.update {
+                    it.copy(
+                        variantPickerLoading = false,
+                        variantPickerError = "load_failed",
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * Persists the user's variant pick (or null to reset to auto),
+     * dismisses the dialog, and — if the picker was opened from a "tap
+     * Update on stale variant" flow — kicks the update off automatically
+     * with the freshly-resolved cached fields.
+     */
+    private fun saveVariantSelection(variant: String?) {
+        val app = _state.value.variantPickerApp ?: return
+        val resume = _state.value.variantPickerResumeUpdateAfterPick
+
+        viewModelScope.launch {
+            try {
+                installedAppsRepository.setPreferredVariant(
+                    packageName = app.packageName,
+                    variant = variant,
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logger.error("Failed to save preferred variant for ${app.packageName}: ${e.message}")
+                _state.update { it.copy(variantPickerError = "save_failed") }
+                return@launch
+            }
+
+            // Dismiss the dialog regardless of whether we resume.
+            _state.update {
+                it.copy(
+                    variantPickerApp = null,
+                    variantPickerOptions = persistentListOf(),
+                    variantPickerCurrentVariant = null,
+                    variantPickerError = null,
+                    variantPickerLoading = false,
+                    variantPickerResumeUpdateAfterPick = false,
+                )
+            }
+
+            if (resume) {
+                // Pick up the freshly-checked InstalledAppUi (the
+                // setPreferredVariant flow already re-ran checkForUpdates)
+                // and kick off the update with the new variant.
+                val refreshed =
+                    _state.value.apps
+                        .firstOrNull { it.installedApp.packageName == app.packageName }
+                        ?.installedApp
+                if (refreshed != null) {
+                    updateSingleApp(refreshed)
+                }
+            }
+        }
+    }
+
     private fun saveAdvancedSettings() {
         val app = _state.value.advancedSettingsApp ?: return
         val draftFilter = _state.value.advancedFilterDraft.trim()
@@ -698,8 +839,21 @@ class AppsViewModel(
                         throw IllegalStateException("No installable assets found for this platform")
                     }
 
+                    // Honour the user's pinned variant first; fall back to
+                    // the platform installer's auto-pick if the variant
+                    // isn't present in this release. The auto-pick
+                    // intentionally never throws here — checkForUpdates
+                    // already flipped `preferredVariantStale=true` and the
+                    // earlier intercept (see updateSingleApp entrypoint)
+                    // would have routed us to the picker dialog instead.
+                    val variantMatch =
+                        AssetVariant.resolvePreferredAsset(
+                            assets = installableAssets,
+                            preferredVariant = app.preferredAssetVariant,
+                        )
                     val primaryAsset =
-                        installer.choosePrimaryAsset(installableAssets)
+                        variantMatch
+                            ?: installer.choosePrimaryAsset(installableAssets)
                             ?: throw IllegalStateException("Could not determine primary asset")
 
                     logger.debug(
@@ -1335,6 +1489,8 @@ class AppsViewModel(
                     repoInfo = repoInfo.toDomain(),
                     assetFilterRegex = _state.value.linkAssetFilter.takeIf { it.isNotBlank() },
                     fallbackToOlderReleases = _state.value.linkFallbackToOlder,
+                    pickedAssetName = asset.name,
+                    pickedAssetSiblingCount = _state.value.linkInstallableAssets.size,
                 )
                     _state.update {
                         it.copy(
@@ -1392,6 +1548,8 @@ class AppsViewModel(
                     repoInfo = repoInfo.toDomain(),
                     assetFilterRegex = _state.value.linkAssetFilter.takeIf { it.isNotBlank() },
                     fallbackToOlderReleases = _state.value.linkFallbackToOlder,
+                    pickedAssetName = asset.name,
+                    pickedAssetSiblingCount = _state.value.linkInstallableAssets.size,
                 )
                 _state.update {
                     it.copy(

@@ -88,6 +88,42 @@ interface InstalledAppDao {
         fallback: Boolean,
     )
 
+    /**
+     * Sets the user's preferred asset variant. Always clears the
+     * "stale" flag in the same write because the user has just made an
+     * explicit choice — whatever was stored before is no longer stale,
+     * even if the new variant is the same value.
+     */
+    @Query(
+        """
+        UPDATE installed_apps
+           SET preferredAssetVariant = :variant,
+               preferredVariantStale = 0
+         WHERE packageName = :packageName
+        """,
+    )
+    suspend fun updatePreferredVariant(
+        packageName: String,
+        variant: String?,
+    )
+
+    /**
+     * Sets `preferredVariantStale` for [packageName]. Used by
+     * `checkForUpdates` when the persisted variant cannot be matched
+     * against the assets in a fresh release.
+     */
+    @Query(
+        """
+        UPDATE installed_apps
+           SET preferredVariantStale = :stale
+         WHERE packageName = :packageName
+        """,
+    )
+    suspend fun updateVariantStaleness(
+        packageName: String,
+        stale: Boolean,
+    )
+
     @Query("UPDATE installed_apps SET lastCheckedAt = :timestamp WHERE packageName = :packageName")
     suspend fun updateLastChecked(
         packageName: String,

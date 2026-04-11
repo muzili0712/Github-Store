@@ -78,6 +78,15 @@ sealed interface AppsAction {
     data object OnAdvancedClearFilter : AppsAction
     data object OnAdvancedRefreshPreview : AppsAction
 
+    // Variant picker dialog (preferred APK variant)
+    data class OnOpenVariantPicker(
+        val app: InstalledAppUi,
+        val resumeUpdateAfterPick: Boolean = false,
+    ) : AppsAction
+    data object OnDismissVariantPicker : AppsAction
+    data class OnVariantSelected(val variant: String?) : AppsAction
+    data object OnResetVariantToAuto : AppsAction
+
     // Export/Import
     data object OnExportApps : AppsAction
     data object OnImportApps : AppsAction

@@ -655,4 +655,18 @@
         <item quantity="one">%1$s sürümünde eşleşti · %2$d varlık</item>
         <item quantity="other">%1$s sürümünde eşleşti · %2$d varlık</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">Tercih edilen varyant</string>
+    <string name="variant_picker_description">Güncellemeler için hangi APK varyantının yüklenmesini istediğinizi seçin. Seçim sürümler arası hatırlanır.</string>
+    <string name="variant_picker_no_assets">En son sürümde yüklenebilir varlık yok.</string>
+    <string name="variant_picker_load_failed">Varyantlar yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="variant_picker_save_failed">Seçiminiz kaydedilemedi. Tekrar deneyin.</string>
+    <string name="variant_picker_stale_title">Varyant değişti — tekrar seçin</string>
+    <string name="variant_picker_stale_was">Önceki: %1$s</string>
+    <string name="variant_picker_auto_title">Otomatik</string>
+    <string name="variant_picker_auto_subtitle">Cihazınız için en iyi varyantı GitHub Store seçsin</string>
+    <string name="variant_picker_pinned">Sabitlendi: %1$s</string>
+    <string name="variant_stale_hint">Varyant değişti — tekrar seçmek için Güncelle\'ye dokunun</string>
+    <string name="variant_label_inline">Varyant: %1$s</string>
 </resources>

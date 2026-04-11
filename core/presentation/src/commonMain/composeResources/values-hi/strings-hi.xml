@@ -656,4 +656,18 @@
         <item quantity="one">%1$s में मिला · %2$d एसेट</item>
         <item quantity="other">%1$s में मिला · %2$d एसेट</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">पसंदीदा वेरिएंट</string>
+    <string name="variant_picker_description">चुनें कि अपडेट के लिए कौन सा APK वेरिएंट इंस्टॉल हो। चुनाव रिलीज़ों में याद रखा जाता है।</string>
+    <string name="variant_picker_no_assets">नवीनतम रिलीज़ में कोई इंस्टॉल योग्य एसेट नहीं है।</string>
+    <string name="variant_picker_load_failed">वेरिएंट लोड नहीं हो सका। अपना कनेक्शन जाँचें और पुनः प्रयास करें।</string>
+    <string name="variant_picker_save_failed">आपका चयन सहेजा नहीं जा सका। पुनः प्रयास करें।</string>
+    <string name="variant_picker_stale_title">वेरिएंट बदल गया — फिर से चुनें</string>
+    <string name="variant_picker_stale_was">पहले था: %1$s</string>
+    <string name="variant_picker_auto_title">स्वचालित</string>
+    <string name="variant_picker_auto_subtitle">GitHub Store को अपने डिवाइस के लिए सर्वोत्तम वेरिएंट चुनने दें</string>
+    <string name="variant_picker_pinned">पिन किया गया: %1$s</string>
+    <string name="variant_stale_hint">वेरिएंट बदला — फिर से चुनने के लिए अपडेट टैप करें</string>
+    <string name="variant_label_inline">वेरिएंट: %1$s</string>
 </resources>

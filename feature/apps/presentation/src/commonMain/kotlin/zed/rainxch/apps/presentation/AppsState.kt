@@ -57,6 +57,20 @@ data class AppsState(
     val advancedPreviewTag: String? = null,
     val advancedPreviewMessage: String? = null,
     val advancedSavingFilter: Boolean = false,
+    // Variant picker dialog (shown when preferredVariantStale, when the
+    // user explicitly opens it from advanced settings, or when they tap
+    // Update on a stale-variant app)
+    val variantPickerApp: InstalledAppUi? = null,
+    val variantPickerLoading: Boolean = false,
+    val variantPickerOptions: ImmutableList<GithubAssetUi> = persistentListOf(),
+    val variantPickerCurrentVariant: String? = null,
+    val variantPickerError: String? = null,
+    /**
+     * Set when the picker is being shown specifically because the user
+     * tapped Update on a stale-variant app — after they pick we should
+     * automatically resume the update flow.
+     */
+    val variantPickerResumeUpdateAfterPick: Boolean = false,
     // Export/Import
     val isExporting: Boolean = false,
     val isImporting: Boolean = false,

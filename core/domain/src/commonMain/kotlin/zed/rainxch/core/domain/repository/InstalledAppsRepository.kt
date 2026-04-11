@@ -66,6 +66,21 @@ interface InstalledAppsRepository {
     )
 
     /**
+     * Persists the user's preferred asset variant tag for [packageName]
+     * (or `null` to fall back to the platform's auto-picker). Always
+     * clears the `preferredVariantStale` flag in the same write because
+     * the user has just made an explicit choice.
+     *
+     * Implementations should re-check the app for updates immediately so
+     * the cached `latestAsset*` fields point at the variant the user
+     * just selected, without waiting for the next periodic worker.
+     */
+    suspend fun setPreferredVariant(
+        packageName: String,
+        variant: String?,
+    )
+
+    /**
      * Dry-run helper for the per-app advanced settings sheet. Fetches a
      * window of releases for [owner]/[repo] (honouring [includePreReleases])
      * and returns the assets in the most-recent release that match

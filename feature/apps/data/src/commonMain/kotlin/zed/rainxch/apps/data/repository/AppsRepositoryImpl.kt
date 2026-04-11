@@ -26,6 +26,7 @@ import zed.rainxch.core.domain.model.RateLimitException
 import zed.rainxch.core.domain.repository.InstalledAppsRepository
 import zed.rainxch.core.domain.repository.TweaksRepository
 import zed.rainxch.core.domain.system.PackageMonitor
+import zed.rainxch.core.domain.util.AssetVariant
 import zed.rainxch.core.domain.utils.AppLauncher
 import kotlin.time.Clock
 
@@ -153,10 +154,21 @@ class AppsRepositoryImpl(
         repoInfo: GithubRepoInfo,
         assetFilterRegex: String?,
         fallbackToOlderReleases: Boolean,
+        pickedAssetName: String?,
+        pickedAssetSiblingCount: Int,
+        preferredAssetVariant: String?,
     ) {
         val now = Clock.System.now().toEpochMilliseconds()
         val globalPreRelease = tweaksRepository.getIncludePreReleases().first()
         val normalizedFilter = assetFilterRegex?.trim()?.takeIf { it.isNotEmpty() }
+        // Direct tag (from import) wins over derivation from a filename
+        // (from the link sheet picker). Both fall back to null which
+        // means "no preference, use the platform auto-picker".
+        val resolvedVariant =
+            preferredAssetVariant?.trim()?.takeIf { it.isNotEmpty() }
+                ?: pickedAssetName?.let {
+                    AssetVariant.deriveFromPickedAsset(it, pickedAssetSiblingCount)
+                }
 
         val installedApp =
             InstalledApp(
@@ -192,6 +204,8 @@ class AppsRepositoryImpl(
                 includePreReleases = globalPreRelease,
                 assetFilterRegex = normalizedFilter,
                 fallbackToOlderReleases = fallbackToOlderReleases,
+                preferredAssetVariant = resolvedVariant,
+                preferredVariantStale = false,
             )
 
         appsRepository.saveInstalledApp(installedApp)
@@ -201,7 +215,7 @@ class AppsRepositoryImpl(
         val apps = appsRepository.getAllInstalledApps().first()
         val exported =
             ExportedAppList(
-                version = 2,
+                version = 3,
                 exportedAt = Clock.System.now().toEpochMilliseconds(),
                 apps =
                     apps.map { app ->
@@ -212,6 +226,7 @@ class AppsRepositoryImpl(
                             repoUrl = app.repoUrl,
                             assetFilterRegex = app.assetFilterRegex,
                             fallbackToOlderReleases = app.fallbackToOlderReleases,
+                            preferredAssetVariant = app.preferredAssetVariant,
                         )
                     },
             )
@@ -261,6 +276,7 @@ class AppsRepositoryImpl(
                     repoInfo = repoInfo,
                     assetFilterRegex = exportedApp.assetFilterRegex,
                     fallbackToOlderReleases = exportedApp.fallbackToOlderReleases,
+                    preferredAssetVariant = exportedApp.preferredAssetVariant,
                 )
                 imported++
             } catch (e: Exception) {

@@ -618,4 +618,18 @@
         <item quantity="one">Coincidencia en %1$s · %2$d asset</item>
         <item quantity="other">Coincidencia en %1$s · %2$d assets</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">Variante preferida</string>
+    <string name="variant_picker_description">Elige qué variante de APK se instalará en las actualizaciones. La elección se recuerda entre versiones.</string>
+    <string name="variant_picker_no_assets">No hay assets instalables en la última versión.</string>
+    <string name="variant_picker_load_failed">No se pudieron cargar las variantes. Verifica tu conexión e inténtalo de nuevo.</string>
+    <string name="variant_picker_save_failed">No se pudo guardar tu elección. Inténtalo de nuevo.</string>
+    <string name="variant_picker_stale_title">La variante cambió — elige otra vez</string>
+    <string name="variant_picker_stale_was">Antes: %1$s</string>
+    <string name="variant_picker_auto_title">Automática</string>
+    <string name="variant_picker_auto_subtitle">Deja que GitHub Store elija la mejor variante para tu dispositivo</string>
+    <string name="variant_picker_pinned">Fijada en: %1$s</string>
+    <string name="variant_stale_hint">Variante cambiada — toca Actualizar para elegir de nuevo</string>
+    <string name="variant_label_inline">Variante: %1$s</string>
 </resources>

@@ -619,4 +619,18 @@
     <plurals name="advanced_preview_release">
         <item quantity="other">在 %1$s 中匹配 · %2$d 个资产</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">首选变体</string>
+    <string name="variant_picker_description">选择更新时要安装的 APK 变体。此选择会在不同版本之间记住。</string>
+    <string name="variant_picker_no_assets">最新版本中没有可安装的资产。</string>
+    <string name="variant_picker_load_failed">无法加载变体。请检查连接并重试。</string>
+    <string name="variant_picker_save_failed">无法保存您的选择。请重试。</string>
+    <string name="variant_picker_stale_title">变体已更改 — 请重新选择</string>
+    <string name="variant_picker_stale_was">原为：%1$s</string>
+    <string name="variant_picker_auto_title">自动</string>
+    <string name="variant_picker_auto_subtitle">让 GitHub Store 为您的设备选择最佳变体</string>
+    <string name="variant_picker_pinned">已固定为：%1$s</string>
+    <string name="variant_stale_hint">变体已更改 — 点击更新以重新选择</string>
+    <string name="variant_label_inline">变体：%1$s</string>
 </resources>

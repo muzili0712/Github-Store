@@ -625,4 +625,18 @@
         <item quantity="many">Совпадение в %1$s · %2$d ассетов</item>
         <item quantity="other">Совпадение в %1$s · %2$d ассетов</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">Предпочтительный вариант</string>
+    <string name="variant_picker_description">Выберите, какой вариант APK будет устанавливаться при обновлениях. Выбор запоминается между релизами.</string>
+    <string name="variant_picker_no_assets">В последнем релизе нет устанавливаемых ассетов.</string>
+    <string name="variant_picker_load_failed">Не удалось загрузить варианты. Проверьте подключение и попробуйте снова.</string>
+    <string name="variant_picker_save_failed">Не удалось сохранить выбор. Попробуйте снова.</string>
+    <string name="variant_picker_stale_title">Вариант изменился — выберите снова</string>
+    <string name="variant_picker_stale_was">Было: %1$s</string>
+    <string name="variant_picker_auto_title">Автоматически</string>
+    <string name="variant_picker_auto_subtitle">Пусть GitHub Store сам выберет лучший вариант для вашего устройства</string>
+    <string name="variant_picker_pinned">Закреплено: %1$s</string>
+    <string name="variant_stale_hint">Вариант изменился — нажмите Обновить, чтобы выбрать снова</string>
+    <string name="variant_label_inline">Вариант: %1$s</string>
 </resources>

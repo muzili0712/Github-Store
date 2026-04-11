@@ -38,6 +38,7 @@ import zed.rainxch.core.domain.system.InstallOutcome
 import zed.rainxch.core.domain.system.Installer
 import zed.rainxch.core.domain.system.PackageMonitor
 import zed.rainxch.core.domain.use_cases.SyncInstalledAppsUseCase
+import zed.rainxch.core.domain.util.AssetVariant
 import zed.rainxch.core.domain.utils.BrowserHelper
 import zed.rainxch.core.domain.utils.ShareManager
 import zed.rainxch.details.domain.model.ApkValidationResult
@@ -370,6 +371,41 @@ class DetailsViewModel(
 
             is DetailsAction.SelectDownloadAsset -> {
                 _state.update { state -> state.copy(primaryAsset = action.release) }
+                // If this app is already tracked and there are multiple
+                // installable assets to choose from, the user just made
+                // an explicit variant choice — persist it so future
+                // updates from the apps list (and the background worker)
+                // stay on the same variant. Single-asset releases skip
+                // this; AssetVariant.deriveFromPickedAsset returns null.
+                val installedApp = _state.value.installedApp
+                val installable = _state.value.installableAssets
+                if (installedApp != null) {
+                    val variant =
+                        AssetVariant.deriveFromPickedAsset(
+                            pickedAssetName = action.release.name,
+                            siblingAssetCount = installable.size,
+                        )
+                    val current = installedApp.preferredAssetVariant
+                    // Avoid hammering the DB / re-check when the user
+                    // tapped the asset that was already pinned.
+                    if (variant != null && !variant.equals(current, ignoreCase = true)) {
+                        viewModelScope.launch {
+                            try {
+                                installedAppsRepository.setPreferredVariant(
+                                    packageName = installedApp.packageName,
+                                    variant = variant,
+                                )
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                logger.error(
+                                    "Failed to persist preferred variant for " +
+                                        "${installedApp.packageName}: ${e.message}",
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             DetailsAction.ToggleReleaseAssetsPicker -> {
@@ -390,7 +426,17 @@ class DetailsViewModel(
                 ?.filter { asset ->
                     installer.isAssetInstallable(asset.name)
                 }.orEmpty()
-        val primary = installer.choosePrimaryAsset(installable)
+
+        // If the user has a tracked variant for this app and the current
+        // release contains an asset with the same variant tag, default
+        // the picker to it. Falling back to the platform installer's
+        // arch-aware auto-pick keeps the existing behaviour for
+        // non-tracked repos and for tracked apps whose variant doesn't
+        // appear in this particular release.
+        val preferredVariant = _state.value.installedApp?.preferredAssetVariant
+        val variantMatch =
+            AssetVariant.resolvePreferredAsset(installable, preferredVariant)
+        val primary = variantMatch ?: installer.choosePrimaryAsset(installable)
         return installable to primary
     }
 

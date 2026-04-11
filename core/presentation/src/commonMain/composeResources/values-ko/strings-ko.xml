@@ -653,4 +653,18 @@
     <plurals name="advanced_preview_release">
         <item quantity="other">%1$s에서 일치 · %2$d개 에셋</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">선호 변형</string>
+    <string name="variant_picker_description">업데이트에 설치할 APK 변형을 선택하세요. 선택은 릴리스 간에 기억됩니다.</string>
+    <string name="variant_picker_no_assets">최신 릴리스에 설치 가능한 에셋이 없습니다.</string>
+    <string name="variant_picker_load_failed">변형을 불러올 수 없습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="variant_picker_save_failed">선택을 저장할 수 없습니다. 다시 시도하세요.</string>
+    <string name="variant_picker_stale_title">변형이 변경되었습니다 — 다시 선택하세요</string>
+    <string name="variant_picker_stale_was">이전: %1$s</string>
+    <string name="variant_picker_auto_title">자동</string>
+    <string name="variant_picker_auto_subtitle">GitHub Store가 기기에 가장 적합한 변형을 선택하도록 합니다</string>
+    <string name="variant_picker_pinned">고정됨: %1$s</string>
+    <string name="variant_stale_hint">변형이 변경되었습니다 — 업데이트를 탭하여 다시 선택하세요</string>
+    <string name="variant_label_inline">변형: %1$s</string>
 </resources>

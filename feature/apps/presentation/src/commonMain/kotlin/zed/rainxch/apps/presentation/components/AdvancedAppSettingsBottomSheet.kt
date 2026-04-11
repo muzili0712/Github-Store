@@ -14,11 +14,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -175,7 +179,23 @@ fun AdvancedAppSettingsBottomSheet(
                 )
             }
 
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+            )
+            Spacer(Modifier.height(16.dp))
+
+            // === Preferred variant row ===
+            // Tappable row that opens the variant picker dialog. Shows
+            // the currently-pinned variant tag (or "Auto" when none),
+            // and warns the user when the pin has gone stale.
+            VariantRow(
+                pinnedVariant = app.preferredAssetVariant,
+                isStale = app.preferredVariantStale,
+                onClick = { onAction(AppsAction.OnOpenVariantPicker(app)) },
+            )
+
+            Spacer(Modifier.height(16.dp))
             HorizontalDivider(
                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
             )
@@ -355,6 +375,65 @@ private fun PreviewSection(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun VariantRow(
+    pinnedVariant: String?,
+    isStale: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            imageVector = if (isStale) Icons.Default.Warning else Icons.Default.Tune,
+            contentDescription = null,
+            tint =
+                if (isStale) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    MaterialTheme.colorScheme.primary
+                },
+            modifier = Modifier.size(20.dp),
+        )
+        Spacer(Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = stringResource(Res.string.variant_picker_title),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+            )
+            Text(
+                text =
+                    when {
+                        isStale ->
+                            stringResource(Res.string.variant_picker_stale_title)
+                        pinnedVariant.isNullOrBlank() ->
+                            stringResource(Res.string.variant_picker_auto_subtitle)
+                        else ->
+                            stringResource(Res.string.variant_picker_pinned, pinnedVariant)
+                    },
+                style = MaterialTheme.typography.bodySmall,
+                color =
+                    if (isStale) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp),
+        )
     }
 }
 

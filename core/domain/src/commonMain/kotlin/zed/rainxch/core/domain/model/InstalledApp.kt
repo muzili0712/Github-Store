@@ -47,4 +47,19 @@ data class InstalledApp(
      * where the latest release belongs to a sibling app.
      */
     val fallbackToOlderReleases: Boolean = false,
+    /**
+     * Stable identifier for the asset variant (e.g. `arm64-v8a`,
+     * `universal`) that the user has chosen to track. Derived from the
+     * picked asset filename's tail (everything after the version) so it
+     * survives version bumps. `null` means "auto-pick by architecture".
+     */
+    val preferredAssetVariant: String? = null,
+    /**
+     * Set when the update checker can't find an asset matching
+     * [preferredAssetVariant] in a fresh release — typically because the
+     * maintainer renamed or restructured the artefacts. The UI shows a
+     * "variant changed" prompt; the flag is cleared once the user picks
+     * a new variant.
+     */
+    val preferredVariantStale: Boolean = false,
 )

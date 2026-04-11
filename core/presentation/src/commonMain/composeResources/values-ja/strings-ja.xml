@@ -618,4 +618,18 @@
     <plurals name="advanced_preview_release">
         <item quantity="other">%1$s で一致 · %2$d 個のアセット</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">優先バリアント</string>
+    <string name="variant_picker_description">アップデートでインストールするAPKバリアントを選択してください。選択はリリース間で記憶されます。</string>
+    <string name="variant_picker_no_assets">最新リリースにインストール可能なアセットがありません。</string>
+    <string name="variant_picker_load_failed">バリアントを読み込めませんでした。接続を確認してもう一度お試しください。</string>
+    <string name="variant_picker_save_failed">選択を保存できませんでした。もう一度お試しください。</string>
+    <string name="variant_picker_stale_title">バリアントが変更されました — もう一度選択してください</string>
+    <string name="variant_picker_stale_was">以前: %1$s</string>
+    <string name="variant_picker_auto_title">自動</string>
+    <string name="variant_picker_auto_subtitle">GitHub Storeにデバイスに最適なバリアントを選ばせる</string>
+    <string name="variant_picker_pinned">固定中: %1$s</string>
+    <string name="variant_stale_hint">バリアントが変更されました — アップデートをタップして再選択</string>
+    <string name="variant_label_inline">バリアント: %1$s</string>
 </resources>

@@ -658,4 +658,18 @@
         <item quantity="one">مطابقة في %1$s · %2$d أصل</item>
         <item quantity="other">مطابقة في %1$s · %2$d أصل</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">النوع المفضل</string>
+    <string name="variant_picker_description">اختر نوع APK الذي يجب تثبيته للتحديثات. يتم تذكر الاختيار عبر الإصدارات.</string>
+    <string name="variant_picker_no_assets">لا توجد أصول قابلة للتثبيت في أحدث إصدار.</string>
+    <string name="variant_picker_load_failed">تعذر تحميل الأنواع. تحقق من اتصالك وحاول مرة أخرى.</string>
+    <string name="variant_picker_save_failed">تعذر حفظ اختيارك. حاول مرة أخرى.</string>
+    <string name="variant_picker_stale_title">تغير النوع — اختر مرة أخرى</string>
+    <string name="variant_picker_stale_was">كان: %1$s</string>
+    <string name="variant_picker_auto_title">تلقائي</string>
+    <string name="variant_picker_auto_subtitle">دع GitHub Store يختار أفضل نوع لجهازك</string>
+    <string name="variant_picker_pinned">مثبت على: %1$s</string>
+    <string name="variant_stale_hint">تغير النوع — انقر تحديث للاختيار مرة أخرى</string>
+    <string name="variant_label_inline">النوع: %1$s</string>
 </resources>

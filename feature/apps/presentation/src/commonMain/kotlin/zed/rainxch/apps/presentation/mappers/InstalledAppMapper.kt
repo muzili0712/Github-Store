@@ -40,6 +40,8 @@ fun InstalledApp.toUi(): InstalledAppUi =
         includePreReleases = includePreReleases,
         assetFilterRegex = assetFilterRegex,
         fallbackToOlderReleases = fallbackToOlderReleases,
+        preferredAssetVariant = preferredAssetVariant,
+        preferredVariantStale = preferredVariantStale,
     )
 
 fun InstalledAppUi.toDomain(): InstalledApp =
@@ -79,4 +81,6 @@ fun InstalledAppUi.toDomain(): InstalledApp =
         includePreReleases = includePreReleases,
         assetFilterRegex = assetFilterRegex,
         fallbackToOlderReleases = fallbackToOlderReleases,
+        preferredAssetVariant = preferredAssetVariant,
+        preferredVariantStale = preferredVariantStale,
     )

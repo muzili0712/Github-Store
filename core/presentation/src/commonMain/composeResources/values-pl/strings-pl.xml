@@ -625,4 +625,18 @@
         <item quantity="many">Pasuje w %1$s · %2$d zasobów</item>
         <item quantity="other">Pasuje w %1$s · %2$d zasobów</item>
     </plurals>
+
+    <!-- Preferred-variant feature -->
+    <string name="variant_picker_title">Preferowany wariant</string>
+    <string name="variant_picker_description">Wybierz, który wariant APK ma być instalowany przy aktualizacjach. Wybór jest zapamiętywany między wydaniami.</string>
+    <string name="variant_picker_no_assets">Brak instalowalnych zasobów w najnowszym wydaniu.</string>
+    <string name="variant_picker_load_failed">Nie można załadować wariantów. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="variant_picker_save_failed">Nie można zapisać wyboru. Spróbuj ponownie.</string>
+    <string name="variant_picker_stale_title">Wariant się zmienił — wybierz ponownie</string>
+    <string name="variant_picker_stale_was">Poprzednio: %1$s</string>
+    <string name="variant_picker_auto_title">Automatyczny</string>
+    <string name="variant_picker_auto_subtitle">Pozwól GitHub Store wybrać najlepszy wariant dla Twojego urządzenia</string>
+    <string name="variant_picker_pinned">Przypięty do: %1$s</string>
+    <string name="variant_stale_hint">Wariant zmieniony — naciśnij Aktualizuj, aby wybrać ponownie</string>
+    <string name="variant_label_inline">Wariant: %1$s</string>
 </resources>

@@ -665,4 +665,18 @@
         <item quantity="one">Matched in %1$s · %2$d asset</item>
         <item quantity="other">Matched in %1$s · %2$d assets</item>
     </plurals>
+
+    <!-- Preferred-variant feature: dialog, advanced settings row, apps list hints -->
+    <string name="variant_picker_title">Preferred variant</string>
+    <string name="variant_picker_description">Pick which APK variant should be installed for updates. The choice is remembered across releases.</string>
+    <string name="variant_picker_no_assets">No installable assets in the latest release.</string>
+    <string name="variant_picker_load_failed">Could not load variants. Check your connection and try again.</string>
+    <string name="variant_picker_save_failed">Could not save your choice. Try again.</string>
+    <string name="variant_picker_stale_title">Variant changed — pick again</string>
+    <string name="variant_picker_stale_was">Was: %1$s</string>
+    <string name="variant_picker_auto_title">Automatic</string>
+    <string name="variant_picker_auto_subtitle">Let GitHub Store pick the best variant for your device</string>
+    <string name="variant_picker_pinned">Pinned to: %1$s</string>
+    <string name="variant_stale_hint">Variant changed — tap Update to pick again</string>
+    <string name="variant_label_inline">Variant: %1$s</string>
 </resources>
