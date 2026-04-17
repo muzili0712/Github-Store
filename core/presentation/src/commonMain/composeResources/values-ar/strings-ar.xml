@@ -235,6 +235,10 @@
     <string name="downloads">التنزيلات</string>
     <string name="license">الترخيص</string>
     <string name="license_none">لا يوجد</string>
+    <string name="fetch_more_from_github">جلب المزيد من GitHub</string>
+    <string name="fetching_from_github">جارٍ الجلب من GitHub…</string>
+    <string name="no_more_github_results">لا توجد نتائج أخرى على GitHub</string>
+    <string name="explore_error">فشل الجلب من GitHub. حاول مرة أخرى.</string>
 
     <!-- Misc -->
     <string name="by_author">بواسطة %1$s</string>

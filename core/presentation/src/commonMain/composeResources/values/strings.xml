@@ -244,6 +244,12 @@
     <string name="license">License</string>
     <string name="license_none">None</string>
 
+    <!-- Explore -->
+    <string name="fetch_more_from_github">Fetch more from GitHub</string>
+    <string name="fetching_from_github">Fetching from GitHub…</string>
+    <string name="no_more_github_results">No more results on GitHub</string>
+    <string name="explore_error">Failed to fetch from GitHub. Try again.</string>
+
     <!-- Misc -->
     <string name="by_author">by %1$s</string>
     <string name="installed_version">• Installed: %1$s</string>

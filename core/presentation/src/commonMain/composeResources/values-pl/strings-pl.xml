@@ -163,6 +163,10 @@
     <string name="downloads">Pobrania</string>
     <string name="license">Licencja</string>
     <string name="license_none">Brak</string>
+    <string name="fetch_more_from_github">Pobierz więcej z GitHub</string>
+    <string name="fetching_from_github">Pobieranie z GitHub…</string>
+    <string name="no_more_github_results">Brak więcej wyników na GitHub</string>
+    <string name="explore_error">Nie udało się pobrać z GitHub. Spróbuj ponownie.</string>
 
     <string name="by_author">autor: %1$s</string>
     <string name="installed_version">• Zainstalowana: %1$s</string>

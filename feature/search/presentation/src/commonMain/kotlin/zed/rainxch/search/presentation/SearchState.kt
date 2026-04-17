@@ -12,6 +12,7 @@ import zed.rainxch.search.presentation.model.SortOrderUi
 data class SearchState(
     val query: String = "",
     val repositories: ImmutableList<DiscoveryRepositoryUi> = persistentListOf(),
+    val visibleRepos: ImmutableList<DiscoveryRepositoryUi> = persistentListOf(),
     val selectedSearchPlatform: SearchPlatformUi = SearchPlatformUi.All,
     val selectedSortBy: SortByUi = SortByUi.BestMatch,
     val selectedSortOrder: SortOrderUi = SortOrderUi.Descending,
@@ -31,4 +32,11 @@ data class SearchState(
     val isClipboardBannerVisible: Boolean = false,
     val autoDetectClipboardEnabled: Boolean = true,
     val recentSearches: ImmutableList<String> = persistentListOf(),
-)
+    val exploreStatus: ExploreStatus = ExploreStatus.IDLE,
+) {
+    enum class ExploreStatus {
+        IDLE,
+        LOADING,
+        EXHAUSTED,
+    }
+}

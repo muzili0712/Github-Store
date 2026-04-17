@@ -2,6 +2,7 @@ package zed.rainxch.search.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CancellationException
@@ -10,6 +11,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -35,6 +37,7 @@ import zed.rainxch.githubstore.core.presentation.res.Res
 import zed.rainxch.githubstore.core.presentation.res.failed_to_share_link
 import zed.rainxch.githubstore.core.presentation.res.link_copied_to_clipboard
 import zed.rainxch.githubstore.core.presentation.res.no_github_link_in_clipboard
+import zed.rainxch.githubstore.core.presentation.res.explore_error
 import zed.rainxch.githubstore.core.presentation.res.no_repositories_found
 import zed.rainxch.githubstore.core.presentation.res.search_failed
 import zed.rainxch.search.presentation.mappers.toDomain
@@ -58,6 +61,8 @@ class SearchViewModel(
     private var hasLoadedInitialData = false
     private var currentSearchJob: Job? = null
     private var currentPage = 1
+    private var explorePage = 1
+    private var lastExploreQuery = ""
 
     companion object {
         private const val MIN_QUERY_LENGTH = 3
@@ -82,11 +87,20 @@ class SearchViewModel(
 
                     hasLoadedInitialData = true
                 }
-            }.stateIn(
+            }
+            .map { it.copy(visibleRepos = computeVisibleRepos(it)) }
+            .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000L),
                 initialValue = SearchState(),
             )
+
+    private fun computeVisibleRepos(state: SearchState): ImmutableList<DiscoveryRepositoryUi> =
+        if (state.isHideSeenEnabled && state.seenRepoIds.isNotEmpty()) {
+            state.repositories.filter { it.repository.id !in state.seenRepoIds }.toImmutableList()
+        } else {
+            state.repositories
+        }
 
     private fun observeLiquidGlassEnabled() {
         viewModelScope.launch {
@@ -277,6 +291,9 @@ class SearchViewModel(
         if (isInitial) {
             currentSearchJob?.cancel()
             currentPage = 1
+            explorePage = 1
+            lastExploreQuery = query
+            _state.update { it.copy(exploreStatus = SearchState.ExploreStatus.IDLE) }
         }
 
         currentSearchJob =
@@ -645,6 +662,82 @@ class SearchViewModel(
                 viewModelScope.launch {
                     searchHistoryRepository.clearAll()
                 }
+            }
+
+            SearchAction.ExploreFromGithub -> {
+                performExplore()
+            }
+        }
+    }
+
+    private fun performExplore() {
+        val query = _state.value.query.trim()
+        if (query.isBlank() || _state.value.exploreStatus == SearchState.ExploreStatus.LOADING) return
+
+        // Reset page if query changed
+        if (query != lastExploreQuery) {
+            explorePage = 1
+            lastExploreQuery = query
+        }
+
+        viewModelScope.launch {
+            _state.update { it.copy(exploreStatus = SearchState.ExploreStatus.LOADING) }
+
+            try {
+                val exploreResult = searchRepository.exploreFromGithub(
+                    query = query,
+                    platform = _state.value.selectedSearchPlatform.toDomain(),
+                    page = explorePage,
+                )
+
+                if (exploreResult.repos.isEmpty() || !exploreResult.hasMore) {
+                    if (exploreResult.repos.isNotEmpty()) {
+                        appendExploreResults(exploreResult.repos)
+                    }
+                    _state.update { it.copy(exploreStatus = SearchState.ExploreStatus.EXHAUSTED) }
+                } else {
+                    appendExploreResults(exploreResult.repos)
+                    explorePage++
+                    _state.update { it.copy(exploreStatus = SearchState.ExploreStatus.IDLE) }
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                logger.error("Explore failed: ${e.message}")
+                _state.update { it.copy(exploreStatus = SearchState.ExploreStatus.IDLE) }
+                _events.send(SearchEvent.OnMessage(getString(Res.string.explore_error)))
+            }
+        }
+    }
+
+    private suspend fun appendExploreResults(
+        newRepos: List<zed.rainxch.core.domain.model.GithubRepoSummary>,
+    ) {
+        val installedMap = installedAppsRepository.getAllInstalledApps().first().associateBy { it.repoId }
+        val favoritesMap = favouritesRepository.getAllFavorites().first().associateBy { it.repoId }
+        val starredMap = starredRepository.getAllStarred().first().associateBy { it.repoId }
+        val seenIds = _state.value.seenRepoIds
+
+        val existingIds = _state.value.repositories.map { it.repository.id }.toSet()
+
+        val deduped = newRepos
+            .filter { it.id !in existingIds }
+            .map { repo ->
+                DiscoveryRepositoryUi(
+                    isInstalled = installedMap[repo.id] != null,
+                    isFavourite = favoritesMap[repo.id] != null,
+                    isStarred = starredMap[repo.id] != null,
+                    isSeen = repo.id in seenIds,
+                    isUpdateAvailable = installedMap[repo.id]?.isUpdateAvailable ?: false,
+                    repository = repo.toUi(),
+                )
+            }
+
+        if (deduped.isNotEmpty()) {
+            _state.update { current ->
+                current.copy(
+                    repositories = (current.repositories + deduped).toImmutableList(),
+                )
             }
         }
     }

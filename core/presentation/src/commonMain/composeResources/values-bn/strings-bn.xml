@@ -194,6 +194,10 @@
     <string name="downloads">ডাউনলোড</string>
     <string name="license">লাইসেন্স</string>
     <string name="license_none">নেই</string>
+    <string name="fetch_more_from_github">GitHub থেকে আরও আনুন</string>
+    <string name="fetching_from_github">GitHub থেকে আনা হচ্ছে…</string>
+    <string name="no_more_github_results">GitHub-এ আর ফলাফল নেই</string>
+    <string name="explore_error">GitHub থেকে আনতে ব্যর্থ। আবার চেষ্টা করুন।</string>
 
     <!-- Misc -->
     <string name="by_author">%1$s দ্বারা</string>

@@ -194,6 +194,10 @@
     <string name="downloads">Download</string>
     <string name="license">Licenza</string>
     <string name="license_none">Nessuna</string>
+    <string name="fetch_more_from_github">Cerca altri su GitHub</string>
+    <string name="fetching_from_github">Ricerca su GitHub…</string>
+    <string name="no_more_github_results">Nessun altro risultato su GitHub</string>
+    <string name="explore_error">Ricerca GitHub fallita. Riprova.</string>
 
     <!-- Misc -->
     <string name="by_author">per %1$s</string>

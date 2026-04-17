@@ -144,6 +144,10 @@
     <string name="downloads">Téléchargements</string>
     <string name="license">Licence</string>
     <string name="license_none">Aucune</string>
+    <string name="fetch_more_from_github">Chercher plus sur GitHub</string>
+    <string name="fetching_from_github">Recherche sur GitHub…</string>
+    <string name="no_more_github_results">Plus de résultats sur GitHub</string>
+    <string name="explore_error">Échec de la recherche GitHub. Réessayez.</string>
 
     <string name="by_author">par %1$s</string>
     <string name="installed_version">• Installé : %1$s</string>

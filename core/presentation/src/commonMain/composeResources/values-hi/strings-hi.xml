@@ -194,6 +194,10 @@
     <string name="downloads">डाउनलोड</string>
     <string name="license">लाइसेंस</string>
     <string name="license_none">कोई नहीं</string>
+    <string name="fetch_more_from_github">GitHub से और लाएं</string>
+    <string name="fetching_from_github">GitHub से ला रहे हैं…</string>
+    <string name="no_more_github_results">GitHub पर और परिणाम नहीं हैं</string>
+    <string name="explore_error">GitHub से लाने में विफल। पुनः प्रयास करें।</string>
 
     <!-- Misc -->
     <string name="by_author">द्वारा %1$s</string>

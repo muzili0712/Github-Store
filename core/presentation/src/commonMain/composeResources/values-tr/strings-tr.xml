@@ -193,6 +193,10 @@
     <string name="downloads">İndirmeler</string>
     <string name="license">Lisans</string>
     <string name="license_none">Yok</string>
+    <string name="fetch_more_from_github">GitHub\'tan daha fazla getir</string>
+    <string name="fetching_from_github">GitHub\'tan getiriliyor…</string>
+    <string name="no_more_github_results">GitHub\'ta başka sonuç yok</string>
+    <string name="explore_error">GitHub\'tan getirilemedi. Tekrar deneyin.</string>
 
     <!-- Misc -->
     <string name="by_author">%1$s</string>

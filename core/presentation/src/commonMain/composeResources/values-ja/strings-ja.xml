@@ -145,6 +145,10 @@
     <string name="downloads">ダウンロード</string>
     <string name="license">ライセンス</string>
     <string name="license_none">なし</string>
+    <string name="fetch_more_from_github">GitHubからさらに取得</string>
+    <string name="fetching_from_github">GitHubから取得中…</string>
+    <string name="no_more_github_results">GitHubにこれ以上の結果はありません</string>
+    <string name="explore_error">GitHubからの取得に失敗しました。再試行してください。</string>
 
     <string name="by_author">%1$s 作</string>
     <string name="installed_version">• インストール済み: %1$s</string>

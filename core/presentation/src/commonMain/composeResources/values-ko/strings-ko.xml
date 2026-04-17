@@ -192,6 +192,10 @@
     <string name="downloads">다운로드</string>
     <string name="license">라이선스</string>
     <string name="license_none">없음</string>
+    <string name="fetch_more_from_github">GitHub에서 더 가져오기</string>
+    <string name="fetching_from_github">GitHub에서 가져오는 중…</string>
+    <string name="no_more_github_results">GitHub에 더 이상 결과가 없습니다</string>
+    <string name="explore_error">GitHub에서 가져오기 실패. 다시 시도하세요.</string>
 
     <!-- Misc -->
     <string name="by_author">%1$s 작성</string>

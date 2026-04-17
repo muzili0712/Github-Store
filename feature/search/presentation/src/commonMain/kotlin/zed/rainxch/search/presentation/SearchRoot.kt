@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -39,6 +40,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,6 +48,7 @@ import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -211,7 +214,7 @@ fun SearchScreen(
 
             val hasEmptySpaceAtBottom =
                 lastVisibleItem.index == totalItems - 1 &&
-                    lastVisibleItem.offset.y + lastVisibleItem.size.height < viewportEndOffset
+                        lastVisibleItem.offset.y + lastVisibleItem.size.height < viewportEndOffset
 
             val threshold = (totalItems * 0.8f).toInt()
             val isNearEnd = lastVisibleItem.index >= threshold
@@ -241,7 +244,7 @@ fun SearchScreen(
         ) {
             val hasEmptySpace =
                 lastVisible.index == layoutInfo.totalItemsCount - 1 &&
-                    lastVisible.offset.y + lastVisible.size.height < layoutInfo.viewportEndOffset
+                        lastVisible.offset.y + lastVisible.size.height < layoutInfo.viewportEndOffset
 
             if (hasEmptySpace) {
                 delay(100)
@@ -506,16 +509,6 @@ fun SearchScreen(
                 )
             }
 
-            val visibleRepos by remember(state.repositories, state.isHideSeenEnabled, state.seenRepoIds) {
-                derivedStateOf {
-                    if (state.isHideSeenEnabled && state.seenRepoIds.isNotEmpty()) {
-                        state.repositories.filter { it.repository.id !in state.seenRepoIds }
-                    } else {
-                        state.repositories
-                    }
-                }
-            }
-
             Box(Modifier.fillMaxSize()) {
                 if (state.isLoading && state.repositories.isEmpty()) {
                     Box(
@@ -548,75 +541,85 @@ fun SearchScreen(
                     }
                 }
 
-                if (visibleRepos.isNotEmpty()) {
+                if (state.visibleRepos.isNotEmpty()) {
                     val isScrollbarEnabled = LocalScrollbarEnabled.current
                     ScrollbarContainer(
                         gridState = listState,
                         enabled = isScrollbarEnabled,
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                    LazyVerticalStaggeredGrid(
-                        state = listState,
-                        columns = StaggeredGridCells.Adaptive(350.dp),
-                        verticalItemSpacing = 12.dp,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp),
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .then(
-                                    if (state.isLiquidGlassEnabled) {
-                                        Modifier.liquefiable(liquidState)
-                                    } else {
-                                        Modifier
+                        LazyVerticalStaggeredGrid(
+                            state = listState,
+                            columns = StaggeredGridCells.Adaptive(350.dp),
+                            verticalItemSpacing = 12.dp,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxSize()
+                                    .then(
+                                        if (state.isLiquidGlassEnabled) {
+                                            Modifier.liquefiable(liquidState)
+                                        } else {
+                                            Modifier
+                                        },
+                                    ),
+                        ) {
+                            items(
+                                items = state.visibleRepos,
+                                key = { it.repository.id },
+                            ) { discoveryRepository ->
+                                RepositoryCard(
+                                    discoveryRepositoryUi = discoveryRepository,
+                                    onClick = {
+                                        onAction(SearchAction.OnRepositoryClick(discoveryRepository.repository))
                                     },
-                                ),
-                    ) {
-                        items(
-                            items = visibleRepos,
-                            key = { it.repository.id },
-                        ) { discoveryRepository ->
-                            RepositoryCard(
-                                discoveryRepositoryUi = discoveryRepository,
-                                onClick = {
-                                    onAction(SearchAction.OnRepositoryClick(discoveryRepository.repository))
-                                },
-                                onDeveloperClick = { username ->
-                                    onAction(SearchAction.OnRepositoryDeveloperClick(username))
-                                },
-                                onShareClick = {
-                                    onAction(SearchAction.OnShareClick(discoveryRepository.repository))
-                                },
-                                modifier =
-                                    Modifier
-                                        .animateItem()
-                                        .then(
-                                            if (state.isLiquidGlassEnabled) {
-                                                Modifier.liquefiable(liquidState)
-                                            } else {
-                                                Modifier
-                                            },
-                                        ),
-                            )
-                        }
-
-                        item {
-                            if (state.isLoadingMore) {
-                                Box(
+                                    onDeveloperClick = { username ->
+                                        onAction(SearchAction.OnRepositoryDeveloperClick(username))
+                                    },
+                                    onShareClick = {
+                                        onAction(SearchAction.OnShareClick(discoveryRepository.repository))
+                                    },
                                     modifier =
                                         Modifier
-                                            .fillMaxWidth()
-                                            .padding(16.dp),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(24.dp),
+                                            .animateItem()
+                                            .then(
+                                                if (state.isLiquidGlassEnabled) {
+                                                    Modifier.liquefiable(liquidState)
+                                                } else {
+                                                    Modifier
+                                                },
+                                            ),
+                                )
+                            }
+
+                            item {
+                                if (state.isLoadingMore) {
+                                    Box(
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(24.dp),
+                                        )
+                                    }
+                                }
+                            }
+
+                            // "Fetch more from GitHub" explore button
+                            if (!state.isLoading && !state.isLoadingMore && state.query.isNotBlank()) {
+                                item {
+                                    ExploreFromGithubButton(
+                                        status = state.exploreStatus,
+                                        onExplore = { onAction(SearchAction.ExploreFromGithub) },
                                     )
                                 }
                             }
                         }
                     }
-                    } // ScrollbarContainer
                 }
             }
         }
@@ -854,6 +857,52 @@ private fun SearchTopbar(
                     .weight(1f)
                     .focusRequester(focusRequester),
         )
+    }
+}
+
+@Composable
+private fun ExploreFromGithubButton(
+    status: SearchState.ExploreStatus,
+    onExplore: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        when (status) {
+            SearchState.ExploreStatus.IDLE -> {
+                OutlinedButton(onClick = onExplore) {
+                    Icon(
+                        imageVector = Icons.Outlined.TravelExplore,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(text = stringResource(Res.string.fetch_more_from_github))
+                }
+            }
+
+            SearchState.ExploreStatus.LOADING -> {
+                OutlinedButton(onClick = {}, enabled = false) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp,
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(text = stringResource(Res.string.fetching_from_github))
+                }
+            }
+
+            SearchState.ExploreStatus.EXHAUSTED -> {
+                Text(
+                    text = stringResource(Res.string.no_more_github_results),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                )
+            }
+        }
     }
 }
 

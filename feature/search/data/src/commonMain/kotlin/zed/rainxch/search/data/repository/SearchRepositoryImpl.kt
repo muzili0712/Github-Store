@@ -29,6 +29,7 @@ import zed.rainxch.core.domain.model.DiscoveryPlatform
 import zed.rainxch.core.domain.model.GithubRepoSummary
 import zed.rainxch.core.domain.model.PaginatedDiscoveryRepositories
 import zed.rainxch.core.domain.model.RateLimitException
+import zed.rainxch.domain.model.ExploreResult
 import zed.rainxch.domain.model.ProgrammingLanguage
 import zed.rainxch.domain.model.SortBy
 import zed.rainxch.domain.model.SortOrder
@@ -425,5 +426,31 @@ class SearchRepositoryImpl(
             releaseCheckCache.put(key, result)
         }
         return result
+    }
+
+    override suspend fun exploreFromGithub(
+        query: String,
+        platform: DiscoveryPlatform,
+        page: Int,
+    ): ExploreResult {
+        val platformSlug = when (platform) {
+            DiscoveryPlatform.Android -> "android"
+            DiscoveryPlatform.Windows -> "windows"
+            DiscoveryPlatform.Macos -> "macos"
+            DiscoveryPlatform.Linux -> "linux"
+            DiscoveryPlatform.All -> null
+        }
+
+        val response = backendApiClient.searchExplore(
+            query = query,
+            platform = platformSlug,
+            page = page,
+        ).getOrThrow()
+
+        return ExploreResult(
+            repos = response.items.map { it.toSummary() },
+            page = response.page,
+            hasMore = response.hasMore,
+        )
     }
 }

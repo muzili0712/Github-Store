@@ -10,6 +10,8 @@ import io.ktor.client.request.parameter
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import io.ktor.client.plugins.timeout
+import zed.rainxch.core.data.dto.BackendExploreResponse
 import zed.rainxch.core.data.dto.BackendRepoResponse
 import zed.rainxch.core.data.dto.BackendSearchResponse
 import kotlin.coroutines.cancellation.CancellationException
@@ -65,6 +67,25 @@ class BackendApiClient {
                 if (sort != null) parameter("sort", sort)
                 parameter("limit", limit)
                 parameter("offset", offset)
+            }
+            if (response.status.isSuccess()) {
+                Result.success(response.body())
+            } else {
+                Result.failure(BackendException("HTTP ${response.status.value}"))
+            }
+        }
+
+    suspend fun searchExplore(
+        query: String,
+        platform: String? = null,
+        page: Int = 1,
+    ): Result<BackendExploreResponse> =
+        safeCall {
+            val response = httpClient.get("search/explore") {
+                parameter("q", query)
+                if (platform != null) parameter("platform", platform)
+                parameter("page", page)
+                timeout { requestTimeoutMillis = 20_000 }
             }
             if (response.status.isSuccess()) {
                 Result.success(response.body())

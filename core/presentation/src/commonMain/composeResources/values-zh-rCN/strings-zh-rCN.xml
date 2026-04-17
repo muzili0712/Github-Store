@@ -146,6 +146,10 @@
     <string name="downloads">下载量</string>
     <string name="license">许可证</string>
     <string name="license_none">无</string>
+    <string name="fetch_more_from_github">从 GitHub 获取更多</string>
+    <string name="fetching_from_github">正在从 GitHub 获取…</string>
+    <string name="no_more_github_results">GitHub 上没有更多结果</string>
+    <string name="explore_error">从 GitHub 获取失败，请重试。</string>
 
     <string name="by_author">由 %1$s</string>
     <string name="installed_version">• 已安装：%1$s</string>
