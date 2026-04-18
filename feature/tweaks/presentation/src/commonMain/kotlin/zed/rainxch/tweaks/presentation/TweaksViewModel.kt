@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import zed.rainxch.core.domain.model.ProxyConfig
 import zed.rainxch.core.domain.model.ProxyScope
+import zed.rainxch.core.domain.model.TranslationProvider
 import zed.rainxch.core.domain.network.ProxyTestOutcome
 import zed.rainxch.core.domain.network.ProxyTester
 import zed.rainxch.core.domain.repository.DeviceIdentityRepository
@@ -70,6 +71,7 @@ class TweaksViewModel(
                     loadHideSeenEnabled()
                     loadScrollbarEnabled()
                     loadTelemetryEnabled()
+                    loadTranslationSettings()
 
                     observeShizukuStatus()
 
@@ -298,6 +300,24 @@ class TweaksViewModel(
                 _state.update {
                     it.copy(isTelemetryEnabled = enabled)
                 }
+            }
+        }
+    }
+
+    private fun loadTranslationSettings() {
+        viewModelScope.launch {
+            tweaksRepository.getTranslationProvider().collect { provider ->
+                _state.update { it.copy(translationProvider = provider) }
+            }
+        }
+        viewModelScope.launch {
+            tweaksRepository.getYoudaoAppKey().collect { appKey ->
+                _state.update { it.copy(youdaoAppKey = appKey) }
+            }
+        }
+        viewModelScope.launch {
+            tweaksRepository.getYoudaoAppSecret().collect { appSecret ->
+                _state.update { it.copy(youdaoAppSecret = appSecret) }
             }
         }
     }
@@ -574,6 +594,48 @@ class TweaksViewModel(
                     telemetryRepository.clearPending()
                     deviceIdentityRepository.resetDeviceId()
                     _events.send(TweaksEvent.OnAnalyticsIdReset)
+                }
+            }
+
+            is TweaksAction.OnTranslationProviderSelected -> {
+                // Persist immediately — switching provider is a single-tap
+                // action, no credentials validation needed at this step
+                // (YOUDAO credentials are entered in the expanded form).
+                viewModelScope.launch {
+                    tweaksRepository.setTranslationProvider(action.provider)
+                    _events.send(TweaksEvent.OnTranslationProviderSaved)
+                }
+            }
+
+            is TweaksAction.OnYoudaoAppKeyChanged -> {
+                _state.update { it.copy(youdaoAppKey = action.appKey) }
+            }
+
+            is TweaksAction.OnYoudaoAppSecretChanged -> {
+                _state.update { it.copy(youdaoAppSecret = action.appSecret) }
+            }
+
+            TweaksAction.OnYoudaoAppSecretVisibilityToggle -> {
+                _state.update {
+                    it.copy(isYoudaoAppSecretVisible = !it.isYoudaoAppSecretVisible)
+                }
+            }
+
+            TweaksAction.OnYoudaoCredentialsSave -> {
+                val current = _state.value
+                viewModelScope.launch {
+                    tweaksRepository.setYoudaoAppKey(current.youdaoAppKey)
+                    tweaksRepository.setYoudaoAppSecret(current.youdaoAppSecret)
+                    // Auto-switch to YOUDAO when the user explicitly saves
+                    // credentials — saves them an extra tap and matches the
+                    // implicit intent ("I just configured this, use it").
+                    if (current.translationProvider != TranslationProvider.YOUDAO &&
+                        current.youdaoAppKey.isNotBlank() &&
+                        current.youdaoAppSecret.isNotBlank()
+                    ) {
+                        tweaksRepository.setTranslationProvider(TranslationProvider.YOUDAO)
+                    }
+                    _events.send(TweaksEvent.OnYoudaoCredentialsSaved)
                 }
             }
         }

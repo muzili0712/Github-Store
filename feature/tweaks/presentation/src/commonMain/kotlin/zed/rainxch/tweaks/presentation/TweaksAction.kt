@@ -4,6 +4,7 @@ import zed.rainxch.core.domain.model.AppTheme
 import zed.rainxch.core.domain.model.FontTheme
 import zed.rainxch.core.domain.model.InstallerType
 import zed.rainxch.core.domain.model.ProxyScope
+import zed.rainxch.core.domain.model.TranslationProvider
 import zed.rainxch.tweaks.presentation.model.ProxyType
 
 sealed interface TweaksAction {
@@ -113,4 +114,20 @@ sealed interface TweaksAction {
     ) : TweaksAction
 
     data object OnResetAnalyticsId : TweaksAction
+
+    data class OnTranslationProviderSelected(
+        val provider: TranslationProvider,
+    ) : TweaksAction
+
+    data class OnYoudaoAppKeyChanged(
+        val appKey: String,
+    ) : TweaksAction
+
+    data class OnYoudaoAppSecretChanged(
+        val appSecret: String,
+    ) : TweaksAction
+
+    data object OnYoudaoAppSecretVisibilityToggle : TweaksAction
+
+    data object OnYoudaoCredentialsSave : TweaksAction
 }

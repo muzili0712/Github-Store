@@ -26,6 +26,7 @@ val detailsModule =
             TranslationRepositoryImpl(
                 localizationManager = get(),
                 clientProvider = get(),
+                tweaksRepository = get(),
             )
         }
 

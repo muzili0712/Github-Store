@@ -664,4 +664,18 @@
     <string name="install">インストール</string>
     <string name="ready_to_install">インストール準備完了</string>
     <string name="install_ready">インストール（準備完了）</string>
+
+    <!-- Translation provider selection -->
+    <string name="section_translation">翻訳</string>
+    <string name="translation_intro">README の翻訳に使用するサービスを選択します。</string>
+    <string name="translation_provider_title">翻訳サービス</string>
+    <string name="translation_provider_description">Google は世界中で設定不要で動作します。Youdao は中国本土からアクセスできますが、Youdao 開発者ポータルから API 認証情報が必要です。</string>
+    <string name="translation_provider_google">Google</string>
+    <string name="translation_provider_youdao">Youdao</string>
+    <string name="translation_provider_saved">翻訳サービスを更新しました</string>
+    <string name="translation_youdao_help">ai.youdao.com に登録して App Key と App Secret を取得してください。無料プランで通常の利用には十分です。</string>
+    <string name="translation_youdao_app_key">App Key</string>
+    <string name="translation_youdao_app_secret">App Secret</string>
+    <string name="translation_youdao_save">認証情報を保存</string>
+    <string name="translation_youdao_saved">Youdao の認証情報を保存しました</string>
 </resources>

@@ -665,4 +665,18 @@
     <string name="install">安装</string>
     <string name="ready_to_install">准备安装</string>
     <string name="install_ready">安装（已就绪）</string>
+
+    <!-- Translation provider selection -->
+    <string name="section_translation">翻译</string>
+    <string name="translation_intro">选择用于翻译 README 的服务。</string>
+    <string name="translation_provider_title">翻译服务</string>
+    <string name="translation_provider_description">Google 全球可用，无需配置。有道可从中国大陆访问，但需要从有道开发者门户获取 API 凭据。</string>
+    <string name="translation_provider_google">Google</string>
+    <string name="translation_provider_youdao">有道</string>
+    <string name="translation_provider_saved">翻译服务已更新</string>
+    <string name="translation_youdao_help">在 ai.youdao.com 注册以获取 App Key 和 App Secret。免费套餐足以满足日常使用。</string>
+    <string name="translation_youdao_app_key">App Key</string>
+    <string name="translation_youdao_app_secret">App Secret</string>
+    <string name="translation_youdao_save">保存凭据</string>
+    <string name="translation_youdao_saved">有道凭据已保存</string>
 </resources>

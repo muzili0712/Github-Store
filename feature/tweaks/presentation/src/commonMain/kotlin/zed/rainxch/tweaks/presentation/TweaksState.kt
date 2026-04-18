@@ -5,6 +5,7 @@ import zed.rainxch.core.domain.model.FontTheme
 import zed.rainxch.core.domain.model.InstallerType
 import zed.rainxch.core.domain.model.ProxyScope
 import zed.rainxch.core.domain.model.ShizukuAvailability
+import zed.rainxch.core.domain.model.TranslationProvider
 import zed.rainxch.tweaks.presentation.model.ProxyScopeFormState
 
 data class TweaksState(
@@ -27,6 +28,10 @@ data class TweaksState(
     val isHideSeenEnabled: Boolean = false,
     val isScrollbarEnabled: Boolean = false,
     val isTelemetryEnabled: Boolean = false,
+    val translationProvider: TranslationProvider = TranslationProvider.Default,
+    val youdaoAppKey: String = "",
+    val youdaoAppSecret: String = "",
+    val isYoudaoAppSecretVisible: Boolean = false,
 ) {
     /** Convenience accessor — guaranteed non-null because the map is
      *  seeded with entries for every [ProxyScope] at construction time. */

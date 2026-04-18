@@ -703,4 +703,18 @@
     <string name="install">ইনস্টল</string>
     <string name="ready_to_install">ইনস্টলের জন্য প্রস্তুত</string>
     <string name="install_ready">ইনস্টল (প্রস্তুত)</string>
+
+    <!-- Translation provider selection -->
+    <string name="section_translation">অনুবাদ</string>
+    <string name="translation_intro">README অনুবাদের জন্য ব্যবহৃত পরিষেবা নির্বাচন করুন।</string>
+    <string name="translation_provider_title">অনুবাদ পরিষেবা</string>
+    <string name="translation_provider_description">Google বিশ্বব্যাপী কনফিগারেশন ছাড়াই কাজ করে। Youdao মূল ভূখণ্ডের চীন থেকে কাজ করে কিন্তু Youdao ডেভেলপার পোর্টাল থেকে API শংসাপত্র প্রয়োজন।</string>
+    <string name="translation_provider_google">Google</string>
+    <string name="translation_provider_youdao">Youdao</string>
+    <string name="translation_provider_saved">অনুবাদ পরিষেবা আপডেট করা হয়েছে</string>
+    <string name="translation_youdao_help">App Key এবং App Secret পেতে ai.youdao.com এ সাইন আপ করুন। সাধারণ ব্যবহারের জন্য বিনামূল্যের স্তর যথেষ্ট।</string>
+    <string name="translation_youdao_app_key">App Key</string>
+    <string name="translation_youdao_app_secret">App Secret</string>
+    <string name="translation_youdao_save">শংসাপত্র সংরক্ষণ করুন</string>
+    <string name="translation_youdao_saved">Youdao শংসাপত্র সংরক্ষিত হয়েছে</string>
 </resources>

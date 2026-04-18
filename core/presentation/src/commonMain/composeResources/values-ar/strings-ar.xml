@@ -704,4 +704,18 @@
     <string name="install">تثبيت</string>
     <string name="ready_to_install">جاهز للتثبيت</string>
     <string name="install_ready">تثبيت (جاهز)</string>
+
+    <!-- Translation provider selection -->
+    <string name="section_translation">الترجمة</string>
+    <string name="translation_intro">اختر الخدمة المستخدمة لترجمة README.</string>
+    <string name="translation_provider_title">خدمة الترجمة</string>
+    <string name="translation_provider_description">يعمل Google عالميًا دون تهيئة. يعمل Youdao من الصين القارية ولكنه يتطلب بيانات اعتماد API من بوابة مطوري Youdao.</string>
+    <string name="translation_provider_google">Google</string>
+    <string name="translation_provider_youdao">Youdao</string>
+    <string name="translation_provider_saved">تم تحديث خدمة الترجمة</string>
+    <string name="translation_youdao_help">سجّل في ai.youdao.com للحصول على App Key و App Secret. الطبقة المجانية كافية للاستخدام العادي.</string>
+    <string name="translation_youdao_app_key">App Key</string>
+    <string name="translation_youdao_app_secret">App Secret</string>
+    <string name="translation_youdao_save">حفظ بيانات الاعتماد</string>
+    <string name="translation_youdao_saved">تم حفظ بيانات اعتماد Youdao</string>
 </resources>
