@@ -236,6 +236,22 @@ class TweaksViewModel(
         }
     }
 
+    /** Transient UI-state mutation (password visibility, test-in-
+     *  progress) — does *not* mark the scope dirty, so toggling the eye
+     *  icon or running a test doesn't block preference hydration. Only
+     *  use for flags that don't represent a real config change the user
+     *  expects to save. */
+    private fun mutateFormUi(
+        scope: ProxyScope,
+        block: (ProxyScopeFormState) -> ProxyScopeFormState,
+    ) {
+        _state.update { state ->
+            state.copy(
+                proxyForms = state.proxyForms + (scope to block(state.formFor(scope))),
+            )
+        }
+    }
+
     /** Clears the dirty flag — call after a successful save or an
      *  explicit reset so the next preferences emission can re-hydrate
      *  the form. */
@@ -448,7 +464,7 @@ class TweaksViewModel(
             }
 
             is TweaksAction.OnProxyPasswordVisibilityToggle -> {
-                mutateForm(action.scope) {
+                mutateFormUi(action.scope) {
                     it.copy(isPasswordVisible = !it.isPasswordVisible)
                 }
             }
@@ -521,7 +537,7 @@ class TweaksViewModel(
                 val form = _state.value.formFor(action.scope)
                 if (form.isTestInProgress) return
                 val config = buildProxyConfigForTest(action.scope) ?: return
-                mutateForm(action.scope) { it.copy(isTestInProgress = true) }
+                mutateFormUi(action.scope) { it.copy(isTestInProgress = true) }
                 viewModelScope.launch {
                     val outcome: ProxyTestOutcome =
                         try {
@@ -532,7 +548,7 @@ class TweaksViewModel(
                         } catch (e: Exception) {
                             ProxyTestOutcome.Failure.Unknown(e.message)
                         } finally {
-                            mutateForm(action.scope) { it.copy(isTestInProgress = false) }
+                            mutateFormUi(action.scope) { it.copy(isTestInProgress = false) }
                         }
                     _events.send(outcome.toEvent())
                 }
