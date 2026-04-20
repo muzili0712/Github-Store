@@ -176,7 +176,31 @@ class ShizukuInstallerWrapper(
         androidInstaller.uninstall(packageName)
     }
 
-    private suspend fun shouldUseShizuku(): Boolean = isShizukuEnabled() && shizukuServiceManager.status.value == ShizukuStatus.READY
+    /**
+     * Whether this install attempt should be routed through Shizuku.
+     *
+     * Refreshes status first so we don't act on a stale cache. The
+     * status flow is only updated reactively by Shizuku's
+     * binder-received / binder-dead / permission-result listeners,
+     * plus a one-shot `initialize()` at DI time. If the app has been
+     * backgrounded long enough for the binder to die and revive
+     * without our listener catching the transition (e.g. days between
+     * the user opening the app), the cached value lags reality and
+     * we'd wrongly fall through to the unknown-sources prompt — the
+     * concrete symptom in issue #419. [AutoUpdateWorker] already does
+     * this before its own gate; this mirrors that pattern for every
+     * install path.
+     *
+     * Both gates are required: the user's explicit
+     * [InstallerType.SHIZUKU] preference AND a live/granted Shizuku.
+     * We deliberately don't override the preference — DEFAULT means
+     * "use the system installer," even when Shizuku happens to be
+     * granted for another purpose.
+     */
+    private fun shouldUseShizuku(): Boolean {
+        shizukuServiceManager.refreshStatus()
+        return isShizukuEnabled() && shizukuServiceManager.status.value == ShizukuStatus.READY
+    }
 
     private fun isShizukuEnabled(): Boolean = cachedInstallerType == InstallerType.SHIZUKU
 }
