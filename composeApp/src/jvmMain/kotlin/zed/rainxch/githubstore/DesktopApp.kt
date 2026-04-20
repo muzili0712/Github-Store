@@ -51,10 +51,6 @@ fun main(args: Array<String>) {
     // language swaps surface as a "restart required" snackbar from the
     // Tweaks screen; this block just covers the cold-start path so
     // users see their chosen language immediately on next launch.
-    //
-    // Timeout guards against a stalled DataStore read blocking window
-    // creation and deep-link dispatch — we fall back to system language
-    // rather than hang the launch.
     runBlocking {
         val koin = GlobalContext.get()
         val tweaksRepo = koin.get<TweaksRepository>()

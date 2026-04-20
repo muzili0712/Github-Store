@@ -752,22 +752,9 @@ class TweaksViewModel(
             }
 
             is TweaksAction.OnAppLanguageSelected -> {
-                // Skip the write + restart prompt when the user re-picks
-                // the language that's already active — tapping the
-                // current option shouldn't look like a change on
-                // Desktop (would fire a spurious "restart to apply"
-                // snackbar) or churn DataStore on Android.
                 if (action.tag == _state.value.selectedAppLanguage) return
                 viewModelScope.launch {
                     tweaksRepository.setAppLanguage(action.tag)
-                    // Android: `MainActivity` is subscribed to the
-                    // same preference flow and calls `recreate()` on
-                    // change — no extra nudging needed. Desktop has
-                    // no recreate-equivalent, so we surface a
-                    // "restart to apply" prompt; the user's choice is
-                    // already persisted and will take effect on the
-                    // next launch (or they can restart now via the
-                    // snackbar action).
                     if (getPlatform() != Platform.ANDROID) {
                         _events.send(TweaksEvent.OnAppLanguageChangeRequiresRestart)
                     }

@@ -214,10 +214,6 @@ class TweaksRepositoryImpl(
 
     override fun getAppLanguage(): Flow<String?> =
         preferences.data.map { prefs ->
-            // Treat blank *or* unknown tags as "unset" — guards against
-            // stale writes from older builds that shipped a language
-            // we no longer bundle resources for, which would otherwise
-            // pin the UI to an unresolvable locale.
             prefs[APP_LANGUAGE_KEY]
                 ?.trim()
                 ?.takeIf { it.isNotEmpty() && AppLanguages.containsTag(it) }

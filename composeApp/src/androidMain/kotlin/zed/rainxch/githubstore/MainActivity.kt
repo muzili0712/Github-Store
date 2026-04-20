@@ -49,11 +49,6 @@ class MainActivity : ComponentActivity() {
         // cheap and we only block once per Activity creation (including
         // the post-language-swap recreate() path below). Without this,
         // recreate() would briefly flash the old locale before settling.
-        //
-        // The 2s timeout + catch-all is defence against a stalled or
-        // corrupted DataStore: we'd rather boot in system language than
-        // leave the Activity stuck before super.onCreate(), which would
-        // hang the whole app with no visible error.
         runBlocking {
             val tag =
                 try {

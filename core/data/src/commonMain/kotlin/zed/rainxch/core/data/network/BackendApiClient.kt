@@ -6,6 +6,7 @@ import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import zed.rainxch.core.data.data_source.TokenStore
 import zed.rainxch.core.data.dto.BackendExploreResponse
 import zed.rainxch.core.data.dto.BackendRepoResponse
 import zed.rainxch.core.data.dto.BackendSearchResponse
@@ -42,6 +44,7 @@ import kotlin.coroutines.cancellation.CancellationException
  */
 class BackendApiClient(
     proxyConfigFlow: StateFlow<ProxyConfig>,
+    private val tokenStore: TokenStore,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
     private val mutex = Mutex()
@@ -110,12 +113,14 @@ class BackendApiClient(
         offset: Int = 0,
     ): Result<BackendSearchResponse> =
         safeCall {
+            val token = currentUserGithubToken()
             val response = httpClient.get("search") {
                 parameter("q", query)
                 if (platform != null) parameter("platform", platform)
                 if (sort != null) parameter("sort", sort)
                 parameter("limit", limit)
                 parameter("offset", offset)
+                if (token != null) header(X_GITHUB_TOKEN_HEADER, token)
             }
             if (response.status.isSuccess()) {
                 Result.success(response.body())
@@ -130,11 +135,13 @@ class BackendApiClient(
         page: Int = 1,
     ): Result<BackendExploreResponse> =
         safeCall {
+            val token = currentUserGithubToken()
             val response = httpClient.get("search/explore") {
                 parameter("q", query)
                 if (platform != null) parameter("platform", platform)
                 parameter("page", page)
                 timeout { requestTimeoutMillis = 20_000 }
+                if (token != null) header(X_GITHUB_TOKEN_HEADER, token)
             }
             if (response.status.isSuccess()) {
                 Result.success(response.body())
@@ -142,6 +149,11 @@ class BackendApiClient(
                 Result.failure(BackendException("HTTP ${response.status.value}"))
             }
         }
+
+    private suspend fun currentUserGithubToken(): String? =
+        runCatching { tokenStore.currentToken()?.accessToken?.trim() }
+            .getOrNull()
+            ?.takeIf { it.isNotEmpty() }
 
     suspend fun getRepo(owner: String, name: String): Result<BackendRepoResponse> =
         safeCall {
@@ -180,6 +192,7 @@ class BackendApiClient(
 
     companion object {
         private const val BASE_URL = "https://api.github-store.org/v1/"
+        private const val X_GITHUB_TOKEN_HEADER = "X-GitHub-Token"
     }
 }
 

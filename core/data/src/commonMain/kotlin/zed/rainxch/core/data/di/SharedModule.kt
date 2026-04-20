@@ -155,6 +155,7 @@ val coreModule =
             get<ProxyManagerSeeding>()
             BackendApiClient(
                 proxyConfigFlow = ProxyManager.configFlow(ProxyScope.DISCOVERY),
+                tokenStore = get(),
             )
         }
         // NOTE: the reviewer asked for a Koin onClose hook to call
