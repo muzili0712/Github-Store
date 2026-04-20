@@ -12,8 +12,13 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.core.context.GlobalContext
+import zed.rainxch.core.data.services.LocalizationManager
+import zed.rainxch.core.domain.repository.TweaksRepository
 import zed.rainxch.githubstore.app.desktop.KeyboardNavigation
 import zed.rainxch.githubstore.app.desktop.KeyboardNavigationEvent
 import zed.rainxch.githubstore.app.di.initKoin
@@ -31,6 +36,20 @@ fun main(args: Array<String>) {
     java.security.Security.setProperty("networkaddress.cache.negative.ttl", "5")
 
     initKoin()
+
+    // Apply persisted UI language before any Compose code runs — same
+    // reasoning as on Android (see `MainActivity.onCreate`). Desktop
+    // Compose has no runtime `recreate()` equivalent, so mid-session
+    // language swaps surface as a "restart required" snackbar from the
+    // Tweaks screen; this block just covers the cold-start path so
+    // users see their chosen language immediately on next launch.
+    runBlocking {
+        val koin = GlobalContext.get()
+        val tweaksRepo = koin.get<TweaksRepository>()
+        val localization = koin.get<LocalizationManager>()
+        val tag = tweaksRepo.getAppLanguage().first()
+        localization.setActiveLanguageTag(tag)
+    }
 
     val deepLinkArg = args.firstOrNull()
 

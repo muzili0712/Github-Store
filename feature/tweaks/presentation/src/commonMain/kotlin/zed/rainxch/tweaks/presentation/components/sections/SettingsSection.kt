@@ -21,6 +21,15 @@ fun LazyListScope.settings(
         Spacer(Modifier.height(32.dp))
     }
 
+    languageSection(
+        state = state,
+        onAction = onAction,
+    )
+
+    item {
+        Spacer(Modifier.height(32.dp))
+    }
+
     networkSection(
         state = state,
         onAction = onAction,
