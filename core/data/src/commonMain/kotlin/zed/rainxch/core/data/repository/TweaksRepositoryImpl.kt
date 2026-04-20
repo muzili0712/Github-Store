@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import zed.rainxch.core.domain.model.AppLanguages
 import zed.rainxch.core.domain.model.AppTheme
 import zed.rainxch.core.domain.model.DiscoveryPlatform
 import zed.rainxch.core.domain.model.FontTheme
@@ -213,15 +214,19 @@ class TweaksRepositoryImpl(
 
     override fun getAppLanguage(): Flow<String?> =
         preferences.data.map { prefs ->
-            // Treat empty/blank as "unset" so a stale/malformed write
-            // doesn't pin the UI to an unresolvable locale.
-            prefs[APP_LANGUAGE_KEY]?.takeIf { it.isNotBlank() }
+            // Treat blank *or* unknown tags as "unset" — guards against
+            // stale writes from older builds that shipped a language
+            // we no longer bundle resources for, which would otherwise
+            // pin the UI to an unresolvable locale.
+            prefs[APP_LANGUAGE_KEY]
+                ?.trim()
+                ?.takeIf { it.isNotEmpty() && AppLanguages.containsTag(it) }
         }
 
     override suspend fun setAppLanguage(tag: String?) {
         preferences.edit { prefs ->
             val normalized = tag?.trim().orEmpty()
-            if (normalized.isEmpty()) {
+            if (normalized.isEmpty() || !AppLanguages.containsTag(normalized)) {
                 prefs.remove(APP_LANGUAGE_KEY)
             } else {
                 prefs[APP_LANGUAGE_KEY] = normalized

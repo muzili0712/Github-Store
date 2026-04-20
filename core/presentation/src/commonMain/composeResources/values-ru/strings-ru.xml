@@ -96,7 +96,7 @@
 
     <string name="section_appearance">ВНЕШНИЙ ВИД</string>
     <string name="section_language">ЯЗЫК</string>
-    <string name="language_intro">Переопределить язык интерфейса приложения. Применяется мгновенно — перезапуск не требуется.</string>
+    <string name="language_intro">Переопределить язык интерфейса приложения.</string>
     <string name="language_picker_title">Язык приложения</string>
     <string name="language_picker_description">Изменяет меню, кнопки и сообщения во всём приложении. Не изменяет содержимое с GitHub.</string>
     <string name="language_follow_system">Как в системе</string>

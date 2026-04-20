@@ -98,7 +98,7 @@
 
     <string name="section_appearance">外观</string>
     <string name="section_language">语言</string>
-    <string name="language_intro">覆盖应用界面语言。即时生效，无需重启。</string>
+    <string name="language_intro">覆盖应用界面语言。</string>
     <string name="language_picker_title">应用语言</string>
     <string name="language_picker_description">更改应用中的菜单、按钮和消息。不会更改来自 GitHub 的内容。</string>
     <string name="language_follow_system">跟随系统</string>

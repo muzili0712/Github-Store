@@ -97,7 +97,7 @@
 
     <string name="section_appearance">WYGLĄD</string>
     <string name="section_language">JĘZYK</string>
-    <string name="language_intro">Zmień język interfejsu aplikacji. Stosowany natychmiast — bez restartu.</string>
+    <string name="language_intro">Zmień język interfejsu aplikacji.</string>
     <string name="language_picker_title">Język aplikacji</string>
     <string name="language_picker_description">Zmienia menu, przyciski i komunikaty w całej aplikacji. Nie zmienia treści pochodzącej z GitHub.</string>
     <string name="language_follow_system">Taki jak system</string>

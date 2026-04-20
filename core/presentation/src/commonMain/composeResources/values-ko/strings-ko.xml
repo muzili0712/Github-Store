@@ -112,7 +112,7 @@
     <!-- Sections -->
     <string name="section_appearance">외관</string>
     <string name="section_language">언어</string>
-    <string name="language_intro">앱의 UI 언어를 재정의합니다. 즉시 적용되며 재시작이 필요 없습니다.</string>
+    <string name="language_intro">앱의 UI 언어를 재정의합니다.</string>
     <string name="language_picker_title">앱 언어</string>
     <string name="language_picker_description">앱 전체의 메뉴, 버튼, 메시지를 변경합니다. GitHub의 콘텐츠는 변경하지 않습니다.</string>
     <string name="language_follow_system">시스템 따름</string>

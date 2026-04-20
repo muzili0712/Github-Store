@@ -104,7 +104,7 @@ Routes defined in `composeApp/.../app/navigation/GithubStoreGraph.kt`, wired in 
 |--------|---------|--------------|
 | `core/domain` | Shared contracts | Repository interfaces (`FavouritesRepository`, `StarredRepository`, `InstalledAppsRepository`, `ThemesRepository`, `ProxyRepository`, `RateLimitRepository`), models (`GithubRepoSummary`, `GithubRelease`, `InstalledApp`, `ProxyConfig`, `InstallerType`, `ShizukuAvailability`), system interfaces (`Installer`, `InstallerInfoExtractor`, `InstallerStatusProvider`, `PackageMonitor`) |
 | `core/data` | Shared implementations | `HttpClientFactory` (Ktor + interceptors), `AppDatabase` (Room), `ProxyManager`, `TokenStore`, `LocalizationManager`, platform-specific clients (OkHttp for Android, CIO for Desktop), Shizuku integration (Android: `ShizukuServiceManager`, `ShizukuInstallerWrapper`, `ShizukuInstallerServiceImpl`, `AndroidInstallerStatusProvider`; Desktop: `DesktopInstallerStatusProvider`) |
-| `core/presentation` | Shared UI | `GithubStoreTheme` (Material 3), reusable components (`RepositoryCard`, `GithubStoreButton`), formatting utils, localized strings (11 languages) |
+| `core/presentation` | Shared UI | `GithubStoreTheme` (Material 3), reusable components (`RepositoryCard`, `GithubStoreButton`), formatting utils, localized strings (13 languages) |
 
 ## Tech Stack
 

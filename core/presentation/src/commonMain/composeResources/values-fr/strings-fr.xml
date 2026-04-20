@@ -96,7 +96,7 @@
 
     <string name="section_appearance">APPARENCE</string>
     <string name="section_language">LANGUE</string>
-    <string name="language_intro">Remplace la langue de l\'interface. Prise en compte immédiate — aucun redémarrage requis.</string>
+    <string name="language_intro">Remplace la langue de l\'interface.</string>
     <string name="language_picker_title">Langue de l\'application</string>
     <string name="language_picker_description">Modifie les menus, boutons et messages dans toute l\'application. Ne modifie pas le contenu provenant de GitHub.</string>
     <string name="language_follow_system">Suivre le système</string>

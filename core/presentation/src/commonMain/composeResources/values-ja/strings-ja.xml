@@ -96,7 +96,7 @@
 
     <string name="section_appearance">外観</string>
     <string name="section_language">言語</string>
-    <string name="language_intro">アプリのUI言語を上書きします。再起動不要で即座に適用されます。</string>
+    <string name="language_intro">アプリのUI言語を上書きします。</string>
     <string name="language_picker_title">アプリの言語</string>
     <string name="language_picker_description">アプリ全体のメニュー、ボタン、メッセージを変更します。GitHubからのコンテンツは変更されません。</string>
     <string name="language_follow_system">システムに従う</string>

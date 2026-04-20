@@ -114,7 +114,7 @@
     <!-- Sections -->
     <string name="section_appearance">उपस्थिति</string>
     <string name="section_language">भाषा</string>
-    <string name="language_intro">ऐप की UI भाषा को बदलें। तुरंत लागू होता है — पुनरारंभ की आवश्यकता नहीं।</string>
+    <string name="language_intro">ऐप की UI भाषा को बदलें।</string>
     <string name="language_picker_title">ऐप भाषा</string>
     <string name="language_picker_description">पूरे ऐप में मेनू, बटन और संदेश बदलता है। GitHub से आने वाली सामग्री नहीं बदलती।</string>
     <string name="language_follow_system">सिस्टम का पालन करें</string>

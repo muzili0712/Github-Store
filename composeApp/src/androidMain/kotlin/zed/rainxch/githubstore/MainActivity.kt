@@ -20,12 +20,15 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import org.koin.android.ext.android.inject
 import zed.rainxch.core.data.services.LocalizationManager
 import zed.rainxch.core.data.utils.AndroidShareManager
 import zed.rainxch.core.domain.repository.TweaksRepository
 import zed.rainxch.core.domain.utils.ShareManager
 import zed.rainxch.githubstore.app.deeplink.DeepLinkParser
+
+private const val LANGUAGE_PREF_READ_TIMEOUT_MS = 2000L
 
 class MainActivity : ComponentActivity() {
     private var deepLinkUri by mutableStateOf<String?>(null)
@@ -46,8 +49,20 @@ class MainActivity : ComponentActivity() {
         // cheap and we only block once per Activity creation (including
         // the post-language-swap recreate() path below). Without this,
         // recreate() would briefly flash the old locale before settling.
+        //
+        // The 2s timeout + catch-all is defence against a stalled or
+        // corrupted DataStore: we'd rather boot in system language than
+        // leave the Activity stuck before super.onCreate(), which would
+        // hang the whole app with no visible error.
         runBlocking {
-            val tag = tweaksRepository.getAppLanguage().first()
+            val tag =
+                try {
+                    withTimeoutOrNull(LANGUAGE_PREF_READ_TIMEOUT_MS) {
+                        tweaksRepository.getAppLanguage().first()
+                    }
+                } catch (_: Throwable) {
+                    null
+                }
             localizationManager.setActiveLanguageTag(tag)
         }
 

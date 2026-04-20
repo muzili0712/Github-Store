@@ -114,7 +114,7 @@
     <!-- Sections -->
     <string name="section_appearance">চেহারা</string>
     <string name="section_language">ভাষা</string>
-    <string name="language_intro">অ্যাপের UI ভাষা ওভাররাইড করুন। তৎক্ষণাৎ প্রয়োগ হয় — পুনরায় চালু করার প্রয়োজন নেই।</string>
+    <string name="language_intro">অ্যাপের UI ভাষা ওভাররাইড করুন।</string>
     <string name="language_picker_title">অ্যাপের ভাষা</string>
     <string name="language_picker_description">সম্পূর্ণ অ্যাপের মেনু, বোতাম এবং বার্তা পরিবর্তন করে। GitHub থেকে আসা বিষয়বস্তু পরিবর্তন করে না।</string>
     <string name="language_follow_system">সিস্টেম অনুসরণ করুন</string>
