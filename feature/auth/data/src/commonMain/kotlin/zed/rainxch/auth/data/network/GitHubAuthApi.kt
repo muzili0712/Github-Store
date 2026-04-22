@@ -21,6 +21,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
+import zed.rainxch.auth.domain.repository.RejectedKind
 import zed.rainxch.core.data.dto.GithubDeviceStartDto
 import zed.rainxch.core.data.dto.GithubDeviceTokenErrorDto
 import zed.rainxch.core.data.dto.GithubDeviceTokenSuccessDto
@@ -32,7 +33,7 @@ class BackendHttpException(
 
 sealed interface PatValidation {
     data object Valid : PatValidation
-    data class Rejected(val reason: String) : PatValidation
+    data class Rejected(val kind: RejectedKind) : PatValidation
     data class Unreachable(val reason: String) : PatValidation
 }
 
@@ -57,6 +58,25 @@ object GitHubAuthApi {
                 retryOnServerErrors(maxRetries = 2)
                 retryOnException(maxRetries = 2, retryOnTimeout = true)
                 exponentialDelay()
+            }
+        }
+    }
+
+    /**
+     * Dedicated client for PAT validation — NO retries. Validation is a
+     * user-blocking synchronous step (sheet is spinning while we call
+     * this), so a 30s retry cascade defeats the UX for anyone on a
+     * degraded network. One shot, 10s timeout, done. Falls back to the
+     * "Unreachable" path on any failure, which the caller handles by
+     * saving optimistically.
+     */
+    private val validationHttp by lazy {
+        HttpClient {
+            install(ContentNegotiation) { json(json) }
+            install(HttpTimeout) {
+                requestTimeoutMillis = 10_000
+                connectTimeoutMillis = 10_000
+                socketTimeoutMillis = 10_000
             }
         }
     }
@@ -281,20 +301,23 @@ object GitHubAuthApi {
      */
     suspend fun validatePersonalAccessToken(token: String): PatValidation {
         return try {
-            val res = http.get("https://api.github.com/user") {
+            val res = validationHttp.get("https://api.github.com/user") {
                 accept(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, "Bearer $token")
                 header(HttpHeaders.UserAgent, "GithubStore/1.0 (PAT-validate)")
-                timeout {
-                    requestTimeoutMillis = 10_000
-                    socketTimeoutMillis = 10_000
-                }
             }
             val status = res.status
             when {
                 status.isSuccessLike() -> PatValidation.Valid
-                status == HttpStatusCode.Unauthorized -> PatValidation.Rejected("Bad credentials")
-                status == HttpStatusCode.Forbidden -> PatValidation.Rejected("Token lacks required permissions or is banned")
+                status == HttpStatusCode.Unauthorized ->
+                    PatValidation.Rejected(RejectedKind.BadCredentials)
+                status == HttpStatusCode.Forbidden ->
+                    PatValidation.Rejected(RejectedKind.InsufficientScope)
+                // Non-auth 4xx (400, 422, etc.): treat as a definitive reject
+                // rather than "unreachable" — GitHub could answer, it just
+                // said no. Retrying won't help.
+                status.value in 400..499 ->
+                    PatValidation.Rejected(RejectedKind.Other(status.value))
                 else -> PatValidation.Unreachable("HTTP ${status.value}")
             }
         } catch (e: CancellationException) {

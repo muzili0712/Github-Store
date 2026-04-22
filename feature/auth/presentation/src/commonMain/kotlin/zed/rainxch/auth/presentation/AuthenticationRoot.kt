@@ -55,6 +55,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -738,7 +739,17 @@ private fun PatSignInSheet(
     isSubmitting: Boolean,
     onAction: (AuthenticationAction) -> Unit,
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        // Veto the visual Hidden transition while a submission is in
+        // flight, so a swipe-down/scrim-tap can't cosmetically dismiss
+        // the sheet before `onDismissRequest`'s guard runs. Pairs with
+        // the existing `!isSubmitting` check in `onDismissRequest` to
+        // fully gate dismissal during save.
+        confirmValueChange = { newValue ->
+            !(isSubmitting && newValue == SheetValue.Hidden)
+        },
+    )
     var isMasked by remember { mutableStateOf(true) }
 
     ModalBottomSheet(

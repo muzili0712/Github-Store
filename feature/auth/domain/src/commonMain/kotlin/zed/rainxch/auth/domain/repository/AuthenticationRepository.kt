@@ -64,3 +64,26 @@ sealed interface DevicePollResult {
 
     data class Failed(val error: Throwable) : DevicePollResult
 }
+
+/**
+ * Reason a Personal Access Token was rejected by GitHub. Lives in the
+ * domain layer so the VM can pattern-match and map to localized strings
+ * without any raw English leaking through from the data layer.
+ */
+sealed interface RejectedKind {
+    /** GitHub returned 401 — token is invalid or has been revoked. */
+    data object BadCredentials : RejectedKind
+
+    /** GitHub returned 403 — token lacks required permissions/scopes or is banned. */
+    data object InsufficientScope : RejectedKind
+
+    /** Any other non-2xx status that still represents a definitive reject. */
+    data class Other(val statusCode: Int) : RejectedKind
+}
+
+/**
+ * Thrown by `signInWithPat` when GitHub definitively rejects the token
+ * (as opposed to "we couldn't reach GitHub to ask"). Carries a typed
+ * [kind] so the presentation layer can display a localized error.
+ */
+class PatRejectedException(val kind: RejectedKind) : Exception("PAT rejected: $kind")

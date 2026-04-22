@@ -22,6 +22,8 @@ import org.jetbrains.compose.resources.getString
 import zed.rainxch.auth.domain.repository.AuthPath
 import zed.rainxch.auth.domain.repository.AuthenticationRepository
 import zed.rainxch.auth.domain.repository.DevicePollResult
+import zed.rainxch.auth.domain.repository.PatRejectedException
+import zed.rainxch.auth.domain.repository.RejectedKind
 import zed.rainxch.auth.presentation.mapper.toUi
 import zed.rainxch.auth.presentation.model.AuthLoginState
 import zed.rainxch.auth.presentation.model.GithubDeviceStartUi
@@ -209,7 +211,15 @@ class AuthenticationViewModel(
                     logger.debug("PAT sign-in failed: ${t.message}")
                     val message = when (t) {
                         is IllegalArgumentException -> getString(Res.string.pat_error_invalid_format)
-                        else -> t.message ?: getString(Res.string.pat_error_generic)
+                        is PatRejectedException -> when (t.kind) {
+                            is RejectedKind.BadCredentials ->
+                                getString(Res.string.pat_error_bad_credentials)
+                            is RejectedKind.InsufficientScope ->
+                                getString(Res.string.pat_error_insufficient_scope)
+                            is RejectedKind.Other ->
+                                getString(Res.string.pat_error_generic)
+                        }
+                        else -> getString(Res.string.pat_error_generic)
                     }
                     _state.update {
                         it.copy(

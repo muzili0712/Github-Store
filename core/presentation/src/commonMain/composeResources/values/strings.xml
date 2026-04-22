@@ -225,6 +225,8 @@
     <string name="pat_hide">Hide token</string>
     <string name="pat_error_empty">Please paste a token.</string>
     <string name="pat_error_invalid_format">That doesn\'t look like a GitHub token. Tokens start with ghp_ or github_pat_.</string>
+    <string name="pat_error_bad_credentials">That token is invalid or has been revoked.</string>
+    <string name="pat_error_insufficient_scope">That token doesn\'t have the required permissions.</string>
     <string name="pat_error_generic">Couldn\'t save token. Please try again.</string>
     <string name="releases_load_failed">Couldn\'t load releases</string>
     <string name="releases_load_failed_description">Check your connection and try again.</string>

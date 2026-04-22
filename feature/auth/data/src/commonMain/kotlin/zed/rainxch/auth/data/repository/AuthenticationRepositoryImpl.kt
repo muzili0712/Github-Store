@@ -19,6 +19,7 @@ import zed.rainxch.auth.domain.repository.AuthPath
 import zed.rainxch.auth.domain.repository.AuthenticationRepository
 import zed.rainxch.auth.domain.repository.DeviceFlowStart
 import zed.rainxch.auth.domain.repository.DevicePollResult
+import zed.rainxch.auth.domain.repository.PatRejectedException
 import zed.rainxch.auth.domain.repository.PollOutcome
 import zed.rainxch.core.data.data_source.TokenStore
 import zed.rainxch.core.data.dto.GithubDeviceTokenSuccessDto
@@ -363,9 +364,9 @@ class AuthenticationRepositoryImpl(
                     logger.debug("PAT network-validated against GitHub /user")
                 }
                 is PatValidation.Rejected -> {
-                    logger.warn("PAT rejected by GitHub: ${validation.reason}")
+                    logger.warn("PAT rejected by GitHub: ${validation.kind}")
                     return@withContext Result.failure(
-                        IllegalStateException(validation.reason),
+                        PatRejectedException(validation.kind),
                     )
                 }
                 is PatValidation.Unreachable -> {
