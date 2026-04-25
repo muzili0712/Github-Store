@@ -33,6 +33,8 @@ import zed.rainxch.core.data.dto.BackendExploreResponse
 import zed.rainxch.core.data.dto.BackendRepoResponse
 import zed.rainxch.core.data.dto.BackendSearchResponse
 import zed.rainxch.core.data.dto.EventRequest
+import zed.rainxch.core.data.dto.ExternalMatchRequest
+import zed.rainxch.core.data.dto.ExternalMatchResponse
 import zed.rainxch.core.data.dto.GithubReadmeResponseDto
 import zed.rainxch.core.data.dto.ReleaseNetwork
 import zed.rainxch.core.data.dto.UserProfileNetwork
@@ -238,6 +240,22 @@ class BackendApiClient(
                 Result.success(response.body())
             } else {
                 Result.failure(BackendException(response.status.value))
+            }
+        }
+
+    suspend fun postExternalMatch(body: ExternalMatchRequest): Result<ExternalMatchResponse> =
+        safeCall {
+            val response = httpClient.post("external-match") {
+                contentType(ContentType.Application.Json)
+                setBody(body)
+            }
+            when {
+                response.status.isSuccess() ->
+                    Result.success(response.body())
+                response.status == HttpStatusCode.TooManyRequests ->
+                    Result.failure(RateLimitedException())
+                else ->
+                    Result.failure(BackendException(response.status.value))
             }
         }
 

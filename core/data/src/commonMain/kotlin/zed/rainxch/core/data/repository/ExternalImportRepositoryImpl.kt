@@ -11,8 +11,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlin.time.Clock
+import zed.rainxch.core.data.dto.ExternalMatchRequest
 import zed.rainxch.core.data.local.db.dao.ExternalLinkDao
 import zed.rainxch.core.data.local.db.entities.ExternalLinkEntity
+import zed.rainxch.core.data.mappers.toRepoMatchResults
+import zed.rainxch.core.data.mappers.toRequestItem
+import zed.rainxch.core.data.network.ExternalMatchApi
 import zed.rainxch.core.domain.repository.ExternalImportRepository
 import zed.rainxch.core.domain.system.ExternalAppCandidate
 import zed.rainxch.core.domain.system.ExternalAppScanner
@@ -20,12 +24,14 @@ import zed.rainxch.core.domain.system.ExternalLinkState
 import zed.rainxch.core.domain.system.ImportSummary
 import zed.rainxch.core.domain.system.RepoMatchResult
 import zed.rainxch.core.domain.system.RepoMatchSource
+import zed.rainxch.core.domain.system.RepoMatchSuggestion
 import zed.rainxch.core.domain.system.ScanResult
 
 class ExternalImportRepositoryImpl(
     private val scanner: ExternalAppScanner,
     private val externalLinkDao: ExternalLinkDao,
     private val preferences: DataStore<Preferences>,
+    private val externalMatchApi: ExternalMatchApi,
 ) : ExternalImportRepository {
     // Snapshot cache survives only for the lifetime of the process. Decisions
     // (linked / skipped / never-ask) are persisted in `external_links`; the
@@ -120,14 +126,82 @@ class ExternalImportRepositoryImpl(
         )
     }
 
-    override suspend fun resolveMatches(candidates: List<ExternalAppCandidate>): List<RepoMatchResult> =
-        // Backend strategy ships in Week 2; manifest-derived matches are already
-        // persisted by `runFullScan` directly onto the external_links row, so
-        // returning empty here is correct for the manifest-only path.
-        emptyList()
+    override suspend fun resolveMatches(candidates: List<ExternalAppCandidate>): List<RepoMatchResult> {
+        if (candidates.isEmpty()) return emptyList()
+
+        val backendResults = mutableMapOf<String, MutableList<RepoMatchSuggestion>>()
+        for (batch in candidates.chunked(MATCH_BATCH_SIZE)) {
+            val request =
+                ExternalMatchRequest(
+                    platform = "android",
+                    candidates = batch.map { it.toRequestItem() },
+                )
+            externalMatchApi
+                .match(request)
+                .onSuccess { response ->
+                    response.toRepoMatchResults().forEach { result ->
+                        backendResults
+                            .getOrPut(result.packageName) { mutableListOf() }
+                            .addAll(result.suggestions)
+                    }
+                }.onFailure { Logger.w(it) { "external-match batch failed; continuing" } }
+        }
+
+        return candidates.map { candidate ->
+            val suggestions = mutableListOf<RepoMatchSuggestion>()
+            candidate.manifestHint?.let { hint ->
+                suggestions += RepoMatchSuggestion(
+                    owner = hint.owner,
+                    repo = hint.repo,
+                    confidence = hint.confidence,
+                    source = RepoMatchSource.MANIFEST,
+                )
+            }
+            backendResults[candidate.packageName]?.let { suggestions += it }
+            RepoMatchResult(
+                packageName = candidate.packageName,
+                suggestions = suggestions
+                    .distinctBy { "${it.owner}/${it.repo}" }
+                    .sortedByDescending { it.confidence },
+            )
+        }
+    }
 
     override suspend fun importAutoMatched(matches: List<RepoMatchResult>): ImportSummary {
-        notImplemented("importAutoMatched")
+        var linked = 0
+        val now = nowMillis()
+        matches.forEach { result ->
+            val top = result.topSuggestion
+            if (top != null && top.confidence >= AUTO_LINK_CONFIDENCE_THRESHOLD) {
+                val existing = externalLinkDao.get(result.packageName)
+                val base = existing ?: ExternalLinkEntity(
+                    packageName = result.packageName,
+                    state = ExternalLinkState.MATCHED.name,
+                    repoOwner = top.owner,
+                    repoName = top.repo,
+                    matchSource = top.source.name.lowercase(),
+                    matchConfidence = top.confidence,
+                    signingFingerprint = null,
+                    installerKind = null,
+                    firstSeenAt = now,
+                    lastReviewedAt = now,
+                    skipExpiresAt = null,
+                )
+                externalLinkDao.upsert(
+                    base.copy(
+                        state = ExternalLinkState.MATCHED.name,
+                        repoOwner = top.owner,
+                        repoName = top.repo,
+                        matchSource = top.source.name.lowercase(),
+                        matchConfidence = top.confidence,
+                        lastReviewedAt = now,
+                    ),
+                )
+                linked++
+            }
+        }
+        // TODO Week 2 day 11: also call AppsRepository.linkAppToRepo to materialize installed_apps rows
+        return ImportSummary(attempted = matches.size, linked = linked, failed = 0)
     }
 
     override suspend fun linkManually(
@@ -136,7 +210,33 @@ class ExternalImportRepositoryImpl(
         repo: String,
         source: String,
     ): Result<Unit> {
-        notImplemented("linkManually")
+        val now = nowMillis()
+        val existing = externalLinkDao.get(packageName)
+        val base = existing ?: ExternalLinkEntity(
+            packageName = packageName,
+            state = ExternalLinkState.MATCHED.name,
+            repoOwner = owner,
+            repoName = repo,
+            matchSource = source,
+            matchConfidence = 1.0,
+            signingFingerprint = null,
+            installerKind = null,
+            firstSeenAt = now,
+            lastReviewedAt = now,
+            skipExpiresAt = null,
+        )
+        externalLinkDao.upsert(
+            base.copy(
+                state = ExternalLinkState.MATCHED.name,
+                repoOwner = owner,
+                repoName = repo,
+                matchSource = source,
+                matchConfidence = 1.0,
+                lastReviewedAt = now,
+            ),
+        )
+        // TODO Week 2 day 11: AppsRepository.linkAppToRepo
+        return Result.success(Unit)
     }
 
     override suspend fun skipPackage(
@@ -174,7 +274,9 @@ class ExternalImportRepositoryImpl(
     }
 
     override suspend fun rescanSinglePackage(packageName: String): RepoMatchResult? {
-        notImplemented("rescanSinglePackage")
+        val candidate = scanner.snapshotSingle(packageName) ?: return null
+        candidateSnapshot.update { it + (packageName to candidate) }
+        return resolveMatches(listOf(candidate)).firstOrNull()
     }
 
     override suspend fun syncSigningFingerprintSeed() {
@@ -240,5 +342,7 @@ class ExternalImportRepositoryImpl(
     companion object {
         private val INITIAL_SCAN_COMPLETED_AT_KEY = longPreferencesKey("external_import_initial_scan_at")
         private const val SKIP_TTL_MILLIS: Long = 7L * 24 * 60 * 60 * 1000
+        private const val MATCH_BATCH_SIZE = 25
+        private const val AUTO_LINK_CONFIDENCE_THRESHOLD = 0.85
     }
 }

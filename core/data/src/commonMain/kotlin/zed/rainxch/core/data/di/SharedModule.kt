@@ -26,7 +26,11 @@ import zed.rainxch.core.data.local.db.dao.StarredRepoDao
 import zed.rainxch.core.data.local.db.dao.UpdateHistoryDao
 import zed.rainxch.core.data.logging.KermitLogger
 import zed.rainxch.core.data.network.BackendApiClient
+import zed.rainxch.core.data.network.BackendExternalMatchApi
+import zed.rainxch.core.data.network.ExternalMatchApi
+import zed.rainxch.core.data.network.ExternalMatchApiSelector
 import zed.rainxch.core.data.network.GitHubClientProvider
+import zed.rainxch.core.data.network.MockExternalMatchApi
 import zed.rainxch.core.data.network.ProxyManager
 import zed.rainxch.core.data.network.ProxyManagerSeeding
 import zed.rainxch.core.data.network.ProxyTesterImpl
@@ -191,11 +195,24 @@ val coreModule =
             )
         }
 
+        single { BackendExternalMatchApi(get()) }
+
+        single { MockExternalMatchApi() }
+
+        single<ExternalMatchApi> {
+            ExternalMatchApiSelector(
+                real = get(),
+                mock = get(),
+                tweaks = get(),
+            )
+        }
+
         single<ExternalImportRepository> {
             ExternalImportRepositoryImpl(
                 scanner = get<ExternalAppScanner>(),
                 externalLinkDao = get(),
                 preferences = get(),
+                externalMatchApi = get(),
             )
         }
 
