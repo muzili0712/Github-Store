@@ -77,7 +77,7 @@ I made a video introducing myself and sharing what's next for GitHub Store.
 
 Help shape the future of GitHub Store — take this 2-minute survey:
 
-**[📋 Take the Survey →](tally.so/r/q4Ed88)**
+**[📋 Take the Survey →](https://www.tally.so/r/q4Ed88)**
 
 </div>
 
