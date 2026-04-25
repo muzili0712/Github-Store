@@ -15,4 +15,5 @@ enum class SuggestionSource {
     MANIFEST,
     SEARCH,
     FINGERPRINT,
+    MANUAL,
 }

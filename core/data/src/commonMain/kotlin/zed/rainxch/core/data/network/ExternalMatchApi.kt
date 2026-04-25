@@ -6,6 +6,7 @@ import zed.rainxch.core.data.dto.ExternalMatchResponse
 import zed.rainxch.core.domain.repository.TweaksRepository
 
 interface ExternalMatchApi {
+    // NOTE: chunking lives in the repo; impls receive whatever the repo passes
     suspend fun match(request: ExternalMatchRequest): Result<ExternalMatchResponse>
 }
 
@@ -51,6 +52,7 @@ class ExternalMatchApiSelector(
     private val tweaks: TweaksRepository,
 ) : ExternalMatchApi {
     override suspend fun match(request: ExternalMatchRequest): Result<ExternalMatchResponse> =
+        // TODO Week 3: cache this via stateIn on a long-lived scope
         if (tweaks.getExternalMatchSearchEnabled().first()) {
             real.match(request)
         } else {

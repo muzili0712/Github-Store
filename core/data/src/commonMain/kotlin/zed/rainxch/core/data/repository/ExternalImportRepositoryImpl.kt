@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import co.touchlab.kermit.Logger
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -62,7 +63,7 @@ class ExternalImportRepositoryImpl(
         val started = nowMillis()
         val granted = scanner.isPermissionGranted()
         val candidates = scanner.snapshot()
-        candidateSnapshot.value = candidates.associateBy { it.packageName }
+        candidateSnapshot.update { candidates.associateBy { it.packageName } }
 
         val now = nowMillis()
         var newCandidates = 0
@@ -169,39 +170,48 @@ class ExternalImportRepositoryImpl(
 
     override suspend fun importAutoMatched(matches: List<RepoMatchResult>): ImportSummary {
         var linked = 0
+        var failed = 0
         val now = nowMillis()
         matches.forEach { result ->
             val top = result.topSuggestion
             if (top != null && top.confidence >= AUTO_LINK_CONFIDENCE_THRESHOLD) {
-                val existing = externalLinkDao.get(result.packageName)
-                val base = existing ?: ExternalLinkEntity(
-                    packageName = result.packageName,
-                    state = ExternalLinkState.MATCHED.name,
-                    repoOwner = top.owner,
-                    repoName = top.repo,
-                    matchSource = top.source.name.lowercase(),
-                    matchConfidence = top.confidence,
-                    signingFingerprint = null,
-                    installerKind = null,
-                    firstSeenAt = now,
-                    lastReviewedAt = now,
-                    skipExpiresAt = null,
-                )
-                externalLinkDao.upsert(
-                    base.copy(
+                val outcome = runCatching {
+                    val existing = externalLinkDao.get(result.packageName)
+                    val base = existing ?: ExternalLinkEntity(
+                        packageName = result.packageName,
                         state = ExternalLinkState.MATCHED.name,
                         repoOwner = top.owner,
                         repoName = top.repo,
                         matchSource = top.source.name.lowercase(),
                         matchConfidence = top.confidence,
+                        signingFingerprint = null,
+                        installerKind = null,
+                        firstSeenAt = now,
                         lastReviewedAt = now,
-                    ),
-                )
-                linked++
+                        skipExpiresAt = null,
+                    )
+                    externalLinkDao.upsert(
+                        base.copy(
+                            state = ExternalLinkState.MATCHED.name,
+                            repoOwner = top.owner,
+                            repoName = top.repo,
+                            matchSource = top.source.name.lowercase(),
+                            matchConfidence = top.confidence,
+                            lastReviewedAt = now,
+                        ),
+                    )
+                }
+                outcome
+                    .onSuccess { linked++ }
+                    .onFailure { e ->
+                        if (e is CancellationException) throw e
+                        failed++
+                        Logger.w(e) { "auto-link upsert failed for ${result.packageName}" }
+                    }
             }
         }
         // TODO Week 2 day 11: also call AppsRepository.linkAppToRepo to materialize installed_apps rows
-        return ImportSummary(attempted = matches.size, linked = linked, failed = 0)
+        return ImportSummary(attempted = matches.size, linked = linked, failed = failed)
     }
 
     override suspend fun linkManually(
@@ -211,32 +221,33 @@ class ExternalImportRepositoryImpl(
         source: String,
     ): Result<Unit> {
         val now = nowMillis()
-        val existing = externalLinkDao.get(packageName)
-        val base = existing ?: ExternalLinkEntity(
-            packageName = packageName,
-            state = ExternalLinkState.MATCHED.name,
-            repoOwner = owner,
-            repoName = repo,
-            matchSource = source,
-            matchConfidence = 1.0,
-            signingFingerprint = null,
-            installerKind = null,
-            firstSeenAt = now,
-            lastReviewedAt = now,
-            skipExpiresAt = null,
-        )
-        externalLinkDao.upsert(
-            base.copy(
+        return runCatching {
+            val existing = externalLinkDao.get(packageName)
+            val base = existing ?: ExternalLinkEntity(
+                packageName = packageName,
                 state = ExternalLinkState.MATCHED.name,
                 repoOwner = owner,
                 repoName = repo,
                 matchSource = source,
                 matchConfidence = 1.0,
+                signingFingerprint = null,
+                installerKind = null,
+                firstSeenAt = now,
                 lastReviewedAt = now,
-            ),
-        )
+                skipExpiresAt = null,
+            )
+            externalLinkDao.upsert(
+                base.copy(
+                    state = ExternalLinkState.MATCHED.name,
+                    repoOwner = owner,
+                    repoName = repo,
+                    matchSource = source,
+                    matchConfidence = 1.0,
+                    lastReviewedAt = now,
+                ),
+            )
+        }.onFailure { if (it is CancellationException) throw it }
         // TODO Week 2 day 11: AppsRepository.linkAppToRepo
-        return Result.success(Unit)
     }
 
     override suspend fun skipPackage(
@@ -303,6 +314,7 @@ class ExternalImportRepositoryImpl(
         if (existing != null && shouldPreserveDecision(existing, now)) {
             return existing.copy(
                 signingFingerprint = candidate.signingFingerprint ?: existing.signingFingerprint,
+                // installerKind is authoritative per-scan from PackageManager; signingFingerprint may briefly be null on extraction failure, so we hold the previous value.
                 installerKind = candidate.installerKind.name,
             )
         }

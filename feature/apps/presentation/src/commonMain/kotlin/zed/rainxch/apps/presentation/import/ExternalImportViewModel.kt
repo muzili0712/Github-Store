@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,6 +32,7 @@ class ExternalImportViewModel(
     private val logger: GitHubStoreLogger,
 ) : ViewModel() {
     private var hasStarted = false
+    private var scanJob: Job? = null
 
     private val _state = MutableStateFlow(ExternalImportState())
     val state =
@@ -114,10 +116,14 @@ class ExternalImportViewModel(
 
     private fun startScanIfIdle(force: Boolean = false) {
         if (!force && _state.value.phase != ImportPhase.Idle) return
-        viewModelScope.launch {
+        if (scanJob?.isActive == true) return
+        scanJob = viewModelScope.launch {
             try {
                 _state.update { it.copy(phase = ImportPhase.Scanning, errorMessage = null) }
 
+                // runFullScan must precede pendingCandidatesFlow().first(): the in-memory candidate
+                // snapshot is process-scoped and empty on cold start, so without a scan first the
+                // wizard would render zero cards even with PENDING_REVIEW rows in the DAO.
                 externalImportRepository.runFullScan()
 
                 val candidates = externalImportRepository.pendingCandidatesFlow().first()
@@ -262,12 +268,15 @@ class ExternalImportViewModel(
         val done = nextIndex >= total
 
         _state.update { current ->
-            transform(current).copy(
-                currentCardIndex = nextIndex,
-                currentExpanded = false,
-                phase = if (done) ImportPhase.Done else current.phase,
-                showCompletionToast = if (done) true else current.showCompletionToast,
-            )
+            val tallied = transform(current).copy(currentExpanded = false)
+            if (done) {
+                tallied.copy(
+                    phase = ImportPhase.Done,
+                    showCompletionToast = true,
+                )
+            } else {
+                tallied.copy(currentCardIndex = nextIndex)
+            }
         }
 
         if (done) {
@@ -285,7 +294,7 @@ class ExternalImportViewModel(
                     RepoMatchSource.MANIFEST -> SuggestionSource.MANIFEST
                     RepoMatchSource.SEARCH -> SuggestionSource.SEARCH
                     RepoMatchSource.FINGERPRINT -> SuggestionSource.FINGERPRINT
-                    RepoMatchSource.MANUAL -> SuggestionSource.MANIFEST
+                    RepoMatchSource.MANUAL -> SuggestionSource.MANUAL
                 },
             stars = stars,
             description = description,
