@@ -17,6 +17,7 @@ import zed.rainxch.core.data.services.PackageEventReceiver
 import zed.rainxch.core.data.services.UpdateScheduler
 import zed.rainxch.core.domain.model.InstallSource
 import zed.rainxch.core.domain.model.InstalledApp
+import zed.rainxch.core.domain.repository.ExternalImportRepository
 import zed.rainxch.core.domain.repository.InstalledAppsRepository
 import zed.rainxch.core.domain.repository.TweaksRepository
 import zed.rainxch.core.domain.system.PackageMonitor
@@ -38,6 +39,15 @@ class GithubStoreApp : Application() {
         startDownloadNotificationObserver()
         scheduleBackgroundUpdateChecks()
         registerSelfAsInstalledApp()
+        scheduleInitialExternalScan()
+    }
+
+    private fun scheduleInitialExternalScan() {
+        appScope.launch {
+            runCatching {
+                get<ExternalImportRepository>().scheduleInitialScanIfNeeded()
+            }.onFailure { Logger.w(it) { "Initial external scan scheduling failed" } }
+        }
     }
 
     private fun startDownloadNotificationObserver() {

@@ -91,6 +91,7 @@ import zed.rainxch.apps.presentation.components.AdvancedAppSettingsBottomSheet
 import zed.rainxch.apps.presentation.components.InstalledAppIcon
 import zed.rainxch.apps.presentation.components.LinkAppBottomSheet
 import zed.rainxch.apps.presentation.components.VariantPickerDialog
+import zed.rainxch.apps.presentation.import.components.ImportProposalBanner
 import zed.rainxch.apps.presentation.model.AppItem
 import zed.rainxch.apps.presentation.model.AppSortRule
 import zed.rainxch.apps.presentation.model.UpdateAllProgress
@@ -525,6 +526,15 @@ fun AppsScreen(
                                 contentPadding = PaddingValues(16.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp),
                             ) {
+                                if (state.showImportProposalBanner) {
+                                    item(key = "external-import-banner") {
+                                        ImportProposalBanner(
+                                            pendingCount = state.pendingExternalImportCount,
+                                            onReview = { onAction(AppsAction.OnImportProposalReview) },
+                                            onDismiss = { onAction(AppsAction.OnImportProposalDismiss) },
+                                        )
+                                    }
+                                }
                                 items(
                                     items = state.filteredApps,
                                     key = { it.installedApp.packageName },

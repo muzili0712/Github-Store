@@ -28,6 +28,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import zed.rainxch.apps.presentation.AppsRoot
 import zed.rainxch.apps.presentation.AppsViewModel
+import zed.rainxch.apps.presentation.import.ExternalImportRoot
 import zed.rainxch.auth.presentation.AuthenticationRoot
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationHeight
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
@@ -314,6 +315,22 @@ fun AppNavigation(
                         },
                         viewModel = appsViewModel,
                         state = appsState,
+                    )
+                }
+
+                composable<GithubStoreGraph.ExternalImportScreen> {
+                    ExternalImportRoot(
+                        onNavigateBack = {
+                            navController.navigateUp()
+                        },
+                        onNavigateToDetails = { repoId ->
+                            navController.navigate(
+                                GithubStoreGraph.DetailsScreen(
+                                    repositoryId = repoId,
+                                    isComingFromUpdate = true,
+                                ),
+                            )
+                        },
                     )
                 }
             }
