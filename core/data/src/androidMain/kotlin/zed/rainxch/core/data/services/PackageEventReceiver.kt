@@ -11,6 +11,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import zed.rainxch.core.data.local.db.dao.ExternalLinkDao
+import zed.rainxch.core.domain.repository.ExternalImportRepository
 import zed.rainxch.core.domain.repository.InstalledAppsRepository
 import zed.rainxch.core.domain.system.PackageMonitor
 import zed.rainxch.core.domain.util.VersionVerdict
@@ -31,10 +33,15 @@ class PackageEventReceiver() :
     private val installedAppsRepositoryKoin: InstalledAppsRepository by inject()
     private val packageMonitorKoin: PackageMonitor by inject()
     private val appScopeKoin: CoroutineScope by inject()
+    private val externalImportRepositoryKoin: ExternalImportRepository by inject()
+    private val externalLinkDaoKoin: ExternalLinkDao by inject()
 
     // Explicitly provided dependencies (dynamic registration path)
     private var explicitRepository: InstalledAppsRepository? = null
     private var explicitMonitor: PackageMonitor? = null
+    private var explicitExternalImport: ExternalImportRepository? = null
+    private var explicitExternalLinkDao: ExternalLinkDao? = null
+    private var explicitAppScope: CoroutineScope? = null
 
     // Local fallback scope for the manifest-registered path when
     // `onReceive` fires but Koin somehow couldn't resolve the shared
@@ -46,21 +53,33 @@ class PackageEventReceiver() :
     constructor(
         installedAppsRepository: InstalledAppsRepository,
         packageMonitor: PackageMonitor,
+        externalImportRepository: ExternalImportRepository,
+        externalLinkDao: ExternalLinkDao,
+        appScope: CoroutineScope,
     ) : this() {
         this.explicitRepository = installedAppsRepository
         this.explicitMonitor = packageMonitor
+        this.explicitExternalImport = externalImportRepository
+        this.explicitExternalLinkDao = externalLinkDao
+        this.explicitAppScope = appScope
     }
 
     private fun getRepository(): InstalledAppsRepository = explicitRepository ?: installedAppsRepositoryKoin
 
     private fun getMonitor(): PackageMonitor = explicitMonitor ?: packageMonitorKoin
 
+    private fun getExternalImport(): ExternalImportRepository =
+        explicitExternalImport ?: externalImportRepositoryKoin
+
+    private fun getExternalLinkDao(): ExternalLinkDao =
+        explicitExternalLinkDao ?: externalLinkDaoKoin
+
     private fun getBackstopScope(): CoroutineScope =
         // Koin's app-scoped CoroutineScope outlives a manifest-registered
         // receiver whose local `scope` would die with the instance. Fall
         // back to the local scope only if Koin isn't initialized yet
         // (shouldn't happen post-Application.onCreate, but defensive).
-        runCatching { appScopeKoin }.getOrElse { scope }
+        explicitAppScope ?: runCatching { appScopeKoin }.getOrElse { scope }
 
     override fun onReceive(
         context: Context?,
@@ -141,6 +160,37 @@ class PackageEventReceiver() :
             }
         } catch (e: Exception) {
             Logger.e { "PackageEventReceiver error for $packageName: ${e.message}" }
+        }
+
+        // Fire a delta scan for previously-untracked installs so the
+        // import banner can pick up the new candidate. Guarded so we
+        // don't churn on apps the user already linked or asked us to
+        // ignore. Runs on the app scope — independent of the install
+        // path above.
+        getBackstopScope().launch {
+            runCatching {
+                if (shouldRescan(packageName)) {
+                    getExternalImport().runDeltaScan(setOf(packageName))
+                }
+            }.onFailure { Logger.w(it) { "Delta scan failed for $packageName" } }
+        }
+    }
+
+    // Skip re-scanning when (a) we already track the app in
+    // `installed_apps` (the user installed it through the store, or
+    // we already auto-linked it and materialized the row), or (b) the
+    // package is already MATCHED / NEVER_ASK in `external_links`.
+    // PENDING_REVIEW and SKIPPED are intentionally rescanned —
+    // metadata may have changed (label, fingerprint, installer) and
+    // the user hasn't given a permanent answer yet.
+    private suspend fun shouldRescan(packageName: String): Boolean {
+        val tracked = runCatching { getRepository().getAppByPackage(packageName) }
+            .getOrNull()
+        if (tracked != null) return false
+        val link = runCatching { getExternalLinkDao().get(packageName) }.getOrNull()
+        return when (link?.state) {
+            "MATCHED", "NEVER_ASK" -> false
+            else -> true
         }
     }
 
@@ -248,6 +298,8 @@ class PackageEventReceiver() :
     private suspend fun onPackageRemoved(packageName: String) {
         try {
             getRepository().deleteInstalledApp(packageName)
+            runCatching { getExternalImport().unlink(packageName) }
+                .onFailure { Logger.w(it) { "External link cleanup failed for $packageName" } }
             Logger.i { "Removed uninstalled app via broadcast: $packageName" }
         } catch (e: Exception) {
             Logger.e { "PackageEventReceiver remove error for $packageName: ${e.message}" }

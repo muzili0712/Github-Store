@@ -211,8 +211,11 @@ val coreModule =
             ExternalImportRepositoryImpl(
                 scanner = get<ExternalAppScanner>(),
                 externalLinkDao = get(),
+                signingFingerprintDao = get(),
                 preferences = get(),
                 externalMatchApi = get(),
+                backendClient = get(),
+                telemetry = get(),
             )
         }
 

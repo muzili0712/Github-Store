@@ -37,6 +37,8 @@ interface ExternalImportRepository {
 
     suspend fun rescanSinglePackage(packageName: String): RepoMatchResult?
 
+    suspend fun searchRepos(query: String): Result<List<zed.rainxch.core.domain.system.RepoMatchSuggestion>>
+
     suspend fun syncSigningFingerprintSeed()
 
     suspend fun pruneExpiredSkips()

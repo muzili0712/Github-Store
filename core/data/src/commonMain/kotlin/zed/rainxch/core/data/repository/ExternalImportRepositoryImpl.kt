@@ -14,11 +14,17 @@ import kotlinx.coroutines.flow.update
 import kotlin.time.Clock
 import zed.rainxch.core.data.dto.ExternalMatchRequest
 import zed.rainxch.core.data.local.db.dao.ExternalLinkDao
+import zed.rainxch.core.data.local.db.dao.SigningFingerprintDao
 import zed.rainxch.core.data.local.db.entities.ExternalLinkEntity
+import zed.rainxch.core.data.local.db.entities.SigningFingerprintEntity
 import zed.rainxch.core.data.mappers.toRepoMatchResults
 import zed.rainxch.core.data.mappers.toRequestItem
+import zed.rainxch.core.data.network.BackendApiClient
+import zed.rainxch.core.data.network.BackendException
 import zed.rainxch.core.data.network.ExternalMatchApi
+import zed.rainxch.core.data.network.RateLimitedException
 import zed.rainxch.core.domain.repository.ExternalImportRepository
+import zed.rainxch.core.domain.repository.TelemetryRepository
 import zed.rainxch.core.domain.system.ExternalAppCandidate
 import zed.rainxch.core.domain.system.ExternalAppScanner
 import zed.rainxch.core.domain.system.ExternalLinkState
@@ -31,8 +37,11 @@ import zed.rainxch.core.domain.system.ScanResult
 class ExternalImportRepositoryImpl(
     private val scanner: ExternalAppScanner,
     private val externalLinkDao: ExternalLinkDao,
+    private val signingFingerprintDao: SigningFingerprintDao,
     private val preferences: DataStore<Preferences>,
     private val externalMatchApi: ExternalMatchApi,
+    private val backendClient: BackendApiClient,
+    private val telemetry: TelemetryRepository,
 ) : ExternalImportRepository {
     // Snapshot cache survives only for the lifetime of the process. Decisions
     // (linked / skipped / never-ask) are persisted in `external_links`; the
@@ -54,8 +63,11 @@ class ExternalImportRepositoryImpl(
     override suspend fun scheduleInitialScanIfNeeded() {
         val alreadyScanned = preferences.data.first()[INITIAL_SCAN_COMPLETED_AT_KEY] != null
         if (alreadyScanned) return
-        runCatching { runFullScan() }
-            .onSuccess { markInitialScanComplete() }
+        runCatching {
+            runCatching { telemetry.importScanStarted(trigger = "first_launch") }
+                .onFailure { Logger.d { "telemetry importScanStarted failed: ${it.message}" } }
+            runFullScan()
+        }.onSuccess { markInitialScanComplete() }
             .onFailure { Logger.w(it) { "Initial external scan failed; will retry on next launch." } }
     }
 
@@ -77,12 +89,20 @@ class ExternalImportRepositoryImpl(
             externalLinkDao.upsert(updated)
         }
 
+        val durationMs = nowMillis() - started
+        runCatching {
+            telemetry.importScanCompleted(
+                candidateCountBucket = bucketCandidateCount(candidates.size),
+                durationMsBucket = bucketDurationMs(durationMs),
+            )
+        }.onFailure { Logger.d { "telemetry importScanCompleted failed: ${it.message}" } }
+
         return ScanResult(
             totalCandidates = candidates.size,
             newCandidates = newCandidates,
             autoLinked = 0, // wired with backend match resolver in Week 2
             pendingReview = pendingReview,
-            durationMillis = nowMillis() - started,
+            durationMillis = durationMs,
             permissionGranted = granted,
         )
     }
@@ -130,6 +150,23 @@ class ExternalImportRepositoryImpl(
     override suspend fun resolveMatches(candidates: List<ExternalAppCandidate>): List<RepoMatchResult> {
         if (candidates.isEmpty()) return emptyList()
 
+        // Strategy 3: signing-fingerprint lookup against the local seed
+        // table. Hits are the strongest non-manifest signal we have —
+        // signature equality is cryptographic, no string fuzzing.
+        val fingerprintHits = mutableMapOf<String, RepoMatchSuggestion>()
+        candidates.forEach { candidate ->
+            val fp = candidate.signingFingerprint ?: return@forEach
+            val hit = runCatching { signingFingerprintDao.lookup(fp) }
+                .onFailure { Logger.d { "signing fingerprint lookup failed: ${it.message}" } }
+                .getOrNull() ?: return@forEach
+            fingerprintHits[candidate.packageName] = RepoMatchSuggestion(
+                owner = hit.repoOwner,
+                repo = hit.repoName,
+                confidence = FINGERPRINT_CONFIDENCE,
+                source = RepoMatchSource.FINGERPRINT,
+            )
+        }
+
         val backendResults = mutableMapOf<String, MutableList<RepoMatchSuggestion>>()
         for (batch in candidates.chunked(MATCH_BATCH_SIZE)) {
             val request =
@@ -145,7 +182,15 @@ class ExternalImportRepositoryImpl(
                             .getOrPut(result.packageName) { mutableListOf() }
                             .addAll(result.suggestions)
                     }
-                }.onFailure { Logger.w(it) { "external-match batch failed; continuing" } }
+                }.onFailure { error ->
+                    Logger.w(error) { "external-match batch failed; continuing" }
+                    runCatching {
+                        telemetry.externalMatchApiFailure(
+                            statusCodeBucket = bucketApiFailure(error),
+                            retried = false,
+                        )
+                    }.onFailure { Logger.d { "telemetry externalMatchApiFailure failed: ${it.message}" } }
+                }
         }
 
         return candidates.map { candidate ->
@@ -158,13 +203,26 @@ class ExternalImportRepositoryImpl(
                     source = RepoMatchSource.MANIFEST,
                 )
             }
+            fingerprintHits[candidate.packageName]?.let { suggestions += it }
             backendResults[candidate.packageName]?.let { suggestions += it }
-            RepoMatchResult(
-                packageName = candidate.packageName,
-                suggestions = suggestions
-                    .distinctBy { "${it.owner}/${it.repo}" }
-                    .sortedByDescending { it.confidence },
-            )
+            val deduped = suggestions
+                .distinctBy { "${it.owner}/${it.repo}" }
+                .sortedByDescending { it.confidence }
+
+            // Emit one `import_match_attempted` per strategy that
+            // produced a hit for this candidate. Bucketed confidence
+            // only — never owner/repo/package name.
+            deduped.groupBy { it.source }.forEach { (source, hits) ->
+                val top = hits.maxByOrNull { it.confidence } ?: return@forEach
+                runCatching {
+                    telemetry.importMatchAttempted(
+                        strategy = source.telemetryStrategy(),
+                        confidenceBucket = bucketConfidence(top.confidence),
+                    )
+                }.onFailure { Logger.d { "telemetry importMatchAttempted failed: ${it.message}" } }
+            }
+
+            RepoMatchResult(packageName = candidate.packageName, suggestions = deduped)
         }
     }
 
@@ -211,6 +269,8 @@ class ExternalImportRepositoryImpl(
             }
         }
         // TODO Week 2 day 11: also call AppsRepository.linkAppToRepo to materialize installed_apps rows
+        runCatching { telemetry.importAutoLinked(countBucket = bucketCount(linked)) }
+            .onFailure { Logger.d { "telemetry importAutoLinked failed: ${it.message}" } }
         return ImportSummary(attempted = matches.size, linked = linked, failed = failed)
     }
 
@@ -290,8 +350,86 @@ class ExternalImportRepositoryImpl(
         return resolveMatches(listOf(candidate)).firstOrNull()
     }
 
+    override suspend fun searchRepos(query: String): Result<List<RepoMatchSuggestion>> {
+        val trimmed = query.trim()
+        if (trimmed.isEmpty()) return Result.success(emptyList())
+        val capped = if (trimmed.length > MAX_SEARCH_QUERY_LEN) {
+            trimmed.substring(0, MAX_SEARCH_QUERY_LEN)
+        } else {
+            trimmed
+        }
+        return backendClient
+            .search(query = capped, platform = "android", limit = SEARCH_LIMIT)
+            .map { response ->
+                response.items.map { item ->
+                    RepoMatchSuggestion(
+                        owner = item.owner.login,
+                        repo = item.name,
+                        // Search is the user-driven override path. The
+                        // 0.5 confidence is a placeholder — UX is "I'll
+                        // pick this myself", not a confidence bet.
+                        confidence = SEARCH_OVERRIDE_CONFIDENCE,
+                        source = RepoMatchSource.SEARCH,
+                        stars = item.stargazersCount,
+                        description = item.description,
+                    )
+                }
+            }
+    }
+
     override suspend fun syncSigningFingerprintSeed() {
-        notImplemented("syncSigningFingerprintSeed")
+        val started = nowMillis()
+        var rowsAdded = 0
+        try {
+            val lastObservedAt = runCatching { signingFingerprintDao.lastSyncTimestamp() }
+                .getOrNull()
+            var cursor: String? = null
+            var pages = 0
+            paging@ while (pages < MAX_SEED_PAGES) {
+                pages++
+                val pageResult = backendClient.getSigningSeeds(
+                    since = lastObservedAt,
+                    cursor = cursor,
+                )
+                val response = pageResult.getOrElse { error ->
+                    if (error is CancellationException) throw error
+                    Logger.w(error) { "signing-seeds fetch failed on page $pages; aborting" }
+                    break@paging
+                }
+                val rows = response.rows.map { row ->
+                    SigningFingerprintEntity(
+                        fingerprint = row.fingerprint,
+                        repoOwner = row.owner,
+                        repoName = row.repo,
+                        source = SEED_SOURCE_BACKEND,
+                        observedAt = row.observedAt,
+                    )
+                }
+                if (rows.isNotEmpty()) {
+                    runCatching { signingFingerprintDao.upsertAll(rows) }
+                        .onSuccess { rowsAdded += rows.size }
+                        .onFailure { e ->
+                            if (e is CancellationException) throw e
+                            Logger.w(e) { "signing-seeds upsert failed on page $pages; continuing" }
+                        }
+                }
+                cursor = response.nextCursor ?: break@paging
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Logger.w(e) { "signing-seeds sync aborted" }
+        }
+        emitSeedSyncTelemetry(rowsAdded, nowMillis() - started)
+    }
+
+    private suspend fun emitSeedSyncTelemetry(rowsAdded: Int, durationMs: Long) {
+        runCatching {
+            telemetry.signingSeedSyncCompleted(
+                rowsAddedBucket = bucketSeedRowsAdded(rowsAdded),
+                durationMsBucket = bucketDurationMs(durationMs),
+            )
+        }.onFailure { Logger.d { "telemetry signingSeedSyncCompleted failed: ${it.message}" } }
     }
 
     override suspend fun pruneExpiredSkips() {
@@ -348,13 +486,75 @@ class ExternalImportRepositoryImpl(
 
     private fun nowMillis(): Long = Clock.System.now().toEpochMilliseconds()
 
-    private fun notImplemented(name: String): Nothing =
-        error("ExternalImportRepository.$name is not implemented yet (Week 2/3 of E1).")
+    private fun bucketCount(n: Int): String =
+        when {
+            n <= 0 -> "0"
+            n <= 2 -> "1-2"
+            n <= 9 -> "3-9"
+            n <= 49 -> "10-49"
+            else -> "50+"
+        }
+
+    private fun bucketCandidateCount(n: Int): String =
+        when {
+            n <= 0 -> "0"
+            n <= 9 -> "1-9"
+            n <= 49 -> "10-49"
+            n <= 199 -> "50-199"
+            else -> "200+"
+        }
+
+    private fun bucketDurationMs(ms: Long): String =
+        when {
+            ms < 500L -> "<500"
+            ms < 2_000L -> "500-2000"
+            ms < 5_000L -> "2000-5000"
+            else -> ">5000"
+        }
+
+    private fun bucketConfidence(c: Double): String =
+        when {
+            c < 0.5 -> "<0.5"
+            c < 0.85 -> "0.5-0.85"
+            else -> ">=0.85"
+        }
+
+    private fun bucketSeedRowsAdded(n: Int): String =
+        when {
+            n <= 0 -> "0"
+            n <= 99 -> "1-99"
+            n <= 999 -> "100-999"
+            else -> "1000+"
+        }
+
+    private fun bucketApiFailure(error: Throwable): String =
+        when (error) {
+            is BackendException -> {
+                val code = error.statusCode
+                if (code in 400..499) "4xx" else "5xx"
+            }
+            is RateLimitedException -> "4xx"
+            else -> "network"
+        }
+
+    private fun RepoMatchSource.telemetryStrategy(): String =
+        when (this) {
+            RepoMatchSource.MANIFEST -> "manifest"
+            RepoMatchSource.SEARCH -> "search"
+            RepoMatchSource.FINGERPRINT -> "fingerprint"
+            RepoMatchSource.MANUAL -> "manual"
+        }
 
     companion object {
         private val INITIAL_SCAN_COMPLETED_AT_KEY = longPreferencesKey("external_import_initial_scan_at")
         private const val SKIP_TTL_MILLIS: Long = 7L * 24 * 60 * 60 * 1000
         private const val MATCH_BATCH_SIZE = 25
         private const val AUTO_LINK_CONFIDENCE_THRESHOLD = 0.85
+        private const val FINGERPRINT_CONFIDENCE = 0.92
+        private const val SEARCH_OVERRIDE_CONFIDENCE = 0.5
+        private const val SEARCH_LIMIT = 10
+        private const val MAX_SEARCH_QUERY_LEN = 100
+        private const val MAX_SEED_PAGES = 50
+        private const val SEED_SOURCE_BACKEND = "backend_seed"
     }
 }

@@ -37,6 +37,7 @@ import zed.rainxch.core.data.dto.ExternalMatchRequest
 import zed.rainxch.core.data.dto.ExternalMatchResponse
 import zed.rainxch.core.data.dto.GithubReadmeResponseDto
 import zed.rainxch.core.data.dto.ReleaseNetwork
+import zed.rainxch.core.data.dto.SigningFingerprintSeedResponse
 import zed.rainxch.core.data.dto.UserProfileNetwork
 import zed.rainxch.core.domain.model.ProxyConfig
 import kotlin.coroutines.cancellation.CancellationException
@@ -248,6 +249,27 @@ class BackendApiClient(
             val response = httpClient.post("external-match") {
                 contentType(ContentType.Application.Json)
                 setBody(body)
+            }
+            when {
+                response.status.isSuccess() ->
+                    Result.success(response.body())
+                response.status == HttpStatusCode.TooManyRequests ->
+                    Result.failure(RateLimitedException())
+                else ->
+                    Result.failure(BackendException(response.status.value))
+            }
+        }
+
+    suspend fun getSigningSeeds(
+        since: Long? = null,
+        cursor: String? = null,
+        platform: String = "android",
+    ): Result<SigningFingerprintSeedResponse> =
+        safeCall {
+            val response = httpClient.get("signing-seeds") {
+                parameter("platform", platform)
+                if (since != null) parameter("since", since)
+                if (cursor != null) parameter("cursor", cursor)
             }
             when {
                 response.status.isSuccess() ->

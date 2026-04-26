@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
+import zed.rainxch.core.data.local.db.dao.ExternalLinkDao
 import zed.rainxch.core.data.services.DownloadNotificationObserver
 import zed.rainxch.core.data.services.PackageEventReceiver
 import zed.rainxch.core.data.services.UpdateScheduler
@@ -40,6 +41,7 @@ class GithubStoreApp : Application() {
         scheduleBackgroundUpdateChecks()
         registerSelfAsInstalledApp()
         scheduleInitialExternalScan()
+        scheduleSigningSeedSync()
     }
 
     private fun scheduleInitialExternalScan() {
@@ -47,6 +49,16 @@ class GithubStoreApp : Application() {
             runCatching {
                 get<ExternalImportRepository>().scheduleInitialScanIfNeeded()
             }.onFailure { Logger.w(it) { "Initial external scan scheduling failed" } }
+        }
+    }
+
+    // Best-effort: signingFingerprintDao.lastSyncTimestamp() acts as the
+    // since cursor inside the repo, so repeat calls are cheap.
+    private fun scheduleSigningSeedSync() {
+        appScope.launch {
+            runCatching {
+                get<ExternalImportRepository>().syncSigningFingerprintSeed()
+            }.onFailure { Logger.w(it) { "Signing seed sync failed" } }
         }
     }
 
@@ -95,6 +107,9 @@ class GithubStoreApp : Application() {
             PackageEventReceiver(
                 installedAppsRepository = get<InstalledAppsRepository>(),
                 packageMonitor = get<PackageMonitor>(),
+                externalImportRepository = get<ExternalImportRepository>(),
+                externalLinkDao = get<ExternalLinkDao>(),
+                appScope = get<CoroutineScope>(),
             )
         val filter = PackageEventReceiver.createIntentFilter()
 
