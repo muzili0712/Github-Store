@@ -69,21 +69,23 @@ class ExternalImportViewModel(
                 viewModelScope.launch { runCatching { telemetry.importPermissionRequested() } }
             }
 
-            ExternalImportAction.OnPermissionGranted -> {
+            is ExternalImportAction.OnPermissionGranted -> {
                 _state.update { it.copy(isPermissionDenied = false) }
-                emitPermissionOutcome(granted = true)
+                emitPermissionOutcome(granted = true, sdkInt = action.sdkInt)
                 startScanIfIdle(force = true)
             }
 
-            ExternalImportAction.OnPermissionDenied -> {
+            is ExternalImportAction.OnPermissionDenied -> {
                 _state.update { it.copy(isPermissionDenied = true) }
-                emitPermissionOutcome(granted = false)
+                emitPermissionOutcome(granted = false, sdkInt = action.sdkInt)
                 startScanIfIdle(force = true)
             }
 
             ExternalImportAction.OnSkipCurrentCard -> skipCurrent(neverAsk = false)
 
             ExternalImportAction.OnSkipForever -> skipCurrent(neverAsk = true)
+
+            ExternalImportAction.OnSkipRemaining -> skipRemaining()
 
             is ExternalImportAction.OnPickSuggestion -> pickSuggestion(action.suggestion)
 
@@ -310,14 +312,69 @@ class ExternalImportViewModel(
         }
     }
 
-    private fun emitPermissionOutcome(granted: Boolean) {
+    private fun emitPermissionOutcome(granted: Boolean, sdkInt: Int?) {
         viewModelScope.launch {
             runCatching {
                 telemetry.importPermissionOutcome(
                     granted = granted,
-                    sdkIntBucket = "unknown",
+                    sdkIntBucket = bucketSdkInt(sdkInt),
                 )
             }
+        }
+    }
+
+    private fun bucketSdkInt(sdkInt: Int?): String =
+        when {
+            sdkInt == null -> "unknown"
+            sdkInt in 26..29 -> "26-29"
+            sdkInt in 30..32 -> "30-32"
+            sdkInt >= 33 -> "33+"
+            else -> "unknown"
+        }
+
+    private fun bucketCount(count: Int): String =
+        when {
+            count <= 0 -> "0"
+            count in 1..2 -> "1-2"
+            count in 3..9 -> "3-9"
+            count in 10..49 -> "10-49"
+            else -> "50+"
+        }
+
+    private fun skipRemaining() {
+        val current = _state.value
+        if (current.phase != ImportPhase.AwaitingReview) return
+        val remaining = current.cards.drop(current.currentCardIndex)
+        if (remaining.isEmpty()) return
+
+        viewModelScope.launch {
+            remaining.forEach { card ->
+                try {
+                    externalImportRepository.skipPackage(card.packageName, neverAsk = false)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    logger.error("Skip-remaining failed for ${card.packageName}: ${e.message}")
+                }
+            }
+
+            runCatching {
+                telemetry.importSkipped(
+                    countBucket = bucketCount(remaining.size),
+                    persisted = "7day",
+                )
+            }
+
+            _state.update {
+                it.copy(
+                    currentCardIndex = it.cards.size,
+                    currentExpanded = false,
+                    phase = ImportPhase.Done,
+                    skipped = it.skipped + remaining.size,
+                    showCompletionToast = true,
+                )
+            }
+            _events.send(ExternalImportEvent.PlayConfetti)
         }
     }
 

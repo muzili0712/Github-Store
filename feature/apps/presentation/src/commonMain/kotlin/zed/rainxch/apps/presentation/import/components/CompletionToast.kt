@@ -27,7 +27,6 @@ fun CompletionToast(
     onExit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // TODO confetti animation
     val tracked = autoImported + manuallyLinked
 
     Box(

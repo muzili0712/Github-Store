@@ -15,11 +15,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import zed.rainxch.apps.presentation.import.ExternalImportAction
+import zed.rainxch.apps.presentation.import.util.rememberPackageVisibilityRequester
+import zed.rainxch.apps.presentation.import.util.rememberSdkInt
 
 private const val BODY_COPY =
     "We can scan your installed apps and match them to GitHub releases — so updates and detection just work.\n\n" +
@@ -29,11 +34,13 @@ private const val BODY_COPY =
 
 @Composable
 fun PermissionRationaleScreen(
-    onContinue: () -> Unit,
-    onDeny: () -> Unit,
+    onAction: (ExternalImportAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // TODO Week 2 day 11: integrate MOKO Permissions runtime request
+    val sdkInt = rememberSdkInt()
+    val requester = rememberPackageVisibilityRequester()
+    val scope = rememberCoroutineScope()
+
     Box(
         modifier = modifier.fillMaxSize().padding(24.dp),
         contentAlignment = Alignment.Center,
@@ -67,11 +74,26 @@ fun PermissionRationaleScreen(
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                OutlinedButton(onClick = onDeny) {
+                OutlinedButton(
+                    onClick = { onAction(ExternalImportAction.OnPermissionDenied(sdkInt)) },
+                ) {
                     // TODO i18n: extract to strings.xml
                     Text("Not now")
                 }
-                Button(onClick = onContinue) {
+                Button(onClick = {
+                    scope.launch {
+                        onAction(ExternalImportAction.OnRequestPermission)
+                        if (requester.isGranted) {
+                            onAction(ExternalImportAction.OnPermissionGranted(sdkInt))
+                        } else {
+                            requester.requestOrOpenSettings()
+                            // We can't auto-confirm grant from a settings deep-link.
+                            // Optimistically advance — the scanner's degraded path
+                            // handles the actual visibility outcome.
+                            onAction(ExternalImportAction.OnPermissionGranted(sdkInt))
+                        }
+                    }
+                }) {
                     // TODO i18n: extract to strings.xml
                     Text("Continue")
                 }

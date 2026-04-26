@@ -7,13 +7,15 @@ sealed interface ExternalImportAction {
 
     data object OnRequestPermission : ExternalImportAction
 
-    data object OnPermissionGranted : ExternalImportAction
+    data class OnPermissionGranted(val sdkInt: Int?) : ExternalImportAction
 
-    data object OnPermissionDenied : ExternalImportAction
+    data class OnPermissionDenied(val sdkInt: Int?) : ExternalImportAction
 
     data object OnSkipCurrentCard : ExternalImportAction
 
     data object OnSkipForever : ExternalImportAction
+
+    data object OnSkipRemaining : ExternalImportAction
 
     data class OnPickSuggestion(val suggestion: RepoSuggestionUi) : ExternalImportAction
 
