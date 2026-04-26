@@ -1,6 +1,8 @@
 package zed.rainxch.core.data.network
 
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import zed.rainxch.core.data.dto.ExternalMatchRequest
 import zed.rainxch.core.data.dto.ExternalMatchResponse
 import zed.rainxch.core.domain.repository.TweaksRepository
@@ -49,11 +51,16 @@ class MockExternalMatchApi : ExternalMatchApi {
 class ExternalMatchApiSelector(
     private val real: BackendExternalMatchApi,
     private val mock: MockExternalMatchApi,
-    private val tweaks: TweaksRepository,
+    tweaks: TweaksRepository,
+    scope: CoroutineScope,
 ) : ExternalMatchApi {
+    // Cache the flag in a hot StateFlow so `match()` can read it
+    // synchronously instead of round-tripping DataStore on every call.
+    private val flagState = tweaks.getExternalMatchSearchEnabled()
+        .stateIn(scope, SharingStarted.Eagerly, initialValue = false)
+
     override suspend fun match(request: ExternalMatchRequest): Result<ExternalMatchResponse> =
-        // TODO Week 3: cache this via stateIn on a long-lived scope
-        if (tweaks.getExternalMatchSearchEnabled().first()) {
+        if (flagState.value) {
             real.match(request)
         } else {
             mock.match(request)

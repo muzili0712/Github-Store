@@ -268,7 +268,6 @@ class ExternalImportRepositoryImpl(
                     }
             }
         }
-        // TODO Week 2 day 11: also call AppsRepository.linkAppToRepo to materialize installed_apps rows
         runCatching { telemetry.importAutoLinked(countBucket = bucketCount(linked)) }
             .onFailure { Logger.d { "telemetry importAutoLinked failed: ${it.message}" } }
         return ImportSummary(attempted = matches.size, linked = linked, failed = failed)
@@ -307,7 +306,6 @@ class ExternalImportRepositoryImpl(
                 ),
             )
         }.onFailure { if (it is CancellationException) throw it }
-        // TODO Week 2 day 11: AppsRepository.linkAppToRepo
     }
 
     override suspend fun skipPackage(

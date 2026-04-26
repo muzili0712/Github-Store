@@ -62,6 +62,7 @@ class AppsViewModel(
     private val externalImportRepository: ExternalImportRepository,
 ) : ViewModel() {
     companion object {
+        private const val BANNER_THRESHOLD = 1
         private const val UPDATE_CHECK_COOLDOWN_MS = 30 * 60 * 1000L
     }
 
@@ -107,7 +108,7 @@ class AppsViewModel(
                 _state.update {
                     it.copy(
                         pendingExternalImportCount = count,
-                        showImportProposalBanner = count >= 3 && !it.isExternalImportInFlight,
+                        showImportProposalBanner = count >= BANNER_THRESHOLD && !it.isExternalImportInFlight,
                     )
                 }
             }

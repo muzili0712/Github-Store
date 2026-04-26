@@ -204,6 +204,7 @@ val coreModule =
                 real = get(),
                 mock = get(),
                 tweaks = get(),
+                scope = get(),
             )
         }
 

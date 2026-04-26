@@ -35,25 +35,18 @@ interface TelemetryRepository {
 
     suspend fun importAutoLinked(countBucket: String)
 
-    // TODO Week 3 (Agent 2): wire from ExternalImportViewModel
     suspend fun importManuallyLinked(countBucket: String, source: String)
 
-    // TODO Week 3 (Agent 2): wire from ExternalImportViewModel
     suspend fun importSkipped(countBucket: String, persisted: String)
 
-    // TODO Week 3 (Agent 2): wire from Details screen Unlink affordance
     suspend fun importUnlinkedFromDetails()
 
-    // TODO Week 3 (Agent 2): wire from ExternalImportViewModel
     suspend fun importPermissionRequested()
 
-    // TODO Week 3 (Agent 2): wire from ExternalImportViewModel
     suspend fun importPermissionOutcome(granted: Boolean, sdkIntBucket: String)
 
-    // TODO Week 3 (Agent 2): wire from ExternalImportViewModel
     suspend fun importSearchOverrideUsed()
 
-    // TODO Week 3 (Agent 2): wire from ExternalImportViewModel
     suspend fun importSearchOverrideNoResults()
 
     suspend fun signingSeedSyncCompleted(rowsAddedBucket: String, durationMsBucket: String)
