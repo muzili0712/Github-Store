@@ -5,6 +5,7 @@ enum class ImportPhase {
     RequestingPermission,
     Scanning,
     AutoImporting,
+    AutoImportSummary,
     AwaitingReview,
     Done,
 }

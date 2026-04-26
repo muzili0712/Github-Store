@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -57,6 +58,10 @@ class ExternalImportViewModel(
     private val logger: GitHubStoreLogger,
 ) : ViewModel() {
     private var candidatesByPackage: Map<String, ExternalAppCandidate> = emptyMap()
+    // Cached so OnAutoSummaryUndoAll can re-build cards for previously
+    // auto-linked packages without round-tripping resolveMatches() (which
+    // would issue another network call and could return different matches).
+    private var lastResolvedMatches: List<RepoMatchResult> = emptyList()
     private var hasStarted = false
     private var scanJob: Job? = null
     private var searchJob: Job? = null
@@ -146,6 +151,16 @@ class ExternalImportViewModel(
             ExternalImportAction.OnDismissCompletionToast -> {
                 _state.update { it.copy(showCompletionToast = false) }
             }
+
+            ExternalImportAction.OnAutoSummaryContinue -> autoSummaryContinue()
+
+            ExternalImportAction.OnAutoSummaryUndoAll -> autoSummaryUndoAll()
+
+            ExternalImportAction.OnAddManually -> {
+                viewModelScope.launch {
+                    _events.send(ExternalImportEvent.NavigateBackAndOpenManualLink)
+                }
+            }
         }
     }
 
@@ -194,6 +209,7 @@ class ExternalImportViewModel(
                 }
 
                 val matches = externalImportRepository.resolveMatches(candidates)
+                lastResolvedMatches = matches
                 val autoLinked = autoMaterialize(matches)
                 val autoLinkedPackages = autoLinked.toSet()
 
@@ -209,12 +225,27 @@ class ExternalImportViewModel(
                             buildCard(candidate, match)
                         }.toImmutableList()
 
-                if (cards.isEmpty()) {
+                if (autoLinked.isNotEmpty()) {
+                    // Stop on the summary screen so the user sees what auto-linked
+                    // and can undo before we cascade into the review wizard.
+                    val autoLinkedLabels = autoLinked.mapNotNull { pkg ->
+                        candidatesByPackage[pkg]?.appLabel
+                    }
+                    _state.update {
+                        it.copy(
+                            phase = ImportPhase.AutoImportSummary,
+                            cards = cards,
+                            autoImported = autoLinked.size,
+                            autoLinkedPackages = autoLinked.toPersistentList(),
+                            autoLinkedLabels = autoLinkedLabels.toPersistentList(),
+                        )
+                    }
+                } else if (cards.isEmpty()) {
                     _state.update {
                         it.copy(
                             phase = ImportPhase.Done,
                             cards = persistentListOf(),
-                            autoImported = autoLinked.size,
+                            autoImported = 0,
                             showCompletionToast = true,
                         )
                     }
@@ -224,7 +255,7 @@ class ExternalImportViewModel(
                         it.copy(
                             phase = ImportPhase.AwaitingReview,
                             cards = cards,
-                            autoImported = autoLinked.size,
+                            autoImported = 0,
                         )
                     }
                 }
@@ -517,6 +548,78 @@ class ExternalImportViewModel(
                         getString(Res.string.external_import_undo_failed),
                     ),
                 )
+            }
+        }
+    }
+
+    private fun autoSummaryContinue() {
+        val current = _state.value
+        if (current.phase != ImportPhase.AutoImportSummary) return
+        if (current.cards.isNotEmpty()) {
+            _state.update { it.copy(phase = ImportPhase.AwaitingReview) }
+        } else {
+            _state.update {
+                it.copy(
+                    phase = ImportPhase.Done,
+                    showCompletionToast = true,
+                )
+            }
+            viewModelScope.launch { _events.send(ExternalImportEvent.PlayConfetti) }
+        }
+    }
+
+    private fun autoSummaryUndoAll() {
+        val current = _state.value
+        if (current.phase != ImportPhase.AutoImportSummary) return
+        val packages = current.autoLinkedPackages.toList()
+        if (packages.isEmpty()) {
+            _state.update { it.copy(phase = ImportPhase.AwaitingReview) }
+            return
+        }
+
+        viewModelScope.launch {
+            // Roll each auto-linked package back to PENDING_REVIEW. Snapshot →
+            // restoreDecision matches the per-row undo path, so the audit trail
+            // and DAO state mirror what the user would see after a fresh scan
+            // with no auto-link applied.
+            packages.forEach { pkg ->
+                val snapshot = runCatching {
+                    externalImportRepository.snapshotDecision(pkg)
+                }.getOrNull()
+                runCatching { installedAppsRepository.deleteInstalledApp(pkg) }
+                if (snapshot != null) {
+                    runCatching { externalImportRepository.restoreDecision(snapshot) }
+                } else {
+                    runCatching { externalImportRepository.unlink(pkg) }
+                }
+            }
+
+            // Bulk-undo invalidates the single-row undo token: the user cleared
+            // the auto-link wave wholesale, so a stale "Undo" snackbar from a
+            // pre-summary action would now point at a row we just restored.
+            pendingUndo = null
+
+            val matchesByPkg = lastResolvedMatches.associateBy { it.packageName }
+            val restoredCards = packages.mapNotNull { pkg ->
+                val candidate = candidatesByPackage[pkg] ?: return@mapNotNull null
+                buildCard(candidate, matchesByPkg[pkg])
+            }
+
+            _state.update { state ->
+                val merged = (restoredCards + state.cards)
+                    .distinctBy { it.packageName }
+                    .toImmutableList()
+                state.copy(
+                    phase = if (merged.isEmpty()) ImportPhase.Done else ImportPhase.AwaitingReview,
+                    cards = merged,
+                    autoImported = 0,
+                    autoLinkedPackages = persistentListOf(),
+                    autoLinkedLabels = persistentListOf(),
+                    showCompletionToast = merged.isEmpty(),
+                )
+            }
+            if (_state.value.cards.isEmpty()) {
+                _events.send(ExternalImportEvent.PlayConfetti)
             }
         }
     }

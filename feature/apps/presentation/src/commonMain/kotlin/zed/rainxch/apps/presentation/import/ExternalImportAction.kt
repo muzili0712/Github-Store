@@ -38,4 +38,10 @@ sealed interface ExternalImportAction {
     data object OnExit : ExternalImportAction
 
     data object OnDismissCompletionToast : ExternalImportAction
+
+    data object OnAutoSummaryContinue : ExternalImportAction
+
+    data object OnAutoSummaryUndoAll : ExternalImportAction
+
+    data object OnAddManually : ExternalImportAction
 }

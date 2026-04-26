@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.githubstore.core.presentation.res.Res
+import zed.rainxch.githubstore.core.presentation.res.external_import_empty_add_manually
 import zed.rainxch.githubstore.core.presentation.res.external_import_empty_all_matched
 import zed.rainxch.githubstore.core.presentation.res.external_import_empty_done
 import zed.rainxch.githubstore.core.presentation.res.external_import_empty_grant_permission
@@ -35,6 +37,7 @@ fun EmptyStateScreen(
     isPermissionDenied: Boolean,
     onRequestPermission: () -> Unit,
     onExit: () -> Unit,
+    onAddManually: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -61,6 +64,9 @@ fun EmptyStateScreen(
                 )
                 Button(onClick = onExit) {
                     Text(stringResource(Res.string.external_import_empty_done))
+                }
+                TextButton(onClick = onAddManually) {
+                    Text(stringResource(Res.string.external_import_empty_add_manually))
                 }
             } else {
                 Icon(
@@ -89,6 +95,9 @@ fun EmptyStateScreen(
                     Button(onClick = onRequestPermission) {
                         Text(stringResource(Res.string.external_import_empty_grant_permission))
                     }
+                }
+                TextButton(onClick = onAddManually) {
+                    Text(stringResource(Res.string.external_import_empty_add_manually))
                 }
             }
         }

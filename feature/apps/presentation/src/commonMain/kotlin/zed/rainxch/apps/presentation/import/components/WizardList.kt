@@ -3,13 +3,19 @@ package zed.rainxch.apps.presentation.import.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -21,9 +27,11 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.apps.presentation.import.model.CandidateUi
 import zed.rainxch.apps.presentation.import.model.RepoSuggestionUi
 import zed.rainxch.githubstore.core.presentation.res.Res
+import zed.rainxch.githubstore.core.presentation.res.external_import_list_add_manually
 import zed.rainxch.githubstore.core.presentation.res.external_import_list_remaining
 
 @Composable
@@ -41,6 +49,7 @@ fun WizardList(
     onLink: (packageName: String) -> Unit,
     onSearchQueryChange: (packageName: String, query: String) -> Unit,
     onSearchSubmit: (packageName: String) -> Unit,
+    onAddManually: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -73,6 +82,30 @@ fun WizardList(
                 onSearchSubmit = { onSearchSubmit(card.packageName) },
             )
         }
+
+        item(key = "add-manually-footer") {
+            AddManuallyFooter(onClick = onAddManually)
+        }
+    }
+}
+
+@Composable
+private fun AddManuallyFooter(onClick: () -> Unit) {
+    TextButton(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = stringResource(Res.string.external_import_list_add_manually),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = null,
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .size(16.dp),
+        )
     }
 }
 

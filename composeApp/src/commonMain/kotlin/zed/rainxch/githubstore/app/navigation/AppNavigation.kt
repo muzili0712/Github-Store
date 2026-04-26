@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,10 @@ import zed.rainxch.recentlyviewed.presentation.RecentlyViewedRoot
 import zed.rainxch.search.presentation.SearchRoot
 import zed.rainxch.starred.presentation.StarredReposRoot
 import zed.rainxch.tweaks.presentation.TweaksRoot
+
+// Cross-screen "return result" key: set by the external-import wizard's
+// "Add manually" path before navigateUp(), read once by the Apps screen.
+private const val EXTERNAL_IMPORT_OPEN_LINK_SHEET_KEY = "external_import_open_link_sheet"
 
 @Composable
 fun AppNavigation(
@@ -297,7 +302,18 @@ fun AppNavigation(
                     TweaksRoot()
                 }
 
-                composable<GithubStoreGraph.AppsScreen> {
+                composable<GithubStoreGraph.AppsScreen> { backStackEntry ->
+                    // Pick up the "open link sheet" flag set by ExternalImportRoot's
+                    // "Add manually" path. We consume the flag once on entry so a
+                    // later config change or back-stack rewind doesn't reopen the sheet.
+                    LaunchedEffect(backStackEntry) {
+                        val handle = backStackEntry.savedStateHandle
+                        val openLinkSheet = handle.get<Boolean>(EXTERNAL_IMPORT_OPEN_LINK_SHEET_KEY)
+                        if (openLinkSheet == true) {
+                            handle.remove<Boolean>(EXTERNAL_IMPORT_OPEN_LINK_SHEET_KEY)
+                            appsViewModel.onAction(zed.rainxch.apps.presentation.AppsAction.OnAddByLinkClick)
+                        }
+                    }
                     AppsRoot(
                         onNavigateBack = {
                             navController.navigateUp()
@@ -330,6 +346,12 @@ fun AppNavigation(
                                     isComingFromUpdate = true,
                                 ),
                             )
+                        },
+                        onAddManually = {
+                            navController.previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(EXTERNAL_IMPORT_OPEN_LINK_SHEET_KEY, true)
+                            navController.navigateUp()
                         },
                     )
                 }

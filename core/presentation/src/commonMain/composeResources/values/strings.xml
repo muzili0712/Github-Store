@@ -837,6 +837,20 @@
         <item quantity="one">%1$d app to review</item>
         <item quantity="other">%1$d apps to review</item>
     </plurals>
+    <plurals name="external_import_auto_summary_headline">
+        <item quantity="one">Linked %1$d app automatically</item>
+        <item quantity="other">Linked %1$d apps automatically</item>
+    </plurals>
+    <string name="external_import_auto_summary_body">We recognized them with high confidence. You can undo individual matches from each app\'s details, or undo all now.</string>
+    <plurals name="external_import_auto_summary_review_hint">
+        <item quantity="one">%1$d more needs your input.</item>
+        <item quantity="other">%1$d more need your input.</item>
+    </plurals>
+    <string name="external_import_auto_summary_continue">Continue</string>
+    <string name="external_import_auto_summary_undo_all">Undo all</string>
+    <string name="external_import_auto_summary_more_count">+%1$d more</string>
+    <string name="external_import_list_add_manually">Don\'t see your app? Add manually</string>
+    <string name="external_import_empty_add_manually">Add an app from another store</string>
 
     <!-- E1: Details unlink dialog -->
     <string name="details_unlink_external_app_menu">Unlink from this repo</string>

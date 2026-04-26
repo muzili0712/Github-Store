@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import zed.rainxch.apps.presentation.import.components.AutoImportSummaryScreen
 import zed.rainxch.apps.presentation.import.components.CompletionToast
 import zed.rainxch.apps.presentation.import.components.ConfettiOverlay
 import zed.rainxch.apps.presentation.import.components.EmptyStateScreen
@@ -56,6 +57,7 @@ import zed.rainxch.githubstore.core.presentation.res.external_import_undo_action
 fun ExternalImportRoot(
     onNavigateBack: () -> Unit,
     onNavigateToDetails: (repoId: Long) -> Unit,
+    onAddManually: () -> Unit,
     viewModel: ExternalImportViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -67,6 +69,7 @@ fun ExternalImportRoot(
         when (event) {
             ExternalImportEvent.NavigateBack -> onNavigateBack()
             is ExternalImportEvent.NavigateToDetails -> onNavigateToDetails(event.repoId)
+            ExternalImportEvent.NavigateBackAndOpenManualLink -> onAddManually()
             is ExternalImportEvent.ShowError -> {
                 scope.launch { snackbarHostState.showSnackbar(event.message) }
             }
@@ -162,6 +165,20 @@ fun ExternalImportRoot(
                         )
                     }
 
+                    ImportPhase.AutoImportSummary -> {
+                        AutoImportSummaryScreen(
+                            autoLinkedCount = state.autoImported,
+                            autoLinkedLabels = state.autoLinkedLabels,
+                            cardsRemaining = state.cards.size,
+                            onContinue = {
+                                viewModel.onAction(ExternalImportAction.OnAutoSummaryContinue)
+                            },
+                            onUndoAll = {
+                                viewModel.onAction(ExternalImportAction.OnAutoSummaryUndoAll)
+                            },
+                        )
+                    }
+
                     ImportPhase.AwaitingReview -> {
                         if (state.cards.isEmpty()) {
                             EmptyStateScreen(
@@ -170,6 +187,9 @@ fun ExternalImportRoot(
                                     viewModel.onAction(ExternalImportAction.OnRequestPermission)
                                 },
                                 onExit = { viewModel.onAction(ExternalImportAction.OnExit) },
+                                onAddManually = {
+                                    viewModel.onAction(ExternalImportAction.OnAddManually)
+                                },
                             )
                         } else {
                             WizardList(
@@ -206,6 +226,9 @@ fun ExternalImportRoot(
                                         ExternalImportAction.OnSearchOverrideSubmit(pkg),
                                     )
                                 },
+                                onAddManually = {
+                                    viewModel.onAction(ExternalImportAction.OnAddManually)
+                                },
                             )
                         }
                     }
@@ -219,6 +242,9 @@ fun ExternalImportRoot(
                                     viewModel.onAction(ExternalImportAction.OnRequestPermission)
                                 },
                                 onExit = { viewModel.onAction(ExternalImportAction.OnExit) },
+                                onAddManually = {
+                                    viewModel.onAction(ExternalImportAction.OnAddManually)
+                                },
                             )
                         } else {
                             CompletionToast(

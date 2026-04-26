@@ -15,6 +15,8 @@ data class ExternalImportState(
     val skipped: Int = 0,
     val manuallyLinked: Int = 0,
     val cards: ImmutableList<CandidateUi> = persistentListOf(),
+    val autoLinkedPackages: ImmutableList<String> = persistentListOf(),
+    val autoLinkedLabels: ImmutableList<String> = persistentListOf(),
     val expandedPackages: ImmutableSet<String> = persistentSetOf(),
     val activeSearchPackage: String? = null,
     val searchQuery: String = "",
