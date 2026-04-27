@@ -50,7 +50,6 @@ class UpdateCheckWorker(
     override suspend fun doWork(): Result =
         try {
             Logger.i { "UpdateCheckWorker: Starting periodic update check" }
-            Logger.withTag("E1Debug").i { "UpdateCheckWorker doWork ENTER attempt=$runAttemptCount" }
 
             // Run as foreground service to prevent OS from killing the worker
             setForeground(createForegroundInfo("Checking for updates..."))
@@ -101,11 +100,9 @@ class UpdateCheckWorker(
     // broadcast we missed (process killed, OEM app-standby, etc.).
     // Cap at 50 so a 200-package device doesn't drag the worker.
     private suspend fun runPeriodicExternalDeltaScan() {
-        Logger.withTag("E1Debug").i { "UpdateCheckWorker runPeriodicExternalDeltaScan ENTER" }
         try {
             val installed = packageMonitor.getAllInstalledPackageNames()
             if (installed.isEmpty()) {
-                Logger.withTag("E1Debug").i { "UpdateCheckWorker delta installed=0 EXIT" }
                 return
             }
 
@@ -118,9 +115,6 @@ class UpdateCheckWorker(
                 ).toSet()
 
             val delta = (installed - tracked - permanent).take(MAX_DELTA_PACKAGES).toSet()
-            Logger.withTag("E1Debug").i {
-                "UpdateCheckWorker delta installed=${installed.size} tracked=${tracked.size} permanent=${permanent.size} -> delta=${delta.size}"
-            }
             if (delta.isEmpty()) {
                 Logger.d { "UpdateCheckWorker: external delta scan empty" }
                 return
@@ -130,7 +124,6 @@ class UpdateCheckWorker(
             externalImportRepository.runDeltaScan(delta)
         } catch (e: Exception) {
             Logger.w { "UpdateCheckWorker: external delta scan failed: ${e.message}" }
-            Logger.withTag("E1Debug").w(e) { "UpdateCheckWorker delta FAILED" }
         }
     }
 

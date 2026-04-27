@@ -45,24 +45,20 @@ class GithubStoreApp : Application() {
     }
 
     private fun scheduleInitialExternalScan() {
-        Logger.withTag("E1Debug").i { "GithubStoreApp scheduleInitialExternalScan invoked" }
         appScope.launch {
             runCatching {
                 get<ExternalImportRepository>().scheduleInitialScanIfNeeded()
             }.onFailure {
-                Logger.withTag("E1Debug").w(it) { "GithubStoreApp scheduleInitialExternalScan FAILED" }
                 Logger.w(it) { "Initial external scan scheduling failed" }
             }
         }
     }
 
     private fun scheduleSigningSeedSync() {
-        Logger.withTag("E1Debug").i { "GithubStoreApp scheduleSigningSeedSync invoked" }
         appScope.launch {
             runCatching {
                 get<ExternalImportRepository>().syncSigningFingerprintSeed()
             }.onFailure {
-                Logger.withTag("E1Debug").w(it) { "GithubStoreApp scheduleSigningSeedSync FAILED" }
                 Logger.w(it) { "Signing seed sync failed" }
             }
         }

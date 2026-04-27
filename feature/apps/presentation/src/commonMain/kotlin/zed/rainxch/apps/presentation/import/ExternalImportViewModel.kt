@@ -67,8 +67,6 @@ class ExternalImportViewModel(
     private var searchJob: Job? = null
     private var pendingUndo: PendingUndo? = null
 
-    private val debug get() = logger.withTag("E1Debug")
-
     private val _state = MutableStateFlow(ExternalImportState())
     val state =
         _state
@@ -191,7 +189,6 @@ class ExternalImportViewModel(
     private fun startScanIfIdle(force: Boolean = false) {
         if (!force && _state.value.phase != ImportPhase.Idle) return
         if (scanJob?.isActive == true) return
-        debug.info("VM startScanIfIdle force=$force")
         scanJob = viewModelScope.launch {
             try {
                 _state.update { it.copy(phase = ImportPhase.Scanning, errorMessage = null) }
@@ -200,7 +197,6 @@ class ExternalImportViewModel(
 
                 val candidates = externalImportRepository.pendingCandidatesFlow().first()
                 candidatesByPackage = candidates.associateBy { it.packageName }
-                debug.info("VM after pendingCandidatesFlow.first(): ${candidates.size} candidates")
 
                 _state.update {
                     it.copy(
@@ -211,9 +207,7 @@ class ExternalImportViewModel(
 
                 val matches = externalImportRepository.resolveMatches(candidates)
                 lastResolvedMatches = matches
-                debug.info("VM resolveMatches returned ${matches.size} results")
                 val autoLinked = autoMaterialize(matches)
-                debug.info("VM autoMaterialize linked=${autoLinked.size} pkgs=$autoLinked")
                 val autoLinkedPackages = autoLinked.toSet()
 
                 val reviewCandidates =
@@ -575,7 +569,6 @@ class ExternalImportViewModel(
         val current = _state.value
         if (current.phase != ImportPhase.AutoImportSummary) return
         val packages = current.autoLinkedPackages.toList()
-        debug.info("VM autoSummaryUndoAll packages=${packages.size}")
         if (packages.isEmpty()) {
             _state.update { it.copy(phase = ImportPhase.AwaitingReview) }
             return
@@ -729,7 +722,6 @@ class ExternalImportViewModel(
         repo: String,
         source: String,
     ): Boolean {
-        debug.info("VM materializeAndMark pkg=${candidate.packageName} repo=$owner/$repo source=$source")
         val repoInfo =
             try {
                 appsRepository.fetchRepoInfo(owner, repo)
@@ -737,12 +729,10 @@ class ExternalImportViewModel(
                 throw e
             } catch (e: Exception) {
                 logger.error("fetchRepoInfo($owner/$repo) failed: ${e.message}")
-                debug.error("VM materializeAndMark fetchRepoInfo failed pkg=${candidate.packageName}", e)
                 null
             }
         if (repoInfo == null) {
             logger.warn("Skipping link for ${candidate.packageName}: repo $owner/$repo not found")
-            debug.info("VM materializeAndMark FAILED pkg=${candidate.packageName} repo=$owner/$repo NOT FOUND")
             return false
         }
 
@@ -753,10 +743,8 @@ class ExternalImportViewModel(
             throw e
         } catch (e: Exception) {
             logger.error("linkAppToRepo failed for ${candidate.packageName}: ${e.message}")
-            debug.error("VM materializeAndMark linkAppToRepo failed pkg=${candidate.packageName}", e)
             return false
         }
-        debug.info("VM materializeAndMark SUCCESS pkg=${candidate.packageName}")
 
         val linkResult =
             try {
