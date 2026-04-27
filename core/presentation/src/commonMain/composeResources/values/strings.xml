@@ -805,7 +805,7 @@
     <string name="external_import_empty_ok">OK</string>
     <string name="external_import_permission_title">Find your GitHub apps</string>
     <!-- Three paragraphs joined with \n\n so a single string carries the full body -->
-    <string name="external_import_permission_body">We can scan your installed apps and match them to GitHub releases — so updates and detection just work.\n\nTo do that, we need to see which apps you have. Without permission we can only see about 5 apps; with it, we can see all of them.\n\nWe never send the list of your apps anywhere without your permission. The match runs on your device. The optional backend lookup sends only the package name and app label of apps you ask us to match — never a full list of what\'s installed.</string>
+    <string name="external_import_permission_body">We can scan your installed apps and match them to GitHub releases — so updates and detection just work.\n\nTo do that, we need to see which apps you have. Without permission we can only see about 5 apps; with it, we can see all of them.\n\nWe never send the list of your apps anywhere without your permission. The match runs on your device. The optional backend lookup sends only the package name and app label, and when available the signing fingerprint, install source, and any GitHub-repo hint declared in the app\'s manifest — never a full list of what\'s installed.</string>
     <string name="external_import_permission_continue">Continue</string>
     <string name="external_import_permission_not_now">Not now</string>
     <plurals name="external_import_proposal_banner_headline">
