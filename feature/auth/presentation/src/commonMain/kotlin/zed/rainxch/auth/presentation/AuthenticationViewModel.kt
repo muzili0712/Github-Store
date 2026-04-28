@@ -422,9 +422,28 @@ class AuthenticationViewModel(
                 }
 
             if (outcome.path != authPath) {
-                logger.debug("Auth path escalated from $authPath to ${outcome.path}")
-                authPath = outcome.path
-                savedStateHandle[KEY_AUTH_PATH] = authPath.name
+                // Mid-session transitions are strictly one-way: only the
+                // Backend → Direct escalation that AuthenticationRepositoryImpl
+                // performs on infrastructure errors (timeouts, connect/socket
+                // failures, 5xx) is legitimate. Direct → Backend is not a path
+                // the repository ever returns; treat any such outcome as a
+                // defensive no-op rather than silently flipping back to a
+                // probably-broken Backend mid-flow. The infrastructure-failure
+                // gate itself lives at the repository (single source of
+                // truth — see `pollDeviceTokenOnce` and
+                // `Throwable.isAuthInfrastructureError()`); the VM only
+                // enforces direction.
+                val isLegalEscalation =
+                    authPath == AuthPath.Backend && outcome.path == AuthPath.Direct
+                if (isLegalEscalation) {
+                    logger.debug("Auth path escalated from $authPath to ${outcome.path}")
+                    authPath = outcome.path
+                    savedStateHandle[KEY_AUTH_PATH] = authPath.name
+                } else {
+                    logger.warn(
+                        "Refusing invalid auth path transition $authPath → ${outcome.path}",
+                    )
+                }
             }
 
             when (val result = outcome.result) {
