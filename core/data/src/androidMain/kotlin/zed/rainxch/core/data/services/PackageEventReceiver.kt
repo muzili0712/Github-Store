@@ -321,6 +321,19 @@ class PackageEventReceiver() :
                         runCatching { getExternalImport().unlink(packageName) }
                             .onSuccess {
                                 Logger.i { "External link cleanup retry succeeded for $packageName" }
+                                // Recovery delta scan: a fast reinstall during the
+                                // retry backoff window would have hit shouldRescan
+                                // while the row was still MATCHED → no rescan
+                                // queued. Now that the row is gone, evaluate
+                                // shouldRescan again and fire if the package is
+                                // currently installed.
+                                runCatching {
+                                    if (shouldRescan(packageName)) {
+                                        getExternalImport().runDeltaScan(setOf(packageName))
+                                    }
+                                }.onFailure { e ->
+                                    Logger.w(e) { "Post-retry delta scan failed for $packageName" }
+                                }
                             }
                             .onFailure { retryError ->
                                 Logger.w(retryError) {
