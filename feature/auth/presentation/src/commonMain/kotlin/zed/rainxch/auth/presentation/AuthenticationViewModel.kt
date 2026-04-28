@@ -345,7 +345,7 @@ class AuthenticationViewModel(
                         )
                     }
 
-                    saveToSavedState(start.deviceCode, startUi)
+                    saveToSavedState(start.deviceCode, startUi, authPath)
                     startCountdown(start.expiresInSec)
                     startPolling(start.deviceCode)
 
@@ -422,14 +422,28 @@ class AuthenticationViewModel(
                 }
 
             if (outcome.path != authPath) {
-                logger.debug("Auth path escalated from $authPath to ${outcome.path}")
-                authPath = outcome.path
-                // Intentionally not persisted: escalation is a reaction to the
-                // current network's reachability and shouldn't carry across a
-                // process restart. A user whose Backend hiccupped once and got
-                // bumped to Direct shouldn't be stuck on Direct forever — esp.
-                // on networks where github.com is the unreachable side. Next
-                // process start re-evaluates from Backend.
+                // Mid-session transitions are strictly one-way: only the
+                // Backend → Direct escalation that AuthenticationRepositoryImpl
+                // performs on infrastructure errors (timeouts, connect/socket
+                // failures, 5xx) is legitimate. Direct → Backend is not a path
+                // the repository ever returns; treat any such outcome as a
+                // defensive no-op rather than silently flipping back to a
+                // probably-broken Backend mid-flow. The infrastructure-failure
+                // gate itself lives at the repository (single source of
+                // truth — see `pollDeviceTokenOnce` and
+                // `Throwable.isAuthInfrastructureError()`); the VM only
+                // enforces direction.
+                val isLegalEscalation =
+                    authPath == AuthPath.Backend && outcome.path == AuthPath.Direct
+                if (isLegalEscalation) {
+                    logger.debug("Auth path escalated from $authPath to ${outcome.path}")
+                    authPath = outcome.path
+                    savedStateHandle[KEY_AUTH_PATH] = authPath.name
+                } else {
+                    logger.warn(
+                        "Refusing invalid auth path transition $authPath → ${outcome.path}",
+                    )
+                }
             }
 
             when (val result = outcome.result) {
@@ -502,6 +516,7 @@ class AuthenticationViewModel(
     private fun saveToSavedState(
         deviceCode: String,
         startUi: GithubDeviceStartUi,
+        path: AuthPath,
     ) {
         savedStateHandle[KEY_DEVICE_CODE] = deviceCode
         savedStateHandle[KEY_USER_CODE] = startUi.userCode
@@ -510,6 +525,7 @@ class AuthenticationViewModel(
         savedStateHandle[KEY_INTERVAL_SEC] = startUi.intervalSec
         savedStateHandle[KEY_EXPIRES_IN_SEC] = startUi.expiresInSec
         savedStateHandle[KEY_START_TIME_MILLIS] = System.currentTimeMillis()
+        savedStateHandle[KEY_AUTH_PATH] = path.name
     }
 
     private fun clearSavedState() {
@@ -523,6 +539,13 @@ class AuthenticationViewModel(
         val expiresInSec = savedStateHandle.get<Int>(KEY_EXPIRES_IN_SEC) ?: return
         val intervalSec = savedStateHandle.get<Int>(KEY_INTERVAL_SEC) ?: 5
         val startTimeMillis = savedStateHandle.get<Long>(KEY_START_TIME_MILLIS) ?: return
+        val restoredPath =
+            savedStateHandle.get<String>(KEY_AUTH_PATH)?.let {
+                runCatching { AuthPath.valueOf(it) }.getOrNull()
+            } ?: run {
+                clearSavedState()
+                return
+            }
 
         val elapsedSec = ((System.currentTimeMillis() - startTimeMillis) / 1000).toInt()
         val remainingSec = expiresInSec - elapsedSec
@@ -532,15 +555,7 @@ class AuthenticationViewModel(
             return
         }
 
-        // Always restart on Backend. A prior Direct escalation reflected the
-        // network at the time it happened; on a fresh process the network may
-        // be different (e.g., user switched away from a hostile WiFi, or back
-        // to one where github.com is filtered). The escalation logic in
-        // pollDeviceTokenOnce will re-promote to Direct if Backend is still
-        // failing on the new network.
-        authPath = AuthPath.Backend
-        // Drop any legacy auth_path bundle entry so it never resurrects.
-        savedStateHandle.remove<String>(KEY_AUTH_PATH)
+        authPath = restoredPath
         logger.debug("Restored auth session on path=$authPath")
 
         val startUi =
