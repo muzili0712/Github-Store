@@ -68,7 +68,7 @@ Content-Type: application/json
 **Other status codes:**
 - `400` — invalid body
 - `429` — rate limited; include `Retry-After` (in seconds). **Current client behavior:** `BackendApiClient.postExternalMatch` throws `RateLimitedException` on 429 and `ExternalImportRepositoryImpl.resolveMatches` logs the failure per-batch and continues with the remaining batches; no automatic WorkManager-backed retry is scheduled today. The plan called for WorkManager retry on `Retry-After` but it isn't wired yet — a backend that hard-rate-limits aggressively will see partial-result wizard sessions until that retry path is implemented in `resolveMatches`.
-- `503` — partial outage (client falls back to manifest-only)
+- `503` — partial outage. **Current client behavior:** `ExternalImportRepositoryImpl.resolveMatches` runs three strategies in parallel — manifest hints (parsed locally from each candidate's `AndroidManifest.xml`), signing-cert seed (looked up locally from the cached `signing_fingerprints` table), and the backend match call. When `BackendApiClient.postExternalMatch` fails with 503, only the backend strategy drops out for that batch; manifest-derived suggestions and signing-cert hits still flow through unaffected. So the client degrades to "local-only matching" — *not* manifest-only — as long as the seed sync has run at least once. Newly-installed apps with no manifest hint and no fingerprint match will see no suggestions until the backend recovers.
 
 **Server-side scoring (per plan §3.2):**
 - If `manifestHint.owner` and `repo` present → validate via HEAD against GitHub → `manifest` match at confidence 1.0
