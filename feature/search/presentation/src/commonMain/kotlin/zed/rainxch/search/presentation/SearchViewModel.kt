@@ -412,7 +412,6 @@ class SearchViewModel(
 
                     if (isInitial) {
                         telemetryRepository.recordSearchPerformed(
-                            query = query,
                             resultCount = _state.value.repositories.size,
                         )
                     }
