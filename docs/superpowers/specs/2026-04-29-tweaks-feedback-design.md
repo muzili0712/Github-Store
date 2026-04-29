@@ -153,7 +153,9 @@ sealed interface FeedbackAction {
 }
 
 sealed interface FeedbackEvent {
-    data object OnSent : FeedbackEvent                      // success → Tweaks dismisses sheet
+    /** Emitted after BrowserHelper.openUrl returned without invoking onFailure.
+     *  The host (TweaksRoot) collapses the sheet and shows a per-channel success snackbar. */
+    data class OnSent(val channel: FeedbackChannel) : FeedbackEvent
     data class OnSendError(val message: String) : FeedbackEvent
 }
 ```
