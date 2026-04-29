@@ -12,6 +12,7 @@ import kotlinx.coroutines.withTimeout
 import org.koin.dsl.module
 import zed.rainxch.core.data.cache.CacheManager
 import zed.rainxch.core.data.data_source.TokenStore
+import zed.rainxch.core.data.download.MultiSourceDownloaderImpl
 import zed.rainxch.core.data.services.DefaultDownloadOrchestrator
 import zed.rainxch.core.data.data_source.impl.DefaultTokenStore
 import zed.rainxch.core.data.local.db.AppDatabase
@@ -57,6 +58,7 @@ import zed.rainxch.core.domain.model.ProxyScope
 import zed.rainxch.core.domain.network.ProxyTester
 import zed.rainxch.core.domain.system.DownloadOrchestrator
 import zed.rainxch.core.domain.system.ExternalAppScanner
+import zed.rainxch.core.domain.system.MultiSourceDownloader
 import zed.rainxch.core.domain.repository.AuthenticationState
 import zed.rainxch.core.domain.repository.DeviceIdentityRepository
 import zed.rainxch.core.domain.repository.ExternalImportRepository
@@ -239,6 +241,12 @@ val coreModule =
                 externalMatchApi = get(),
                 backendClient = get(),
                 telemetry = get(),
+            )
+        }
+
+        single<MultiSourceDownloader> {
+            MultiSourceDownloaderImpl(
+                downloader = get(),
             )
         }
 
