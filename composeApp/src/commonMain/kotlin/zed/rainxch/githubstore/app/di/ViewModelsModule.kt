@@ -15,9 +15,9 @@ import zed.rainxch.recentlyviewed.presentation.RecentlyViewedViewModel
 import zed.rainxch.search.presentation.SearchViewModel
 import zed.rainxch.starred.presentation.StarredReposViewModel
 import zed.rainxch.tweaks.presentation.TweaksViewModel
+import zed.rainxch.tweaks.presentation.feedback.FeedbackViewModel
 import zed.rainxch.tweaks.presentation.mirror.AutoSuggestMirrorViewModel
 import zed.rainxch.tweaks.presentation.mirror.MirrorPickerViewModel
-import zed.rainxch.tweaks.presentation.feedback.FeedbackViewModel
 
 val viewModelsModule =
     module {
