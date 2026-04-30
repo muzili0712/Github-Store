@@ -760,7 +760,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">%1$d 件をスキップ — 設定から再スキャンできます。</string>
     <string name="external_import_completion_action_view_all">すべて表示</string>
-    <string name="external_import_empty_all_matched">すべてリンク済みです。\\nリンクするものはありません。</string>
+    <string name="external_import_empty_all_matched">すべてリンク済みです。\nリンクするものはありません。</string>
     <string name="external_import_empty_done">完了</string>
     <string name="external_import_empty_no_apps_title">このデバイスに GitHub アプリが見つかりませんでした。</string>
     <string name="external_import_empty_no_apps_body">すべて別のストアからインストールされたか、インストール済みアプリへのアクセス権がないためです。</string>
@@ -768,7 +768,7 @@
     <string name="external_import_empty_ok">OK</string>
     <string name="external_import_empty_add_manually">別のストアからアプリを追加</string>
     <string name="external_import_permission_title">GitHub アプリを見つける</string>
-    <string name="external_import_permission_body">インストール済みのアプリをスキャンして GitHub のリリースと照合できます。これにより、アップデートの検出が自動的に機能します。\\n\\nそのためには、インストールされているアプリを確認する必要があります。権限なしでは約 5 個のアプリしか確認できません。権限があればすべて確認できます。\\n\\nあなたの許可なくアプリのリストをどこかに送信することはありません。照合はデバイス上で行われます。任意のサーバー検索では、パッケージ名とアプリラベルのみを送信し、利用可能な場合は署名フィンガープリント、インストール元、アプリのマニフェストで宣言された GitHub リポジトリのヒントも送信しますが、インストール済みアプリの完全なリストは一切送信しません。</string>
+    <string name="external_import_permission_body">インストール済みのアプリをスキャンして GitHub のリリースと照合できます。これにより、アップデートの検出が自動的に機能します。\n\nそのためには、インストールされているアプリを確認する必要があります。権限なしでは約 5 個のアプリしか確認できません。権限があればすべて確認できます。\n\nあなたの許可なくアプリのリストをどこかに送信することはありません。照合はデバイス上で行われます。任意のサーバー検索では、パッケージ名とアプリラベルのみを送信し、利用可能な場合は署名フィンガープリント、インストール元、アプリのマニフェストで宣言された GitHub リポジトリのヒントも送信しますが、インストール済みアプリの完全なリストは一切送信しません。</string>
     <string name="external_import_permission_continue">続行</string>
     <string name="external_import_permission_not_now">後で</string>
     <plurals name="external_import_proposal_banner_headline">

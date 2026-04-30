@@ -795,7 +795,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">%1$d টি বাদ দেওয়া হয়েছে — সেটিংস থেকে আবার স্ক্যান করতে পারবেন।</string>
     <string name="external_import_completion_action_view_all">সব দেখুন</string>
-    <string name="external_import_empty_all_matched">সব মিলেছে।\\nলিঙ্ক করার কিছু নেই।</string>
+    <string name="external_import_empty_all_matched">সব মিলেছে।\nলিঙ্ক করার কিছু নেই।</string>
     <string name="external_import_empty_done">সম্পন্ন</string>
     <string name="external_import_empty_no_apps_title">এই ডিভাইসে কোনো GitHub অ্যাপ খুঁজে পাওয়া যায়নি।</string>
     <string name="external_import_empty_no_apps_body">এর মানে হয় সবকিছু অন্য স্টোর থেকে ইনস্টল করা হয়েছে, অথবা কী ইনস্টল আছে তা আমরা দেখতে পাচ্ছি না।</string>
@@ -803,7 +803,7 @@
     <string name="external_import_empty_ok">ঠিক আছে</string>
     <string name="external_import_empty_add_manually">অন্য স্টোর থেকে অ্যাপ যোগ করুন</string>
     <string name="external_import_permission_title">আপনার GitHub অ্যাপ খুঁজুন</string>
-    <string name="external_import_permission_body">আমরা আপনার ইনস্টল করা অ্যাপ স্ক্যান করে GitHub রিলিজের সাথে মিলাতে পারি — যাতে আপডেট ও শনাক্তকরণ স্বয়ংক্রিয়ভাবে কাজ করে।\\n\\nএর জন্য আপনার কাছে কোন অ্যাপ আছে তা জানতে হবে। অনুমতি ছাড়া আমরা প্রায় ৫টি অ্যাপ দেখতে পারি; অনুমতি দিলে সব দেখতে পারব।\\n\\nআপনার অনুমতি ছাড়া আমরা আপনার অ্যাপের তালিকা কোথাও পাঠাই না। মিলানো আপনার ডিভাইসে হয়। ঐচ্ছিক ব্যাকএন্ড লুকআপ শুধু প্যাকেজের নাম ও অ্যাপ লেবেল পাঠায়, এবং পাওয়া গেলে সাইনিং ফিঙ্গারপ্রিন্ট, ইনস্টল সোর্স ও অ্যাপের ম্যানিফেস্টে ঘোষিত যেকোনো GitHub-রিপো হিন্ট — কখনো ইনস্টল করা সব অ্যাপের পুরো তালিকা নয়।</string>
+    <string name="external_import_permission_body">আমরা আপনার ইনস্টল করা অ্যাপ স্ক্যান করে GitHub রিলিজের সাথে মিলাতে পারি — যাতে আপডেট ও শনাক্তকরণ স্বয়ংক্রিয়ভাবে কাজ করে।\n\nএর জন্য আপনার কাছে কোন অ্যাপ আছে তা জানতে হবে। অনুমতি ছাড়া আমরা প্রায় ৫টি অ্যাপ দেখতে পারি; অনুমতি দিলে সব দেখতে পারব।\n\nআপনার অনুমতি ছাড়া আমরা আপনার অ্যাপের তালিকা কোথাও পাঠাই না। মিলানো আপনার ডিভাইসে হয়। ঐচ্ছিক ব্যাকএন্ড লুকআপ শুধু প্যাকেজের নাম ও অ্যাপ লেবেল পাঠায়, এবং পাওয়া গেলে সাইনিং ফিঙ্গারপ্রিন্ট, ইনস্টল সোর্স ও অ্যাপের ম্যানিফেস্টে ঘোষিত যেকোনো GitHub-রিপো হিন্ট — কখনো ইনস্টল করা সব অ্যাপের পুরো তালিকা নয়।</string>
     <string name="external_import_permission_continue">চালিয়ে যান</string>
     <string name="external_import_permission_not_now">এখন না</string>
     <plurals name="external_import_proposal_banner_headline">
@@ -898,7 +898,7 @@
     <string name="mirror_section_community">কমিউনিটি</string>
     <string name="mirror_status_ok">%1$dms</string>
     <string name="mirror_status_degraded">%1$dms</string>
-    <string name="mirror_status_down">(down)</string>
+    <string name="mirror_status_down">(বন্ধ)</string>
     <string name="mirror_status_unknown">?</string>
     <string name="mirror_custom_label">কাস্টম মিরর…</string>
     <string name="mirror_custom_dialog_title">কাস্টম মিরর</string>

@@ -761,7 +761,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">Se omitieron %1$d — puedes volver a escanear desde Ajustes.</string>
     <string name="external_import_completion_action_view_all">Ver todas</string>
-    <string name="external_import_empty_all_matched">Todo vinculado.\\nNada que vincular.</string>
+    <string name="external_import_empty_all_matched">Todo vinculado.\nNada que vincular.</string>
     <string name="external_import_empty_done">Listo</string>
     <string name="external_import_empty_no_apps_title">No se encontraron aplicaciones de GitHub en este dispositivo.</string>
     <string name="external_import_empty_no_apps_body">Esto significa que todo fue instalado a través de otra tienda, o que no tenemos visibilidad de lo que está instalado.</string>
@@ -769,7 +769,7 @@
     <string name="external_import_empty_ok">Aceptar</string>
     <string name="external_import_empty_add_manually">Añadir una aplicación de otra tienda</string>
     <string name="external_import_permission_title">Encuentra tus aplicaciones de GitHub</string>
-    <string name="external_import_permission_body">Podemos analizar tus aplicaciones instaladas y vincularlas a versiones de GitHub, para que las actualizaciones y la detección funcionen solas.\\n\\nPara eso, necesitamos ver qué aplicaciones tienes. Sin permiso solo podemos ver unas 5 aplicaciones; con él, podemos verlas todas.\\n\\nNunca enviamos la lista de tus aplicaciones a ningún lugar sin tu permiso. La comparación se ejecuta en tu dispositivo. La búsqueda opcional en el servidor solo envía el nombre del paquete y la etiqueta de la aplicación, y cuando esté disponible, la huella de firma, el origen de instalación y cualquier indicación de repositorio de GitHub declarada en el manifiesto de la aplicación; nunca una lista completa de lo instalado.</string>
+    <string name="external_import_permission_body">Podemos analizar tus aplicaciones instaladas y vincularlas a versiones de GitHub, para que las actualizaciones y la detección funcionen solas.\n\nPara eso, necesitamos ver qué aplicaciones tienes. Sin permiso solo podemos ver unas 5 aplicaciones; con él, podemos verlas todas.\n\nNunca enviamos la lista de tus aplicaciones a ningún lugar sin tu permiso. La comparación se ejecuta en tu dispositivo. La búsqueda opcional en el servidor solo envía el nombre del paquete y la etiqueta de la aplicación, y cuando esté disponible, la huella de firma, el origen de instalación y cualquier indicación de repositorio de GitHub declarada en el manifiesto de la aplicación; nunca una lista completa de lo instalado.</string>
     <string name="external_import_permission_continue">Continuar</string>
     <string name="external_import_permission_not_now">Ahora no</string>
     <plurals name="external_import_proposal_banner_headline">

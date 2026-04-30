@@ -762,7 +762,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">%1$d ignorée(s) — vous pouvez relancer une analyse depuis Paramètres.</string>
     <string name="external_import_completion_action_view_all">Tout afficher</string>
-    <string name="external_import_empty_all_matched">Tout est lié.\\nRien à lier.</string>
+    <string name="external_import_empty_all_matched">Tout est lié.\nRien à lier.</string>
     <string name="external_import_empty_done">Terminé</string>
     <string name="external_import_empty_no_apps_title">Aucune application GitHub trouvée sur cet appareil.</string>
     <string name="external_import_empty_no_apps_body">Cela signifie que tout a été installé via une autre boutique, ou que nous n\'avons pas accès à la liste des applications installées.</string>
@@ -770,7 +770,7 @@
     <string name="external_import_empty_ok">OK</string>
     <string name="external_import_empty_add_manually">Ajouter une application d\'une autre boutique</string>
     <string name="external_import_permission_title">Trouvez vos applications GitHub</string>
-    <string name="external_import_permission_body">Nous pouvons analyser vos applications installées et les associer aux versions GitHub, afin que les mises à jour et la détection fonctionnent automatiquement.\\n\\nPour cela, nous devons voir quelles applications vous avez. Sans permission, nous ne pouvons voir qu\'environ 5 applications ; avec elle, nous pouvons toutes les voir.\\n\\nNous n\'envoyons jamais la liste de vos applications sans votre permission. La correspondance s\'effectue sur votre appareil. La recherche optionnelle sur le serveur envoie uniquement le nom du paquet et l\'étiquette de l\'application, et si disponibles, l\'empreinte de signature, la source d\'installation et tout indice de dépôt GitHub déclaré dans le manifeste de l\'application — jamais une liste complète de ce qui est installé.</string>
+    <string name="external_import_permission_body">Nous pouvons analyser vos applications installées et les associer aux versions GitHub, afin que les mises à jour et la détection fonctionnent automatiquement.\n\nPour cela, nous devons voir quelles applications vous avez. Sans permission, nous ne pouvons voir qu\'environ 5 applications ; avec elle, nous pouvons toutes les voir.\n\nNous n\'envoyons jamais la liste de vos applications sans votre permission. La correspondance s\'effectue sur votre appareil. La recherche optionnelle sur le serveur envoie uniquement le nom du paquet et l\'étiquette de l\'application, et si disponibles, l\'empreinte de signature, la source d\'installation et tout indice de dépôt GitHub déclaré dans le manifeste de l\'application — jamais une liste complète de ce qui est installé.</string>
     <string name="external_import_permission_continue">Continuer</string>
     <string name="external_import_permission_not_now">Pas maintenant</string>
     <plurals name="external_import_proposal_banner_headline">

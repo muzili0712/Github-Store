@@ -798,7 +798,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">%1$d atlandı — Ayarlar\'dan yeniden tarama yapabilirsiniz.</string>
     <string name="external_import_completion_action_view_all">Tümünü görüntüle</string>
-    <string name="external_import_empty_all_matched">Tümü eşleşti.\\nBağlanacak bir şey yok.</string>
+    <string name="external_import_empty_all_matched">Tümü eşleşti.\nBağlanacak bir şey yok.</string>
     <string name="external_import_empty_done">Tamam</string>
     <string name="external_import_empty_no_apps_title">Bu cihazda GitHub uygulaması bulunamadı.</string>
     <string name="external_import_empty_no_apps_body">Bu, her şeyin farklı bir mağaza aracılığıyla yüklendiği ya da yüklü uygulamalara erişimimizin olmadığı anlamına gelir.</string>
@@ -806,7 +806,7 @@
     <string name="external_import_empty_ok">Tamam</string>
     <string name="external_import_empty_add_manually">Başka bir mağazadan uygulama ekle</string>
     <string name="external_import_permission_title">GitHub uygulamalarınızı bulun</string>
-    <string name="external_import_permission_body">Yüklü uygulamalarınızı tarayıp GitHub sürümleriyle eşleştirebiliriz; böylece güncellemeler ve algılama otomatik çalışır.\\n\\nBunun için hangi uygulamaların yüklü olduğunu görmemiz gerekiyor. İzin vermeden yalnızca yaklaşık 5 uygulama görebiliriz; izinle tümünü görebiliriz.\\n\\nUygulama listenizi izniniz olmadan hiçbir yere göndermiyoruz. Eşleştirme işlemi cihazınızda gerçekleşir. İsteğe bağlı sunucu araması yalnızca paket adını ve uygulama etiketini, varsa imza parmak izini, kurulum kaynağını ve uygulama manifest\'inde belirtilen GitHub depo ipucunu gönderir; yüklü uygulamaların tam listesini asla göndermez.</string>
+    <string name="external_import_permission_body">Yüklü uygulamalarınızı tarayıp GitHub sürümleriyle eşleştirebiliriz; böylece güncellemeler ve algılama otomatik çalışır.\n\nBunun için hangi uygulamaların yüklü olduğunu görmemiz gerekiyor. İzin vermeden yalnızca yaklaşık 5 uygulama görebiliriz; izinle tümünü görebiliriz.\n\nUygulama listenizi izniniz olmadan hiçbir yere göndermiyoruz. Eşleştirme işlemi cihazınızda gerçekleşir. İsteğe bağlı sunucu araması yalnızca paket adını ve uygulama etiketini, varsa imza parmak izini, kurulum kaynağını ve uygulama manifest\'inde belirtilen GitHub depo ipucunu gönderir; yüklü uygulamaların tam listesini asla göndermez.</string>
     <string name="external_import_permission_continue">Devam et</string>
     <string name="external_import_permission_not_now">Şimdi değil</string>
     <plurals name="external_import_proposal_banner_headline">

@@ -774,7 +774,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">Pominięto %1$d — możesz ponownie uruchomić skanowanie w Ustawieniach.</string>
     <string name="external_import_completion_action_view_all">Zobacz wszystkie</string>
-    <string name="external_import_empty_all_matched">Wszystko dopasowane.\\nNie ma nic do połączenia.</string>
+    <string name="external_import_empty_all_matched">Wszystko dopasowane.\nNie ma nic do połączenia.</string>
     <string name="external_import_empty_done">Gotowe</string>
     <string name="external_import_empty_no_apps_title">Nie znaleziono żadnych aplikacji GitHub na tym urządzeniu.</string>
     <string name="external_import_empty_no_apps_body">Oznacza to, że wszystko zostało zainstalowane przez inny sklep lub nie mamy wglądu w to, co jest zainstalowane.</string>
@@ -782,7 +782,7 @@
     <string name="external_import_empty_ok">OK</string>
     <string name="external_import_empty_add_manually">Dodaj aplikację z innego sklepu</string>
     <string name="external_import_permission_title">Znajdź swoje aplikacje GitHub</string>
-    <string name="external_import_permission_body">Możemy przeskanować zainstalowane aplikacje i dopasować je do wydań GitHub, dzięki czemu aktualizacje i wykrywanie działają automatycznie.\\n\\nAby to zrobić, musimy widzieć, jakie masz aplikacje. Bez zgody możemy zobaczyć tylko około 5 aplikacji; po jej udzieleniu — wszystkie.\\n\\nNigdy nie wysyłamy listy Twoich aplikacji bez Twojej zgody. Dopasowywanie odbywa się na Twoim urządzeniu. Opcjonalne wyszukiwanie serwerowe wysyła jedynie nazwę pakietu i etykietę aplikacji, a jeśli są dostępne — odcisk palca podpisu, źródło instalacji oraz wskazówkę dotyczącą repozytorium GitHub zadeklarowaną w manifeście aplikacji; nigdy pełną listę zainstalowanych aplikacji.</string>
+    <string name="external_import_permission_body">Możemy przeskanować zainstalowane aplikacje i dopasować je do wydań GitHub, dzięki czemu aktualizacje i wykrywanie działają automatycznie.\n\nAby to zrobić, musimy widzieć, jakie masz aplikacje. Bez zgody możemy zobaczyć tylko około 5 aplikacji; po jej udzieleniu — wszystkie.\n\nNigdy nie wysyłamy listy Twoich aplikacji bez Twojej zgody. Dopasowywanie odbywa się na Twoim urządzeniu. Opcjonalne wyszukiwanie serwerowe wysyła jedynie nazwę pakietu i etykietę aplikacji, a jeśli są dostępne — odcisk palca podpisu, źródło instalacji oraz wskazówkę dotyczącą repozytorium GitHub zadeklarowaną w manifeście aplikacji; nigdy pełną listę zainstalowanych aplikacji.</string>
     <string name="external_import_permission_continue">Kontynuuj</string>
     <string name="external_import_permission_not_now">Nie teraz</string>
     <plurals name="external_import_proposal_banner_headline">

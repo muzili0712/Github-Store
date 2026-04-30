@@ -801,7 +801,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">%1$d saltate — puoi ripetere la scansione dalle Impostazioni.</string>
     <string name="external_import_completion_action_view_all">Vedi tutte</string>
-    <string name="external_import_empty_all_matched">Tutto collegato.\\nNiente da collegare.</string>
+    <string name="external_import_empty_all_matched">Tutto collegato.\nNiente da collegare.</string>
     <string name="external_import_empty_done">Fatto</string>
     <string name="external_import_empty_no_apps_title">Nessuna app GitHub trovata su questo dispositivo.</string>
     <string name="external_import_empty_no_apps_body">Significa che tutto è stato installato tramite un altro store, oppure che non abbiamo visibilità su ciò che è installato.</string>
@@ -809,7 +809,7 @@
     <string name="external_import_empty_ok">OK</string>
     <string name="external_import_empty_add_manually">Aggiungi un\'app da un altro store</string>
     <string name="external_import_permission_title">Trova le tue app GitHub</string>
-    <string name="external_import_permission_body">Possiamo analizzare le app installate e abbinarle alle release di GitHub, così gli aggiornamenti e il rilevamento funzionano automaticamente.\\n\\nPer farlo, dobbiamo sapere quali app hai. Senza permesso possiamo vedere solo circa 5 app; con il permesso le vediamo tutte.\\n\\nNon inviamo mai l\'elenco delle tue app senza il tuo consenso. L\'abbinamento avviene sul tuo dispositivo. La ricerca opzionale sul server invia solo il nome del pacchetto e l\'etichetta dell\'app, e quando disponibili, l\'impronta della firma, la fonte di installazione e qualsiasi riferimento al repository GitHub dichiarato nel manifest dell\'app — mai l\'elenco completo di ciò che è installato.</string>
+    <string name="external_import_permission_body">Possiamo analizzare le app installate e abbinarle alle release di GitHub, così gli aggiornamenti e il rilevamento funzionano automaticamente.\n\nPer farlo, dobbiamo sapere quali app hai. Senza permesso possiamo vedere solo circa 5 app; con il permesso le vediamo tutte.\n\nNon inviamo mai l\'elenco delle tue app senza il tuo consenso. L\'abbinamento avviene sul tuo dispositivo. La ricerca opzionale sul server invia solo il nome del pacchetto e l\'etichetta dell\'app, e quando disponibili, l\'impronta della firma, la fonte di installazione e qualsiasi riferimento al repository GitHub dichiarato nel manifest dell\'app — mai l\'elenco completo di ciò che è installato.</string>
     <string name="external_import_permission_continue">Continua</string>
     <string name="external_import_permission_not_now">Non ora</string>
     <plurals name="external_import_proposal_banner_headline">

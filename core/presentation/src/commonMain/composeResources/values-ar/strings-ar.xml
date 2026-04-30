@@ -803,7 +803,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">تم تخطي %1$d — يمكنك إعادة تشغيل الفحص من الإعدادات.</string>
     <string name="external_import_completion_action_view_all">عرض الكل</string>
-    <string name="external_import_empty_all_matched">تمت مطابقة الكل.\\nلا يوجد شيء للربط.</string>
+    <string name="external_import_empty_all_matched">تمت مطابقة الكل.\nلا يوجد شيء للربط.</string>
     <string name="external_import_empty_done">تم</string>
     <string name="external_import_empty_no_apps_title">لم نتمكن من العثور على أي تطبيقات GitHub على هذا الجهاز.</string>
     <string name="external_import_empty_no_apps_body">هذا يعني إما أن كل شيء تم تثبيته عبر متجر مختلف، أو أننا لا نملك صلاحية رؤية ما هو مثبّت.</string>
@@ -811,7 +811,7 @@
     <string name="external_import_empty_ok">حسناً</string>
     <string name="external_import_empty_add_manually">إضافة تطبيق من متجر آخر</string>
     <string name="external_import_permission_title">ابحث عن تطبيقات GitHub الخاصة بك</string>
-    <string name="external_import_permission_body">يمكننا فحص تطبيقاتك المثبّتة ومطابقتها مع إصدارات GitHub — حتى تعمل التحديثات والكشف تلقائياً.\\n\\nللقيام بذلك، نحتاج إلى معرفة التطبيقات التي لديك. بدون الإذن يمكننا رؤية نحو 5 تطبيقات فقط؛ معه يمكننا رؤية جميعها.\\n\\nنحن لا نرسل قائمة تطبيقاتك إلى أي مكان دون إذنك. تعمل المطابقة على جهازك. البحث الاختياري في الخادم يرسل فقط اسم الحزمة وتسمية التطبيق، وعند توفرها بصمة التوقيع ومصدر التثبيت وأي تلميح لمستودع GitHub مُعلَن في بيان التطبيق — وليس قائمة كاملة بما هو مثبّت.</string>
+    <string name="external_import_permission_body">يمكننا فحص تطبيقاتك المثبّتة ومطابقتها مع إصدارات GitHub — حتى تعمل التحديثات والكشف تلقائياً.\n\nللقيام بذلك، نحتاج إلى معرفة التطبيقات التي لديك. بدون الإذن يمكننا رؤية نحو 5 تطبيقات فقط؛ معه يمكننا رؤية جميعها.\n\nنحن لا نرسل قائمة تطبيقاتك إلى أي مكان دون إذنك. تعمل المطابقة على جهازك. البحث الاختياري في الخادم يرسل فقط اسم الحزمة وتسمية التطبيق، وعند توفرها بصمة التوقيع ومصدر التثبيت وأي تلميح لمستودع GitHub مُعلَن في بيان التطبيق — وليس قائمة كاملة بما هو مثبّت.</string>
     <string name="external_import_permission_continue">متابعة</string>
     <string name="external_import_permission_not_now">ليس الآن</string>
     <plurals name="external_import_proposal_banner_headline">
@@ -922,7 +922,7 @@
     <string name="mirror_section_community">مجتمع</string>
     <string name="mirror_status_ok">%1$dms</string>
     <string name="mirror_status_degraded">%1$dms</string>
-    <string name="mirror_status_down">(down)</string>
+    <string name="mirror_status_down">(متوقف)</string>
     <string name="mirror_status_unknown">?</string>
     <string name="mirror_custom_label">مرآة مخصصة…</string>
     <string name="mirror_custom_dialog_title">مرآة مخصصة</string>

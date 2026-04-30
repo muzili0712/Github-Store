@@ -774,7 +774,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">Пропущено %1$d — повторите сканирование в Настройках.</string>
     <string name="external_import_completion_action_view_all">Посмотреть все</string>
-    <string name="external_import_empty_all_matched">Всё связано.\\nНечего связывать.</string>
+    <string name="external_import_empty_all_matched">Всё связано.\nНечего связывать.</string>
     <string name="external_import_empty_done">Готово</string>
     <string name="external_import_empty_no_apps_title">На этом устройстве не найдено приложений GitHub.</string>
     <string name="external_import_empty_no_apps_body">Это означает, что всё установлено через другой магазин или у нас нет доступа к списку установленных приложений.</string>
@@ -782,7 +782,7 @@
     <string name="external_import_empty_ok">ОК</string>
     <string name="external_import_empty_add_manually">Добавить приложение из другого магазина</string>
     <string name="external_import_permission_title">Найдите ваши приложения GitHub</string>
-    <string name="external_import_permission_body">Мы можем просканировать установленные приложения и сопоставить их с релизами GitHub, чтобы обновления и обнаружение работали автоматически.\\n\\nДля этого нам нужно видеть, какие приложения у вас установлены. Без разрешения мы можем видеть только около 5 приложений; с ним — все.\\n\\nМы никогда не отправляем список ваших приложений без вашего согласия. Сопоставление выполняется на вашем устройстве. Необязательный серверный поиск передаёт только имя пакета и метку приложения, а при наличии — отпечаток подписи, источник установки и любую подсказку о репозитории GitHub, указанную в манифесте приложения; полный список установленных приложений никогда не передаётся.</string>
+    <string name="external_import_permission_body">Мы можем просканировать установленные приложения и сопоставить их с релизами GitHub, чтобы обновления и обнаружение работали автоматически.\n\nДля этого нам нужно видеть, какие приложения у вас установлены. Без разрешения мы можем видеть только около 5 приложений; с ним — все.\n\nМы никогда не отправляем список ваших приложений без вашего согласия. Сопоставление выполняется на вашем устройстве. Необязательный серверный поиск передаёт только имя пакета и метку приложения, а при наличии — отпечаток подписи, источник установки и любую подсказку о репозитории GitHub, указанную в манифесте приложения; полный список установленных приложений никогда не передаётся.</string>
     <string name="external_import_permission_continue">Продолжить</string>
     <string name="external_import_permission_not_now">Не сейчас</string>
     <plurals name="external_import_proposal_banner_headline">

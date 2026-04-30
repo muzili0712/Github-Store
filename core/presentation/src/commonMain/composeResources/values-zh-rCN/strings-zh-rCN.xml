@@ -762,7 +762,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">已跳过 %1$d 个 — 您可以在设置中重新扫描。</string>
     <string name="external_import_completion_action_view_all">查看全部</string>
-    <string name="external_import_empty_all_matched">全部已关联。\\n没有需要关联的内容。</string>
+    <string name="external_import_empty_all_matched">全部已关联。\n没有需要关联的内容。</string>
     <string name="external_import_empty_done">完成</string>
     <string name="external_import_empty_no_apps_title">在此设备上未找到 GitHub 应用。</string>
     <string name="external_import_empty_no_apps_body">这意味着所有应用都通过其他商店安装，或者我们无法获取已安装应用的信息。</string>
@@ -770,7 +770,7 @@
     <string name="external_import_empty_ok">确定</string>
     <string name="external_import_empty_add_manually">从其他商店添加应用</string>
     <string name="external_import_permission_title">找到您的 GitHub 应用</string>
-    <string name="external_import_permission_body">我们可以扫描您已安装的应用并将其与 GitHub 发布版本匹配，让更新检测自动运行。\\n\\n为此，我们需要查看您安装了哪些应用。没有权限时我们只能看到约 5 个应用；有权限时可以看到全部。\\n\\n未经您的许可，我们绝不会将您的应用列表发送到任何地方。匹配过程在您的设备上进行。可选的后端查询仅发送包名和应用标签，以及（如有）签名指纹、安装来源和应用 manifest 中声明的 GitHub 仓库提示，绝不发送完整的已安装应用列表。</string>
+    <string name="external_import_permission_body">我们可以扫描您已安装的应用并将其与 GitHub 发布版本匹配，让更新检测自动运行。\n\n为此，我们需要查看您安装了哪些应用。没有权限时我们只能看到约 5 个应用；有权限时可以看到全部。\n\n未经您的许可，我们绝不会将您的应用列表发送到任何地方。匹配过程在您的设备上进行。可选的后端查询仅发送包名和应用标签，以及（如有）签名指纹、安装来源和应用 manifest 中声明的 GitHub 仓库提示，绝不发送完整的已安装应用列表。</string>
     <string name="external_import_permission_continue">继续</string>
     <string name="external_import_permission_not_now">暂不</string>
     <plurals name="external_import_proposal_banner_headline">

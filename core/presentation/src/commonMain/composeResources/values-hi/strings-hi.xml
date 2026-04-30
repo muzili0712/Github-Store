@@ -800,7 +800,7 @@
     </plurals>
     <string name="external_import_completion_skipped_subline">%1$d छोड़े — आप सेटिंग्स से पुनः स्कैन चला सकते हैं।</string>
     <string name="external_import_completion_action_view_all">सभी देखें</string>
-    <string name="external_import_empty_all_matched">सब लिंक हो गया।\\nलिंक करने के लिए कुछ नहीं।</string>
+    <string name="external_import_empty_all_matched">सब लिंक हो गया।\nलिंक करने के लिए कुछ नहीं।</string>
     <string name="external_import_empty_done">हो गया</string>
     <string name="external_import_empty_no_apps_title">इस डिवाइस पर कोई GitHub ऐप नहीं मिला।</string>
     <string name="external_import_empty_no_apps_body">इसका मतलब है कि सब किसी और स्टोर से इंस्टॉल हुआ, या हमें इंस्टॉल ऐप्स की जानकारी नहीं मिल पाई।</string>
@@ -808,7 +808,7 @@
     <string name="external_import_empty_ok">ठीक है</string>
     <string name="external_import_empty_add_manually">किसी और स्टोर से ऐप जोड़ें</string>
     <string name="external_import_permission_title">अपने GitHub ऐप्स खोजें</string>
-    <string name="external_import_permission_body">हम आपके इंस्टॉल ऐप्स स्कैन करके GitHub रिलीज़ से मिला सकते हैं, ताकि अपडेट और पहचान अपने आप काम करे।\\n\\nइसके लिए हमें देखना होगा कि आपके पास कौन से ऐप्स हैं। अनुमति के बिना हम केवल लगभग 5 ऐप्स देख सकते हैं; अनुमति के साथ सभी देख सकते हैं।\\n\\nहम आपकी अनुमति के बिना आपके ऐप्स की सूची कहीं नहीं भेजते। मिलान आपके डिवाइस पर होता है। वैकल्पिक सर्वर लुकअप केवल पैकेज नाम और ऐप लेबल भेजता है, और उपलब्ध होने पर साइनिंग फिंगरप्रिंट, इंस्टॉल स्रोत और ऐप के मैनिफेस्ट में घोषित GitHub रिपो संकेत भी — कभी भी इंस्टॉल की पूरी सूची नहीं।</string>
+    <string name="external_import_permission_body">हम आपके इंस्टॉल ऐप्स स्कैन करके GitHub रिलीज़ से मिला सकते हैं, ताकि अपडेट और पहचान अपने आप काम करे।\n\nइसके लिए हमें देखना होगा कि आपके पास कौन से ऐप्स हैं। अनुमति के बिना हम केवल लगभग 5 ऐप्स देख सकते हैं; अनुमति के साथ सभी देख सकते हैं।\n\nहम आपकी अनुमति के बिना आपके ऐप्स की सूची कहीं नहीं भेजते। मिलान आपके डिवाइस पर होता है। वैकल्पिक सर्वर लुकअप केवल पैकेज नाम और ऐप लेबल भेजता है, और उपलब्ध होने पर साइनिंग फिंगरप्रिंट, इंस्टॉल स्रोत और ऐप के मैनिफेस्ट में घोषित GitHub रिपो संकेत भी — कभी भी इंस्टॉल की पूरी सूची नहीं।</string>
     <string name="external_import_permission_continue">जारी रखें</string>
     <string name="external_import_permission_not_now">अभी नहीं</string>
     <plurals name="external_import_proposal_banner_headline">
