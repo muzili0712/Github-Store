@@ -3,6 +3,7 @@ package zed.rainxch.core.data.network
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.plugin
+import io.ktor.http.HttpHeaders
 import io.ktor.http.Url
 import io.ktor.http.takeFrom
 import io.ktor.util.AttributeKey
@@ -30,8 +31,14 @@ fun HttpClient.installMirrorRewrite() {
             if (MirrorRewriter.shouldRewrite(original)) {
                 val template = ProxyManager.currentMirrorTemplate()
                 if (template != null) {
-                    val rewritten = MirrorRewriter.applyTemplate(template, original)
-                    request.url.takeFrom(Url(rewritten))
+                    val originalHost = request.url.host
+                    val rewritten = Url(MirrorRewriter.applyTemplate(template, original))
+                    request.url.takeFrom(rewritten)
+                    // Host changed — strip the user's GitHub bearer token so we
+                    // never send it to a community mirror.
+                    if (rewritten.host != originalHost) {
+                        request.headers.remove(HttpHeaders.Authorization)
+                    }
                 }
             }
         }
