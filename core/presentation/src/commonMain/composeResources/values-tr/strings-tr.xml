@@ -788,15 +788,15 @@
     <string name="external_import_card_preselect_unknown">Depo bulmak için dokun</string>
     <string name="external_import_card_expand_label">Diğer eşleşmeleri görmek için genişlet</string>
     <string name="external_import_card_collapse_label">Kartı daralt</string>
-    <string name="external_import_search_icon_label">GitHub\'da ara</string>
+    <string name="external_import_search_icon_label">GitHub'da ara</string>
     <string name="external_import_search_empty">Eşleşme yok</string>
     <string name="external_import_search_error_default">Arama başarısız</string>
-    <string name="external_import_search_placeholder_url">Bir github.com URL\'si yapıştırın veya arayın…</string>
+    <string name="external_import_search_placeholder_url">Bir github.com URL'si yapıştırın veya arayın…</string>
     <plurals name="external_import_completion_headline">
         <item quantity="one">%1$d uygulama artık takip ediliyor.</item>
         <item quantity="other">%1$d uygulama artık takip ediliyor.</item>
     </plurals>
-    <string name="external_import_completion_skipped_subline">%1$d atlandı — Ayarlar\'dan yeniden tarama yapabilirsiniz.</string>
+    <string name="external_import_completion_skipped_subline">%1$d atlandı — Ayarlar'dan yeniden tarama yapabilirsiniz.</string>
     <string name="external_import_completion_action_view_all">Tümünü görüntüle</string>
     <string name="external_import_empty_all_matched">Tümü eşleşti.\nBağlanacak bir şey yok.</string>
     <string name="external_import_empty_done">Tamam</string>
@@ -806,12 +806,12 @@
     <string name="external_import_empty_ok">Tamam</string>
     <string name="external_import_empty_add_manually">Başka bir mağazadan uygulama ekle</string>
     <string name="external_import_permission_title">GitHub uygulamalarınızı bulun</string>
-    <string name="external_import_permission_body">Yüklü uygulamalarınızı tarayıp GitHub sürümleriyle eşleştirebiliriz; böylece güncellemeler ve algılama otomatik çalışır.\n\nBunun için hangi uygulamaların yüklü olduğunu görmemiz gerekiyor. İzin vermeden yalnızca yaklaşık 5 uygulama görebiliriz; izinle tümünü görebiliriz.\n\nUygulama listenizi izniniz olmadan hiçbir yere göndermiyoruz. Eşleştirme işlemi cihazınızda gerçekleşir. İsteğe bağlı sunucu araması yalnızca paket adını ve uygulama etiketini, varsa imza parmak izini, kurulum kaynağını ve uygulama manifest\'inde belirtilen GitHub depo ipucunu gönderir; yüklü uygulamaların tam listesini asla göndermez.</string>
+    <string name="external_import_permission_body">Yüklü uygulamalarınızı tarayıp GitHub sürümleriyle eşleştirebiliriz; böylece güncellemeler ve algılama otomatik çalışır.\n\nBunun için hangi uygulamaların yüklü olduğunu görmemiz gerekiyor. İzin vermeden yalnızca yaklaşık 5 uygulama görebiliriz; izinle tümünü görebiliriz.\n\nUygulama listenizi izniniz olmadan hiçbir yere göndermiyoruz. Eşleştirme işlemi cihazınızda gerçekleşir. İsteğe bağlı sunucu araması yalnızca paket adını ve uygulama etiketini, varsa imza parmak izini, kurulum kaynağını ve uygulama manifest'inde belirtilen GitHub depo ipucunu gönderir; yüklü uygulamaların tam listesini asla göndermez.</string>
     <string name="external_import_permission_continue">Devam et</string>
     <string name="external_import_permission_not_now">Şimdi değil</string>
     <plurals name="external_import_proposal_banner_headline">
-        <item quantity="one">GitHub\'dan %1$d uygulama bulundu</item>
-        <item quantity="other">GitHub\'dan %1$d uygulama bulundu</item>
+        <item quantity="one">GitHub'dan %1$d uygulama bulundu</item>
+        <item quantity="other">GitHub'dan %1$d uygulama bulundu</item>
     </plurals>
     <string name="external_import_proposal_banner_body">Güncellemeleri burada takip etmek için inceleyin.</string>
     <string name="external_import_proposal_banner_review">İncele</string>
@@ -819,7 +819,7 @@
     <string name="external_import_match_confidence_a11y">Eşleşme güveni: yüzde %1$d</string>
     <string name="external_import_match_confidence_chip">%1$d%%</string>
     <string name="external_import_error_link_failed">Bu uygulama bağlanamadı — tekrar deneyin.</string>
-    <string name="external_import_error_link_network">GitHub\'a ulaşılamadı. Daha sonra tekrar deneyin.</string>
+    <string name="external_import_error_link_network">GitHub'a ulaşılamadı. Daha sonra tekrar deneyin.</string>
     <string name="external_import_error_scan_failed_default">Tarama başarısız</string>
     <string name="external_import_installer_obtainium">Obtainium</string>
     <string name="external_import_installer_fdroid">F-Droid</string>
@@ -917,16 +917,16 @@
     <string name="mirror_custom_save">Kaydet</string>
     <string name="mirror_test_button">Seçileni test et</string>
     <string name="mirror_test_in_progress">Test ediliyor…</string>
-    <string name="mirror_test_success">%1$dms\'de ulaşıldı</string>
+    <string name="mirror_test_success">%1$dms'de ulaşıldı</string>
     <string name="mirror_test_http_error">Ayna %1$d döndürdü</string>
     <string name="mirror_test_timeout">5s sonra zaman aşımı</string>
     <string name="mirror_test_dns_fail">Ana bilgisayar çözümlenemedi</string>
     <string name="mirror_test_other">Başarısız: %1$s</string>
     <string name="mirror_deploy_your_own_hint">Tüm aynalar mı çöktü? 5 dakikada kendinizinkini barındırabilirsiniz — belgelere bakın.</string>
-    <string name="mirror_removed_toast">%1$s artık kullanılamıyor, Doğrudan GitHub\'a geçildi.</string>
+    <string name="mirror_removed_toast">%1$s artık kullanılamıyor, Doğrudan GitHub'a geçildi.</string>
     <string name="mirror_digest_mismatch_error">Sağlama toplamı uyumsuzluğu — dosya değiştirilmiş olabilir</string>
     <string name="mirror_auto_suggest_title">Daha hızlı bir ayna deneyin mi?</string>
-    <string name="mirror_auto_suggest_body">Yavaş ağlardaki bazı kullanıcılar topluluk proxy\'siyle daha iyi sonuç alıyor.</string>
+    <string name="mirror_auto_suggest_body">Yavaş ağlardaki bazı kullanıcılar topluluk proxy'siyle daha iyi sonuç alıyor.</string>
     <string name="mirror_auto_suggest_pick_one">Birini seç</string>
     <string name="mirror_auto_suggest_maybe_later">Belki daha sonra</string>
     <string name="mirror_auto_suggest_dont_ask_again">Bir daha sorma</string>

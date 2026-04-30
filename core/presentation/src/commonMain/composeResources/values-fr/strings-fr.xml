@@ -725,7 +725,7 @@
     <string name="action_switch_to_stable">Passer à %1$s stable</string>
     <string name="stalled_project_warning_months">Aucune version stable depuis %1$d mois</string>
     <string name="stalled_project_warning_days">Aucune version stable depuis %1$d jour(s)</string>
-    <string name="stalled_project_warning_description">Des préversions actives existent, mais le projet n\'a pas publié de version stable depuis un moment. Les bêtas pourraient ne pas aboutir à une version stable.</string>
+    <string name="stalled_project_warning_description">Des préversions actives existent, mais le projet n'a pas publié de version stable depuis un moment. Les bêtas pourraient ne pas aboutir à une version stable.</string>
     <string name="merged_whats_changed_title">Nouveautés depuis %1$s</string>
     <string name="merged_release_heading">— %1$s —</string>
 
@@ -734,7 +734,7 @@
          ═══════════════════════════════════════════════════════════════ -->
     <string name="external_import_top_bar_title">Importer les applications installées</string>
     <string name="external_import_top_bar_back">Retour</string>
-    <string name="external_import_overflow_more">Plus d\'options</string>
+    <string name="external_import_overflow_more">Plus d'options</string>
     <string name="external_import_overflow_skip_remaining">Ignorer les restantes</string>
     <string name="external_import_progress_scanning">Analyse de vos applications…</string>
     <string name="external_import_progress_auto_importing">Importation des correspondances…</string>
@@ -748,9 +748,9 @@
     <string name="external_import_card_action_more">Plus de correspondances</string>
     <string name="external_import_card_action_less">Masquer les correspondances</string>
     <string name="external_import_card_installer_chip">Installé via %1$s</string>
-    <string name="external_import_card_preselect_known">Nous pensons que c\'est %1$s · %2$d%%</string>
+    <string name="external_import_card_preselect_known">Nous pensons que c'est %1$s · %2$d%%</string>
     <string name="external_import_card_preselect_unknown">Appuyez pour trouver un dépôt</string>
-    <string name="external_import_card_expand_label">Développer pour voir d\'autres correspondances</string>
+    <string name="external_import_card_expand_label">Développer pour voir d'autres correspondances</string>
     <string name="external_import_card_collapse_label">Réduire la carte</string>
     <string name="external_import_search_icon_label">Rechercher sur GitHub</string>
     <string name="external_import_search_empty">Aucune correspondance</string>
@@ -765,12 +765,12 @@
     <string name="external_import_empty_all_matched">Tout est lié.\nRien à lier.</string>
     <string name="external_import_empty_done">Terminé</string>
     <string name="external_import_empty_no_apps_title">Aucune application GitHub trouvée sur cet appareil.</string>
-    <string name="external_import_empty_no_apps_body">Cela signifie que tout a été installé via une autre boutique, ou que nous n\'avons pas accès à la liste des applications installées.</string>
+    <string name="external_import_empty_no_apps_body">Cela signifie que tout a été installé via une autre boutique, ou que nous n'avons pas accès à la liste des applications installées.</string>
     <string name="external_import_empty_grant_permission">Accorder la permission</string>
     <string name="external_import_empty_ok">OK</string>
-    <string name="external_import_empty_add_manually">Ajouter une application d\'une autre boutique</string>
+    <string name="external_import_empty_add_manually">Ajouter une application d'une autre boutique</string>
     <string name="external_import_permission_title">Trouvez vos applications GitHub</string>
-    <string name="external_import_permission_body">Nous pouvons analyser vos applications installées et les associer aux versions GitHub, afin que les mises à jour et la détection fonctionnent automatiquement.\n\nPour cela, nous devons voir quelles applications vous avez. Sans permission, nous ne pouvons voir qu\'environ 5 applications ; avec elle, nous pouvons toutes les voir.\n\nNous n\'envoyons jamais la liste de vos applications sans votre permission. La correspondance s\'effectue sur votre appareil. La recherche optionnelle sur le serveur envoie uniquement le nom du paquet et l\'étiquette de l\'application, et si disponibles, l\'empreinte de signature, la source d\'installation et tout indice de dépôt GitHub déclaré dans le manifeste de l\'application — jamais une liste complète de ce qui est installé.</string>
+    <string name="external_import_permission_body">Nous pouvons analyser vos applications installées et les associer aux versions GitHub, afin que les mises à jour et la détection fonctionnent automatiquement.\n\nPour cela, nous devons voir quelles applications vous avez. Sans permission, nous ne pouvons voir qu'environ 5 applications ; avec elle, nous pouvons toutes les voir.\n\nNous n'envoyons jamais la liste de vos applications sans votre permission. La correspondance s'effectue sur votre appareil. La recherche optionnelle sur le serveur envoie uniquement le nom du paquet et l'étiquette de l'application, et si disponibles, l'empreinte de signature, la source d'installation et tout indice de dépôt GitHub déclaré dans le manifeste de l'application — jamais une liste complète de ce qui est installé.</string>
     <string name="external_import_permission_continue">Continuer</string>
     <string name="external_import_permission_not_now">Pas maintenant</string>
     <plurals name="external_import_proposal_banner_headline">
@@ -783,8 +783,8 @@
     <string name="external_import_match_confidence_a11y">Confiance de correspondance : %1$d pour cent</string>
     <string name="external_import_match_confidence_chip">%1$d%%</string>
     <string name="external_import_error_link_failed">Impossible de lier cette application — réessayez.</string>
-    <string name="external_import_error_link_network">Impossible d\'atteindre GitHub. Réessayez plus tard.</string>
-    <string name="external_import_error_scan_failed_default">Échec de l\'analyse</string>
+    <string name="external_import_error_link_network">Impossible d'atteindre GitHub. Réessayez plus tard.</string>
+    <string name="external_import_error_scan_failed_default">Échec de l'analyse</string>
     <string name="external_import_installer_obtainium">Obtainium</string>
     <string name="external_import_installer_fdroid">F-Droid</string>
     <string name="external_import_installer_browser">Navigateur</string>
@@ -794,7 +794,7 @@
     <string name="external_import_undo_linked">%1$s lié.</string>
     <string name="external_import_undo_skipped">%1$s ignoré.</string>
     <string name="external_import_undo_action">Annuler</string>
-    <string name="external_import_undo_failed">Impossible d\'annuler — réessayez.</string>
+    <string name="external_import_undo_failed">Impossible d'annuler — réessayez.</string>
     <plurals name="external_import_list_remaining">
         <item quantity="one">%1$d application à examiner</item>
         <item quantity="other">%1$d applications à examiner</item>
@@ -818,9 +818,9 @@
          E1 — Details unlink dialog
          ═══════════════════════════════════════════════════════════════ -->
     <string name="details_unlink_external_app_menu">Délier de ce dépôt</string>
-    <string name="details_unlink_external_app_more_options">Plus d\'options</string>
+    <string name="details_unlink_external_app_more_options">Plus d'options</string>
     <string name="details_unlink_external_app_dialog_title">Délier cette application ?</string>
-    <string name="details_unlink_external_app_dialog_body">Nous cesserons de suivre %1$s comme installée depuis ce dépôt. L\'application reste sur votre appareil — seul le lien est supprimé.</string>
+    <string name="details_unlink_external_app_dialog_body">Nous cesserons de suivre %1$s comme installée depuis ce dépôt. L'application reste sur votre appareil — seul le lien est supprimé.</string>
     <string name="details_unlink_external_app_dialog_confirm">Délier</string>
     <string name="details_unlink_external_app_success">Délié. Nous proposerons une correspondance lors du prochain scan.</string>
     <string name="details_unlink_external_app_failure">Impossible de délier — réessayez.</string>
@@ -849,7 +849,7 @@
     <string name="feedback_field_description">Description</string>
     <string name="feedback_field_steps">Étapes pour reproduire</string>
     <string name="feedback_field_expected_actual">Attendu vs obtenu</string>
-    <string name="feedback_field_use_case">Cas d\'utilisation</string>
+    <string name="feedback_field_use_case">Cas d'utilisation</string>
     <string name="feedback_field_proposed_solution">Solution proposée</string>
     <string name="feedback_field_current_behaviour">Comportement actuel</string>
     <string name="feedback_field_desired_behaviour">Comportement souhaité</string>
@@ -859,14 +859,14 @@
     <string name="feedback_send_via_github">Ouvrir comme Issue GitHub</string>
     <string name="feedback_send_success_email">Merci — ouverture de votre client e-mail.</string>
     <string name="feedback_send_success_github">Merci — ouverture de votre navigateur.</string>
-    <string name="feedback_send_error">Impossible d\'ouvrir le canal de commentaires : %1$s</string>
+    <string name="feedback_send_error">Impossible d'ouvrir le canal de commentaires : %1$s</string>
 
     <!-- ═══════════════════════════════════════════════════════════════
          E5 — Mirror feature
          ═══════════════════════════════════════════════════════════════ -->
     <string name="mirror_tweaks_entry_label">Miroir de téléchargement</string>
     <string name="mirror_picker_title">Miroir de téléchargement</string>
-    <string name="mirror_picker_description">Utilisé pour télécharger les fichiers de versions. Les appels à l\'API GitHub passent toujours en direct. La plupart des utilisateurs devraient laisser ce paramètre sur GitHub direct.</string>
+    <string name="mirror_picker_description">Utilisé pour télécharger les fichiers de versions. Les appels à l'API GitHub passent toujours en direct. La plupart des utilisateurs devraient laisser ce paramètre sur GitHub direct.</string>
     <string name="mirror_section_official">Officiel</string>
     <string name="mirror_section_community">Communauté</string>
     <string name="mirror_status_ok">%1$dms</string>
@@ -884,10 +884,10 @@
     <string name="mirror_test_success">Atteint en %1$dms</string>
     <string name="mirror_test_http_error">Le miroir a renvoyé %1$d</string>
     <string name="mirror_test_timeout">Délai dépassé après 5s</string>
-    <string name="mirror_test_dns_fail">Impossible de résoudre l\'hôte</string>
+    <string name="mirror_test_dns_fail">Impossible de résoudre l'hôte</string>
     <string name="mirror_test_other">Échec : %1$s</string>
     <string name="mirror_deploy_your_own_hint">Tous les miroirs hors ligne ? Vous pouvez héberger le vôtre en 5 minutes — consultez la documentation.</string>
-    <string name="mirror_removed_toast">%1$s n\'est plus disponible, basculé vers GitHub direct.</string>
+    <string name="mirror_removed_toast">%1$s n'est plus disponible, basculé vers GitHub direct.</string>
     <string name="mirror_digest_mismatch_error">Somme de contrôle incorrecte — le fichier a peut-être été altéré</string>
     <string name="mirror_auto_suggest_title">Essayer un miroir plus rapide ?</string>
     <string name="mirror_auto_suggest_body">Certains utilisateurs sur des réseaux lents ont plus de succès avec un proxy communautaire.</string>

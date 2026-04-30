@@ -764,7 +764,7 @@
     <string name="action_switch_to_stable">Passa a %1$s stabile</string>
     <string name="stalled_project_warning_months">Nessuna versione stabile da %1$d mesi</string>
     <string name="stalled_project_warning_days">Nessuna versione stabile da %1$d giorni</string>
-    <string name="stalled_project_warning_description">Ci sono pre-release attive, ma il progetto non ha pubblicato una build stabile da un po\'. Le versioni beta potrebbero non convergere a un rilascio stabile.</string>
+    <string name="stalled_project_warning_description">Ci sono pre-release attive, ma il progetto non ha pubblicato una build stabile da un po'. Le versioni beta potrebbero non convergere a un rilascio stabile.</string>
     <string name="merged_whats_changed_title">Novità da %1$s</string>
     <string name="merged_release_heading">— %1$s —</string>
 
@@ -807,9 +807,9 @@
     <string name="external_import_empty_no_apps_body">Significa che tutto è stato installato tramite un altro store, oppure che non abbiamo visibilità su ciò che è installato.</string>
     <string name="external_import_empty_grant_permission">Concedi permesso</string>
     <string name="external_import_empty_ok">OK</string>
-    <string name="external_import_empty_add_manually">Aggiungi un\'app da un altro store</string>
+    <string name="external_import_empty_add_manually">Aggiungi un'app da un altro store</string>
     <string name="external_import_permission_title">Trova le tue app GitHub</string>
-    <string name="external_import_permission_body">Possiamo analizzare le app installate e abbinarle alle release di GitHub, così gli aggiornamenti e il rilevamento funzionano automaticamente.\n\nPer farlo, dobbiamo sapere quali app hai. Senza permesso possiamo vedere solo circa 5 app; con il permesso le vediamo tutte.\n\nNon inviamo mai l\'elenco delle tue app senza il tuo consenso. L\'abbinamento avviene sul tuo dispositivo. La ricerca opzionale sul server invia solo il nome del pacchetto e l\'etichetta dell\'app, e quando disponibili, l\'impronta della firma, la fonte di installazione e qualsiasi riferimento al repository GitHub dichiarato nel manifest dell\'app — mai l\'elenco completo di ciò che è installato.</string>
+    <string name="external_import_permission_body">Possiamo analizzare le app installate e abbinarle alle release di GitHub, così gli aggiornamenti e il rilevamento funzionano automaticamente.\n\nPer farlo, dobbiamo sapere quali app hai. Senza permesso possiamo vedere solo circa 5 app; con il permesso le vediamo tutte.\n\nNon inviamo mai l'elenco delle tue app senza il tuo consenso. L'abbinamento avviene sul tuo dispositivo. La ricerca opzionale sul server invia solo il nome del pacchetto e l'etichetta dell'app, e quando disponibili, l'impronta della firma, la fonte di installazione e qualsiasi riferimento al repository GitHub dichiarato nel manifest dell'app — mai l'elenco completo di ciò che è installato.</string>
     <string name="external_import_permission_continue">Continua</string>
     <string name="external_import_permission_not_now">Non ora</string>
     <plurals name="external_import_proposal_banner_headline">
@@ -859,7 +859,7 @@
     <string name="details_unlink_external_app_menu">Scollega da questo repository</string>
     <string name="details_unlink_external_app_more_options">Altre opzioni</string>
     <string name="details_unlink_external_app_dialog_title">Scollegare questa app?</string>
-    <string name="details_unlink_external_app_dialog_body">Smetteremo di tracciare %1$s come installata da questo repository. L\'app rimane sul dispositivo — viene rimosso solo il collegamento.</string>
+    <string name="details_unlink_external_app_dialog_body">Smetteremo di tracciare %1$s come installata da questo repository. L'app rimane sul dispositivo — viene rimosso solo il collegamento.</string>
     <string name="details_unlink_external_app_dialog_confirm">Scollega</string>
     <string name="details_unlink_external_app_success">Scollegata. Proporremo una corrispondenza alla prossima scansione.</string>
     <string name="details_unlink_external_app_failure">Impossibile scollegare — riprova.</string>
@@ -888,7 +888,7 @@
     <string name="feedback_field_description">Descrizione</string>
     <string name="feedback_field_steps">Passaggi per riprodurre</string>
     <string name="feedback_field_expected_actual">Atteso vs effettivo</string>
-    <string name="feedback_field_use_case">Caso d\'uso</string>
+    <string name="feedback_field_use_case">Caso d'uso</string>
     <string name="feedback_field_proposed_solution">Soluzione proposta</string>
     <string name="feedback_field_current_behaviour">Comportamento attuale</string>
     <string name="feedback_field_desired_behaviour">Comportamento desiderato</string>
@@ -923,7 +923,7 @@
     <string name="mirror_test_success">Raggiunto in %1$dms</string>
     <string name="mirror_test_http_error">Il mirror ha restituito %1$d</string>
     <string name="mirror_test_timeout">Timeout dopo 5s</string>
-    <string name="mirror_test_dns_fail">Impossibile risolvere l\'host</string>
+    <string name="mirror_test_dns_fail">Impossibile risolvere l'host</string>
     <string name="mirror_test_other">Errore: %1$s</string>
     <string name="mirror_deploy_your_own_hint">Tutti i mirror non disponibili? Puoi ospitarne uno tuo in 5 minuti — consulta la documentazione.</string>
     <string name="mirror_removed_toast">%1$s non è più disponibile, passato a GitHub diretto.</string>
