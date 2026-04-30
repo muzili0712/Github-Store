@@ -104,6 +104,19 @@ class MirrorRepositoryImpl(
 
     override fun observeRemovedNotices(): Flow<MirrorRemoved> = _removedNotices.asSharedFlow()
 
+    override suspend fun snoozeAutoSuggest(forMs: Long) {
+        preferences.edit { prefs ->
+            prefs[MirrorPersistence.AUTO_SUGGEST_SNOOZE_UNTIL_KEY] =
+                kotlin.time.Clock.System.now().toEpochMilliseconds() + forMs
+        }
+    }
+
+    override suspend fun dismissAutoSuggestPermanently() {
+        preferences.edit { prefs ->
+            prefs[MirrorPersistence.AUTO_SUGGEST_DISMISSED_KEY] = true
+        }
+    }
+
     private suspend fun readCachedCatalogOrBundled(): List<MirrorConfig> {
         val cachedJson = preferences.data.first()[MirrorPersistence.CACHED_MIRROR_LIST_JSON_KEY]
         return if (cachedJson.isNullOrBlank()) {
