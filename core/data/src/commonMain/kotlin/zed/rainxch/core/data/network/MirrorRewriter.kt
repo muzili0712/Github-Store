@@ -6,15 +6,16 @@ object MirrorRewriter {
     private val rewriteHosts =
         setOf(
             "github.com",
-            "api.github.com",
             "raw.githubusercontent.com",
             "objects.githubusercontent.com",
         )
 
     /**
      * True iff the URL host is one of the GitHub-owned hosts that should
-     * be routed through a community mirror. Returns false for all other
-     * hosts including `api.github-store.org` (our backend).
+     * be routed through a community mirror. `api.github.com` is intentionally
+     * excluded — community mirrors are built for binary downloads, not API
+     * calls, and routing API traffic through them returns 403. `api.github-store.org`
+     * (our backend) is also excluded.
      */
     fun shouldRewrite(url: String): Boolean =
         runCatching {
