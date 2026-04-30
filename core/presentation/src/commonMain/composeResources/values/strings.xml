@@ -909,7 +909,7 @@
     <!-- Tweaks feature - Mirror -->
     <string name="mirror_tweaks_entry_label">Download Mirror</string>
     <string name="mirror_picker_title">Download Mirror</string>
-    <string name="mirror_picker_description">Used for downloading release assets and proxying GitHub API calls. Most users should leave this on Direct GitHub.</string>
+    <string name="mirror_picker_description">Used for downloading release assets. GitHub API calls always go direct. Most users should leave this on Direct GitHub.</string>
 
     <!-- Mirror - Sections -->
     <string name="mirror_section_official">Official</string>
