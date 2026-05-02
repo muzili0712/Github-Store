@@ -821,17 +821,28 @@ class DetailsViewModel(
     private fun observeInstalledApp(repoId: Long) {
         viewModelScope.launch {
             installedAppsRepository
-                .getAppByRepoIdAsFlow(repoId)
+                .getAppsByRepoIdAsFlow(repoId)
                 .distinctUntilChanged()
-                .collect { app ->
+                .collect { apps ->
+                    // Pick the "primary" tracked app: the one whose
+                    // package name matches the currently selected
+                    // asset's prior install, or just the first.
+                    val primary = apps.firstOrNull { existing ->
+                        _state.value.primaryAsset?.name?.let { assetName ->
+                            val filter = existing.assetFilterRegex
+                            filter != null && Regex(filter).containsMatchIn(assetName)
+                        } == true
+                    } ?: apps.firstOrNull()
+
                     // Recompute merged changelog + stalled signals
                     // against the new installed version — if the
                     // user just updated externally, the installed
                     // tag flips and what they've "missed" changes.
-                    val insights = computeReleaseInsights(_state.value.allReleases, app)
+                    val insights = computeReleaseInsights(_state.value.allReleases, primary)
                     _state.update {
                         it.copy(
-                            installedApp = app,
+                            installedApp = primary,
+                            installedApps = apps,
                             mergedChangelog = insights.mergedChangelog,
                             mergedChangelogBaseTag = insights.mergedChangelogBaseTag,
                             stalledStableSinceDays = insights.stalledStableSinceDays,
@@ -2294,12 +2305,13 @@ class DetailsViewModel(
                         }
                     }
 
-                val installedAppDeferred =
+                val installedAppsDeferred =
                     async {
                         try {
-                            val dbApp = installedAppsRepository.getAppByRepoId(repo.id)
+                            val dbApps = installedAppsRepository.getAppsByRepoId(repo.id)
 
-                            if (dbApp != null) {
+                            // Reconcile pending-install status for each tracked app
+                            dbApps.map { dbApp ->
                                 if (dbApp.isPendingInstall &&
                                     packageMonitor.isPackageInstalled(dbApp.packageName)
                                 ) {
@@ -2308,18 +2320,17 @@ class DetailsViewModel(
                                         false,
                                     )
                                     installedAppsRepository.getAppByPackage(dbApp.packageName)
+                                        ?: dbApp
                                 } else {
                                     dbApp
                                 }
-                            } else {
-                                null
                             }
                         } catch (_: RateLimitException) {
                             rateLimited.set(true)
-                            null
+                            emptyList()
                         } catch (t: Throwable) {
-                            logger.error("Failed to load installed app: ${t.message}")
-                            null
+                            logger.error("Failed to load installed apps: ${t.message}")
+                            emptyList()
                         }
                     }
 
@@ -2330,7 +2341,8 @@ class DetailsViewModel(
                 val stats = statsDeferred.await()
                 val readme = readmeDeferred.await()
                 val userProfile = userProfileDeferred.await()
-                val installedApp = installedAppDeferred.await()
+                val allInstalledApps = installedAppsDeferred.await()
+                val installedApp = allInstalledApps.firstOrNull()
 
                 if (rateLimited.get()) {
                     // Any deferred tripping the rate-limit flag leaves the UI

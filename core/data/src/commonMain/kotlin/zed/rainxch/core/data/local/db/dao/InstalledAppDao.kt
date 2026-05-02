@@ -26,6 +26,12 @@ interface InstalledAppDao {
     @Query("SELECT * FROM installed_apps WHERE repoId = :repoId")
     fun getAppByRepoIdAsFlow(repoId: Long): Flow<InstalledAppEntity?>
 
+    @Query("SELECT * FROM installed_apps WHERE repoId = :repoId")
+    suspend fun getAppsByRepoId(repoId: Long): List<InstalledAppEntity>
+
+    @Query("SELECT * FROM installed_apps WHERE repoId = :repoId")
+    fun getAppsByRepoIdAsFlow(repoId: Long): Flow<List<InstalledAppEntity>>
+
     @Query("SELECT COUNT(*) FROM installed_apps WHERE isUpdateAvailable = 1")
     fun getUpdateCount(): Flow<Int>
 

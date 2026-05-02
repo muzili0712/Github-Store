@@ -112,7 +112,8 @@ class StarredRepositoryImpl(
                                     val hasValidAssets =
                                         checkForValidAssets(repo.owner.login, repo.name)
                                     if (hasValidAssets) {
-                                        val installedApp = installedAppsDao.getAppByRepoId(repo.id)
+                                        val installedApps = installedAppsDao.getAppsByRepoId(repo.id)
+                                        val firstInstalled = installedApps.firstOrNull { !it.isPendingInstall }
                                         zed.rainxch.core.domain.model.StarredRepository(
                                             repoId = repo.id,
                                             repoName = repo.name,
@@ -124,8 +125,8 @@ class StarredRepositoryImpl(
                                             stargazersCount = repo.stargazersCount,
                                             forksCount = repo.forksCount,
                                             openIssuesCount = repo.openIssuesCount,
-                                            isInstalled = installedApp != null,
-                                            installedPackageName = installedApp?.packageName,
+                                            isInstalled = firstInstalled != null,
+                                            installedPackageName = firstInstalled?.packageName,
                                             latestVersion = null,
                                             latestReleaseUrl = null,
                                             starredAt =

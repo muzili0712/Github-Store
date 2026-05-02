@@ -105,19 +105,19 @@ class HomeViewModel(
     private fun observeInstalledApps() {
         viewModelScope.launch {
             installedAppsRepository.getAllInstalledApps().collect { installedApps ->
-                val installedMap = installedApps.associateBy { it.repoId }
+                val installedMap = installedApps.groupBy { it.repoId }
                 _state.update { current ->
                     current.copy(
                         repos =
                             current.repos
                                 .map { homeRepo ->
-                                    val app = installedMap[homeRepo.repository.id]
+                                    val apps = installedMap[homeRepo.repository.id].orEmpty()
                                     homeRepo.copy(
-                                        isInstalled = app.isReallyInstalled(),
-                                        isUpdateAvailable = app.hasActualUpdate(),
+                                        isInstalled = apps.any { it.isReallyInstalled() },
+                                        isUpdateAvailable = apps.any { it.hasActualUpdate() },
                                     )
                                 }.toImmutableList(),
-                        isUpdateAvailable = installedMap.values.any { it.hasActualUpdate() },
+                        isUpdateAvailable = installedMap.values.flatten().any { it.hasActualUpdate() },
                     )
                 }
             }
@@ -341,7 +341,7 @@ class HomeViewModel(
             installedAppsRepository
                 .getAllInstalledApps()
                 .first()
-                .associateBy { it.repoId }
+                .groupBy { it.repoId }
 
         val favoritesMap =
             favouritesRepository
@@ -358,16 +358,16 @@ class HomeViewModel(
         val seenIds = _state.value.seenRepoIds
 
         return repos.map { repo ->
-            val app = installedAppsMap[repo.id]
+            val apps = installedAppsMap[repo.id].orEmpty()
             val favourite = favoritesMap[repo.id]
             val starred = starredReposMap[repo.id]
 
             DiscoveryRepositoryUi(
-                isInstalled = app.isReallyInstalled(),
+                isInstalled = apps.any { it.isReallyInstalled() },
                 isFavourite = favourite != null,
                 isStarred = starred != null,
                 isSeen = repo.id in seenIds,
-                isUpdateAvailable = app.hasActualUpdate(),
+                isUpdateAvailable = apps.any { it.hasActualUpdate() },
                 repository = repo.toUi(),
             )
         }

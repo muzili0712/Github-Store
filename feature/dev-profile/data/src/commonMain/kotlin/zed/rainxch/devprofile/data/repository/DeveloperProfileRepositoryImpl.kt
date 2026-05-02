@@ -128,7 +128,7 @@ class DeveloperProfileRepositoryImpl(
         repo: GitHubRepoResponse,
         favoriteIds: Set<Long>,
     ): DeveloperRepository {
-        val installedApp = installedAppsDao.getAppByRepoId(repo.id)
+        val installedApps = installedAppsDao.getAppsByRepoId(repo.id)
         val isFavorite = favoriteIds.contains(repo.id)
 
         val (hasReleases, hasInstallableAssets, latestVersion) =
@@ -140,12 +140,11 @@ class DeveloperProfileRepositoryImpl(
         return repo.toDomain(
             hasReleases = hasReleases,
             hasInstallableAssets = hasInstallableAssets,
-            // Treat a row as installed only if the actual install
-            // completed; a parked-download row left by a failed install
-            // would otherwise leak "Installed" into the UI (see
-            // `InstalledApp.isReallyInstalled` for the domain-model
-            // equivalent of this check).
-            isInstalled = installedApp != null && !installedApp.isPendingInstall,
+            // Treat a repo as installed if any tracked app has
+            // completed install; a parked-download row left by a
+            // failed install would otherwise leak "Installed" into
+            // the UI (see `InstalledApp.isReallyInstalled`).
+            isInstalled = installedApps.any { !it.isPendingInstall },
             isFavorite = isFavorite,
             latestVersion = latestVersion,
         )

@@ -18,6 +18,10 @@ interface InstalledAppsRepository {
 
     fun getAppByRepoIdAsFlow(repoId: Long): Flow<InstalledApp?>
 
+    suspend fun getAppsByRepoId(repoId: Long): List<InstalledApp>
+
+    fun getAppsByRepoIdAsFlow(repoId: Long): Flow<List<InstalledApp>>
+
     suspend fun isAppInstalled(repoId: Long): Boolean
 
     suspend fun saveInstalledApp(app: InstalledApp)

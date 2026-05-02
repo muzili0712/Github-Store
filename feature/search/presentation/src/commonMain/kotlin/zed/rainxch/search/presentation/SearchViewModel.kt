@@ -220,16 +220,16 @@ class SearchViewModel(
             installedAppsRepository
                 .getAllInstalledApps()
                 .collect { installedApps ->
-                    val installedMap = installedApps.associateBy { it.repoId }
+                    val installedMap = installedApps.groupBy { it.repoId }
                     _state.update { current ->
                         current.copy(
                             repositories =
                                 current.repositories
                                     .map { searchRepo ->
-                                        val app = installedMap[searchRepo.repository.id]
+                                        val apps = installedMap[searchRepo.repository.id].orEmpty()
                                         searchRepo.copy(
-                                            isInstalled = app.isReallyInstalled(),
-                                            isUpdateAvailable = app.hasActualUpdate(),
+                                            isInstalled = apps.any { it.isReallyInstalled() },
+                                            isUpdateAvailable = apps.any { it.hasActualUpdate() },
                                         )
                                     }.toImmutableList(),
                         )
@@ -330,7 +330,7 @@ class SearchViewModel(
                         installedAppsRepository
                             .getAllInstalledApps()
                             .first()
-                            .associateBy { it.repoId }
+                            .groupBy { it.repoId }
                     val favoritesMap =
                         favouritesRepository
                             .getAllFavorites()
@@ -357,16 +357,16 @@ class SearchViewModel(
 
                             val newReposWithStatus =
                                 paginatedRepos.repos.map { repo ->
-                                    val app = installedMap[repo.id]
+                                    val apps = installedMap[repo.id].orEmpty()
                                     val favourite = favoritesMap[repo.id]
                                     val starred = starredReposMap[repo.id]
 
                                     DiscoveryRepositoryUi(
-                                        isInstalled = app.isReallyInstalled(),
+                                        isInstalled = apps.any { it.isReallyInstalled() },
                                         isFavourite = favourite != null,
                                         isStarred = starred != null,
                                         isSeen = repo.id in seenIds,
-                                        isUpdateAvailable = app.hasActualUpdate(),
+                                        isUpdateAvailable = apps.any { it.hasActualUpdate() },
                                         repository = repo.toUi(),
                                     )
                                 }
@@ -761,7 +761,7 @@ class SearchViewModel(
     private suspend fun appendExploreResults(
         newRepos: List<zed.rainxch.core.domain.model.GithubRepoSummary>,
     ) {
-        val installedMap = installedAppsRepository.getAllInstalledApps().first().associateBy { it.repoId }
+        val installedMap = installedAppsRepository.getAllInstalledApps().first().groupBy { it.repoId }
         val favoritesMap = favouritesRepository.getAllFavorites().first().associateBy { it.repoId }
         val starredMap = starredRepository.getAllStarred().first().associateBy { it.repoId }
         val seenIds = _state.value.seenRepoIds
@@ -771,13 +771,13 @@ class SearchViewModel(
         val deduped = newRepos
             .filter { it.id !in existingIds }
             .map { repo ->
-                val app = installedMap[repo.id]
+                val apps = installedMap[repo.id].orEmpty()
                 DiscoveryRepositoryUi(
-                    isInstalled = app.isReallyInstalled(),
+                    isInstalled = apps.any { it.isReallyInstalled() },
                     isFavourite = favoritesMap[repo.id] != null,
                     isStarred = starredMap[repo.id] != null,
                     isSeen = repo.id in seenIds,
-                    isUpdateAvailable = app.hasActualUpdate(),
+                    isUpdateAvailable = apps.any { it.hasActualUpdate() },
                     repository = repo.toUi(),
                 )
             }

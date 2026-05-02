@@ -25,13 +25,14 @@ class FavouritesRepositoryImpl(
     override suspend fun isFavoriteSync(repoId: Long): Boolean = favoriteRepoDao.isFavoriteSync(repoId)
 
     suspend fun addFavorite(repo: FavoriteRepo) {
-        val installedApp = installedAppsDao.getAppByRepoId(repo.repoId)
+        val installedApps = installedAppsDao.getAppsByRepoId(repo.repoId)
+        val firstInstalled = installedApps.firstOrNull { !it.isPendingInstall }
         favoriteRepoDao.insertFavorite(
             repo
                 .toEntity()
                 .copy(
-                    isInstalled = installedApp != null,
-                    installedPackageName = installedApp?.packageName,
+                    isInstalled = firstInstalled != null,
+                    installedPackageName = firstInstalled?.packageName,
                 ),
         )
     }

@@ -53,6 +53,14 @@ data class DetailsState(
     val isAppManagerAvailable: Boolean = false,
     val isAppManagerEnabled: Boolean = false,
     val installedApp: InstalledApp? = null,
+    /**
+     * All apps tracked for this repository. For single-app repos this
+     * contains at most one element (same as [installedApp]). For
+     * monorepos it may contain multiple entries with different package
+     * names. [installedApp] is the "primary" — the one whose asset
+     * filter matches the currently selected asset, or the first.
+     */
+    val installedApps: List<InstalledApp> = emptyList(),
     val isFavourite: Boolean = false,
     val isStarred: Boolean = false,
     val isTrackingApp: Boolean = false,
