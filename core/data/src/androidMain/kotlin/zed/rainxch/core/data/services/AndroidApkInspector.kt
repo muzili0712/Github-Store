@@ -66,6 +66,15 @@ class AndroidApkInspector(
                     pm.getPackageInfoCompat(packageName, FULL_FLAGS)
                 } catch (_: PackageManager.NameNotFoundException) {
                     null
+                } catch (t: Throwable) {
+                    // Wider catch for SecurityException, DeadObjectException
+                    // and other binder-side surprises so the coroutine
+                    // never propagates a PM hiccup; the sheet renders the
+                    // empty state instead of crashing.
+                    Logger.w(TAG) {
+                        "inspectInstalled: PackageManager threw for $packageName: $t"
+                    }
+                    null
                 }
             if (info == null) {
                 Logger.w(TAG) { "inspectInstalled: package not found: $packageName" }
@@ -102,15 +111,16 @@ class AndroidApkInspector(
 
         val permissions = info.requestedPermissions?.toList().orEmpty()
         val grantFlags = info.requestedPermissionsFlags
+        val isInstalledPackage = packageNameForGrantState != null
         val resolvedPermissions =
             permissions.mapIndexed { index, permName ->
                 val granted =
-                    if (packageNameForGrantState != null && grantFlags != null && index < grantFlags.size) {
+                    if (isInstalledPackage && grantFlags != null && index < grantFlags.size) {
                         (grantFlags[index] and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
                     } else {
                         null
                     }
-                resolvePermission(permName, granted)
+                resolvePermission(permName, granted, isInstalledPackage)
             }
 
         val mainActivity =
@@ -140,7 +150,11 @@ class AndroidApkInspector(
         )
     }
 
-    private fun resolvePermission(name: String, granted: Boolean?): ApkPermission {
+    private fun resolvePermission(
+        name: String,
+        granted: Boolean?,
+        isInstalledPackage: Boolean,
+    ): ApkPermission {
         // PermissionInfo lookup is best-effort — system / OEM
         // permissions sometimes vanish between OS versions.
         val info =
@@ -151,15 +165,24 @@ class AndroidApkInspector(
                 ?: name.substringAfterLast('.').replace('_', ' ').lowercase()
                     .replaceFirstChar { it.titlecase() }
         val description = info?.loadDescription(pm)?.toString()?.takeIf { it.isNotBlank() }
+        // Normal-protection permissions are auto-granted at install,
+        // so on an installed package treat them as granted=true even
+        // if the requestedPermissionsFlags array didn't surface the
+        // bit (some OEM ROMs omit it for non-dangerous entries). For
+        // file-based inspections there's no grant state yet — report
+        // `null` so the UI can render "to be granted on install".
+        val resolvedGranted =
+            when {
+                granted != null -> granted
+                isInstalledPackage && protection == ProtectionLevel.NORMAL -> true
+                else -> null
+            }
         return ApkPermission(
             name = name,
             displayName = display,
             description = description,
             protectionLevel = protection,
-            // Normal-protection permissions are auto-granted at install
-            // and don't surface in the runtime grant array, so report
-            // `true` for installed packages and `null` for file-only.
-            granted = granted ?: if (granted == null && protection == ProtectionLevel.NORMAL) null else granted,
+            granted = resolvedGranted,
         )
     }
 
