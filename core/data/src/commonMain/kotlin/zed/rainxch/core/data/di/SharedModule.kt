@@ -21,6 +21,7 @@ import zed.rainxch.core.data.cache.CacheManager
 import zed.rainxch.core.data.data_source.TokenStore
 import zed.rainxch.core.data.download.MultiSourceDownloaderImpl
 import zed.rainxch.core.data.download.SlowDownloadDetectorImpl
+import zed.rainxch.core.data.services.BuildKonfigAppVersionInfo
 import zed.rainxch.core.data.services.DefaultDownloadOrchestrator
 import zed.rainxch.core.data.data_source.impl.DefaultTokenStore
 import zed.rainxch.core.data.local.db.AppDatabase
@@ -65,6 +66,7 @@ import zed.rainxch.core.domain.model.ProxyConfig
 import zed.rainxch.core.domain.model.ProxyScope
 import zed.rainxch.core.domain.network.ProxyTester
 import zed.rainxch.core.domain.network.SlowDownloadDetector
+import zed.rainxch.core.domain.system.AppVersionInfo
 import zed.rainxch.core.domain.system.DownloadOrchestrator
 import zed.rainxch.core.domain.system.ExternalAppScanner
 import zed.rainxch.core.domain.system.MultiSourceDownloader
@@ -133,6 +135,10 @@ val coreModule =
             TweaksRepositoryImpl(
                 preferences = get(),
             )
+        }
+
+        single<AppVersionInfo> {
+            BuildKonfigAppVersionInfo()
         }
 
         single<MirrorApiClient> {
