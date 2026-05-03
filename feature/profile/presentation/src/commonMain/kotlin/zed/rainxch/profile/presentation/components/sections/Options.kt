@@ -1,7 +1,9 @@
 package zed.rainxch.profile.presentation.components.sections
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -83,6 +85,9 @@ fun LazyListScope.options(
             onClick = {
                 onAction(ProfileAction.OnWhatsNewClick)
             },
+            onLongClick = {
+                onAction(ProfileAction.OnWhatsNewLongClick)
+            },
         )
 
         Spacer(Modifier.height(4.dp))
@@ -95,7 +100,7 @@ fun LazyListScope.options(
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun OptionCard(
     icon: ImageVector,
@@ -104,72 +109,101 @@ private fun OptionCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    onLongClick: (() -> Unit)? = null,
 ) {
+    val cardColors = CardDefaults.elevatedCardColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = .7f),
+        disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .7f),
+    )
+    val cardShape = RoundedCornerShape(32.dp)
+    val cardBorder = BorderStroke(
+        width = .5.dp,
+        color = MaterialTheme.colorScheme.surface,
+    )
+
+    if (onLongClick != null) {
+        Card(
+            modifier = modifier.combinedClickable(
+                enabled = enabled,
+                onClick = onClick,
+                onLongClick = onLongClick,
+            ),
+            colors = cardColors,
+            shape = cardShape,
+            border = cardBorder,
+        ) {
+            OptionCardContent(icon = icon, label = label, description = description)
+        }
+        return
+    }
+
     Card(
         modifier = modifier,
-        colors =
-            CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = .7f),
-                disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = .7f),
-            ),
+        colors = cardColors,
         onClick = onClick,
-        shape = RoundedCornerShape(32.dp),
-        border =
-            BorderStroke(
-                width = .5.dp,
-                color = MaterialTheme.colorScheme.surface,
-            ),
+        shape = cardShape,
+        border = cardBorder,
         enabled = enabled,
     ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier =
-                    Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.secondary,
-                                ),
+        OptionCardContent(icon = icon, label = label, description = description)
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun OptionCardContent(
+    icon: ImageVector,
+    label: String,
+    description: String,
+) {
+    Row(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier =
+                Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(
+                        Brush.linearGradient(
+                            listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.secondary,
                             ),
-                        ).padding(6.dp),
-                tint = MaterialTheme.colorScheme.onPrimary,
+                        ),
+                    ).padding(6.dp),
+            tint = MaterialTheme.colorScheme.onPrimary,
+        )
+
+        Column(
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .padding(12.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Text(
+                text = label,
+                maxLines = 1,
+                style = MaterialTheme.typography.titleMedium,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
-            Column(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .padding(12.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start,
-            ) {
-                Text(
-                    text = label,
-                    maxLines = 1,
-                    style = MaterialTheme.typography.titleMedium,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-
-                Text(
-                    text = description,
-                    maxLines = 2,
-                    style = MaterialTheme.typography.bodyLargeEmphasized,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+            Text(
+                text = description,
+                maxLines = 2,
+                style = MaterialTheme.typography.bodyLargeEmphasized,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
