@@ -52,6 +52,9 @@ fun ProfileRoot(
     onNavigateToSponsor: () -> Unit,
     onNavigateToWhatsNew: () -> Unit,
     onPreviewWhatsNewSheet: () -> Unit,
+    onNavigateToAnnouncements: () -> Unit,
+    onPreviewAnnouncements: () -> Unit,
+    hasUnreadAnnouncements: Boolean,
     viewModel: ProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -108,6 +111,7 @@ fun ProfileRoot(
 
     ProfileScreen(
         state = state,
+        hasUnreadAnnouncements = hasUnreadAnnouncements,
         onAction = { action ->
             when (action) {
                 ProfileAction.OnLoginClick -> {
@@ -142,6 +146,14 @@ fun ProfileRoot(
                     onPreviewWhatsNewSheet()
                 }
 
+                ProfileAction.OnAnnouncementsClick -> {
+                    onNavigateToAnnouncements()
+                }
+
+                ProfileAction.OnAnnouncementsLongClick -> {
+                    onPreviewAnnouncements()
+                }
+
                 else -> {
                     viewModel.onAction(action)
                 }
@@ -168,6 +180,7 @@ fun ProfileScreen(
     state: ProfileState,
     onAction: (ProfileAction) -> Unit,
     snackbarState: SnackbarHostState,
+    hasUnreadAnnouncements: Boolean = false,
 ) {
     val liquidState = LocalBottomNavigationLiquid.current
     val bottomNavHeight = LocalBottomNavigationHeight.current
@@ -203,6 +216,7 @@ fun ProfileScreen(
         ) {
             profile(
                 state = state,
+                hasUnreadAnnouncements = hasUnreadAnnouncements,
                 onAction = onAction,
             )
 

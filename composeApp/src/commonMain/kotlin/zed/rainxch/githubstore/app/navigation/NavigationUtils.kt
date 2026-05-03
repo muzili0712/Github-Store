@@ -20,6 +20,7 @@ fun NavBackStackEntry?.getCurrentScreen(): GithubStoreGraph? {
         route.contains("StarredReposScreen") -> GithubStoreGraph.StarredReposScreen
         route.contains("AppsScreen") -> GithubStoreGraph.AppsScreen
         route.contains("WhatsNewHistoryScreen") -> GithubStoreGraph.WhatsNewHistoryScreen
+        route.contains("AnnouncementsScreen") -> GithubStoreGraph.AnnouncementsScreen
         else -> null
     }
 }

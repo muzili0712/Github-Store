@@ -12,10 +12,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
 import org.koin.compose.viewmodel.koinViewModel
+import zed.rainxch.core.presentation.components.announcements.CriticalAnnouncementModal
 import zed.rainxch.core.presentation.components.whatsnew.WhatsNewSheet
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ApplyAndroidSystemBars
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
+import zed.rainxch.githubstore.app.announcements.AnnouncementsViewModel
 import zed.rainxch.githubstore.app.components.RateLimitDialog
 import zed.rainxch.githubstore.app.components.SessionExpiredDialog
 import zed.rainxch.githubstore.app.deeplink.DeepLinkDestination
@@ -165,6 +167,17 @@ fun App(deepLinkUri: String? = null) {
                     whatsNewViewModel.markSeen()
                     navController.navigate(GithubStoreGraph.WhatsNewHistoryScreen)
                 },
+            )
+        }
+
+        val announcementsViewModel: AnnouncementsViewModel = koinViewModel()
+        val pendingCritical by announcementsViewModel.pendingCriticalAcknowledgment.collectAsStateWithLifecycle()
+        val criticalToShow = pendingCritical
+        if (criticalToShow != null && canShowWhatsNew && debouncedReady && entryToShow == null) {
+            CriticalAnnouncementModal(
+                announcement = criticalToShow,
+                onAcknowledge = { announcementsViewModel.acknowledge(criticalToShow) },
+                onOpenDetails = { announcementsViewModel.openCta(criticalToShow) },
             )
         }
     }

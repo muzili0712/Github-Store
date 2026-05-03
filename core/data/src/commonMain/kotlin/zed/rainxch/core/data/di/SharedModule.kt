@@ -58,6 +58,8 @@ import zed.rainxch.core.data.repository.SearchHistoryRepositoryImpl
 import zed.rainxch.core.data.repository.TelemetryRepositoryImpl
 import zed.rainxch.core.data.repository.SeenReposRepositoryImpl
 import zed.rainxch.core.data.repository.StarredRepositoryImpl
+import zed.rainxch.core.data.repository.AnnouncementsCacheStoreImpl
+import zed.rainxch.core.data.repository.AnnouncementsRepositoryImpl
 import zed.rainxch.core.data.repository.TweaksRepositoryImpl
 import zed.rainxch.core.domain.getPlatform
 import zed.rainxch.core.domain.logging.GitHubStoreLogger
@@ -70,6 +72,8 @@ import zed.rainxch.core.domain.system.AppVersionInfo
 import zed.rainxch.core.domain.system.DownloadOrchestrator
 import zed.rainxch.core.domain.system.ExternalAppScanner
 import zed.rainxch.core.domain.system.MultiSourceDownloader
+import zed.rainxch.core.domain.repository.AnnouncementsCacheStore
+import zed.rainxch.core.domain.repository.AnnouncementsRepository
 import zed.rainxch.core.domain.repository.AuthenticationState
 import zed.rainxch.core.domain.repository.DeviceIdentityRepository
 import zed.rainxch.core.domain.repository.ExternalImportRepository
@@ -139,6 +143,22 @@ val coreModule =
 
         single<AppVersionInfo> {
             BuildKonfigAppVersionInfo()
+        }
+
+        single<AnnouncementsCacheStore> {
+            AnnouncementsCacheStoreImpl(
+                preferences = get(qualifier = org.koin.core.qualifier.named("announcements")),
+            )
+        }
+
+        single<AnnouncementsRepository> {
+            AnnouncementsRepositoryImpl(
+                backendApiClient = get(),
+                tweaksRepository = get(),
+                cacheStore = get(),
+                localizationManager = get(),
+                appVersionInfo = get(),
+            )
         }
 
         single<MirrorApiClient> {

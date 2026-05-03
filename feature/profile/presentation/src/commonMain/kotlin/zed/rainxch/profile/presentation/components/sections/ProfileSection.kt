@@ -10,6 +10,7 @@ import zed.rainxch.profile.presentation.ProfileState
 
 fun LazyListScope.profile(
     state: ProfileState,
+    hasUnreadAnnouncements: Boolean,
     onAction: (ProfileAction) -> Unit,
 ) {
     accountSection(
@@ -23,6 +24,7 @@ fun LazyListScope.profile(
 
     options(
         isUserLoggedIn = state.isUserLoggedIn,
+        hasUnreadAnnouncements = hasUnreadAnnouncements,
         onAction = onAction,
     )
 }

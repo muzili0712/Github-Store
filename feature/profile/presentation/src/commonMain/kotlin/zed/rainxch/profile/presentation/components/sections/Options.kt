@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.VolunteerActivism
@@ -41,6 +43,7 @@ import zed.rainxch.profile.presentation.ProfileAction
 
 fun LazyListScope.options(
     isUserLoggedIn: Boolean,
+    hasUnreadAnnouncements: Boolean,
     onAction: (ProfileAction) -> Unit,
 ) {
     item {
@@ -92,6 +95,21 @@ fun LazyListScope.options(
 
         Spacer(Modifier.height(4.dp))
 
+        OptionCard(
+            icon = Icons.Default.Notifications,
+            label = stringResource(Res.string.announcements_title),
+            description = stringResource(Res.string.announcements_profile_description),
+            onClick = {
+                onAction(ProfileAction.OnAnnouncementsClick)
+            },
+            onLongClick = {
+                onAction(ProfileAction.OnAnnouncementsLongClick)
+            },
+            hasBadge = hasUnreadAnnouncements,
+        )
+
+        Spacer(Modifier.height(4.dp))
+
         SponsorCard(
             onClick = {
                 onAction(ProfileAction.OnSponsorClick)
@@ -110,6 +128,7 @@ private fun OptionCard(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onLongClick: (() -> Unit)? = null,
+    hasBadge: Boolean = false,
 ) {
     val cardColors = CardDefaults.elevatedCardColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -134,7 +153,7 @@ private fun OptionCard(
             shape = cardShape,
             border = cardBorder,
         ) {
-            OptionCardContent(icon = icon, label = label, description = description)
+            OptionCardContent(icon = icon, label = label, description = description, hasBadge = hasBadge)
         }
         return
     }
@@ -157,29 +176,41 @@ private fun OptionCardContent(
     icon: ImageVector,
     label: String,
     description: String,
+    hasBadge: Boolean = false,
 ) {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier =
-                Modifier
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(
-                        Brush.linearGradient(
-                            listOf(
-                                MaterialTheme.colorScheme.primary,
-                                MaterialTheme.colorScheme.secondary,
+        Box {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier =
+                    Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(
+                            Brush.linearGradient(
+                                listOf(
+                                    MaterialTheme.colorScheme.primary,
+                                    MaterialTheme.colorScheme.secondary,
+                                ),
                             ),
-                        ),
-                    ).padding(6.dp),
-            tint = MaterialTheme.colorScheme.onPrimary,
-        )
+                        ).padding(6.dp),
+                tint = MaterialTheme.colorScheme.onPrimary,
+            )
+            if (hasBadge) {
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.error)
+                        .align(Alignment.TopEnd),
+                )
+            }
+        }
 
         Column(
             modifier =

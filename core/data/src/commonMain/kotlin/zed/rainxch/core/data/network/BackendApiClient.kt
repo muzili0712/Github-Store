@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import zed.rainxch.core.data.data_source.TokenStore
+import zed.rainxch.core.data.dto.AnnouncementsResponseDto
 import zed.rainxch.core.data.dto.BackendExploreResponse
 import zed.rainxch.core.data.dto.BackendRepoResponse
 import zed.rainxch.core.data.dto.BackendSearchResponse
@@ -285,6 +286,16 @@ class BackendApiClient(
     suspend fun getMirrorList(): Result<MirrorListResponse> =
         safeCall {
             val response = httpClient.get("mirrors/list")
+            if (response.status.isSuccess()) {
+                Result.success(response.body())
+            } else {
+                Result.failure(BackendException(response.status.value))
+            }
+        }
+
+    suspend fun getAnnouncements(): Result<AnnouncementsResponseDto> =
+        safeCall {
+            val response = httpClient.get("announcements")
             if (response.status.isSuccess()) {
                 Result.success(response.body())
             } else {

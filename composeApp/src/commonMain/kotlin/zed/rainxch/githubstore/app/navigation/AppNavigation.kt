@@ -31,6 +31,7 @@ import zed.rainxch.apps.presentation.AppsRoot
 import zed.rainxch.apps.presentation.AppsViewModel
 import zed.rainxch.apps.presentation.import.ExternalImportRoot
 import zed.rainxch.auth.presentation.AuthenticationRoot
+import zed.rainxch.core.presentation.components.announcements.AnnouncementsRoot
 import zed.rainxch.core.presentation.components.whatsnew.WhatsNewHistoryScreen
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationHeight
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
@@ -38,6 +39,7 @@ import zed.rainxch.core.presentation.locals.LocalScrollbarEnabled
 import zed.rainxch.details.presentation.DetailsRoot
 import zed.rainxch.devprofile.presentation.DeveloperProfileRoot
 import zed.rainxch.favourites.presentation.FavouritesRoot
+import zed.rainxch.githubstore.app.announcements.AnnouncementsViewModel
 import zed.rainxch.githubstore.app.whatsnew.WhatsNewViewModel
 import zed.rainxch.home.presentation.HomeRoot
 import zed.rainxch.profile.presentation.ProfileRoot
@@ -68,6 +70,8 @@ fun AppNavigation(
     val appsState by appsViewModel.state.collectAsStateWithLifecycle()
 
     val whatsNewViewModel = koinViewModel<WhatsNewViewModel>()
+    val announcementsViewModel = koinViewModel<AnnouncementsViewModel>()
+    val announcementsUnreadCount by announcementsViewModel.unreadCount.collectAsStateWithLifecycle()
 
     CompositionLocalProvider(
         LocalBottomNavigationLiquid provides liquidState,
@@ -279,6 +283,14 @@ fun AppNavigation(
                             whatsNewViewModel.forceShowLatest()
                             navController.navigateUp()
                         },
+                        onNavigateToAnnouncements = {
+                            navController.navigate(GithubStoreGraph.AnnouncementsScreen)
+                        },
+                        onPreviewAnnouncements = {
+                            announcementsViewModel.previewSampleAnnouncements()
+                            navController.navigate(GithubStoreGraph.AnnouncementsScreen)
+                        },
+                        hasUnreadAnnouncements = announcementsUnreadCount > 0,
                     )
                 }
 
@@ -323,6 +335,27 @@ fun AppNavigation(
                     WhatsNewHistoryScreen(
                         entries = historyEntries,
                         onNavigateBack = { navController.navigateUp() },
+                    )
+                }
+
+                composable<GithubStoreGraph.AnnouncementsScreen> {
+                    val feed by announcementsViewModel.feed.collectAsStateWithLifecycle()
+                    val displayed by announcementsViewModel.displayedItems.collectAsStateWithLifecycle()
+                    AnnouncementsRoot(
+                        items = displayed,
+                        acknowledgedIds = feed.acknowledgedIds,
+                        mutedCategories = feed.mutedCategories,
+                        refreshFailed = feed.lastRefreshFailed,
+                        onNavigateBack = { navController.navigateUp() },
+                        onRefresh = { announcementsViewModel.refresh() },
+                        onCtaClick = { announcementsViewModel.openCta(it) },
+                        onDismissClick = { announcementsViewModel.dismiss(it) },
+                        onAcknowledgeClick = { announcementsViewModel.acknowledge(it) },
+                        onToggleMute = { category, muted ->
+                            announcementsViewModel.setMuted(category, muted)
+                        },
+                        onLeavingScreen = { announcementsViewModel.clearPreview() },
+                        onEnteringScreen = { announcementsViewModel.markRoutineItemsSeen() },
                     )
                 }
 
@@ -414,6 +447,7 @@ fun AppNavigation(
                     isUpdateAvailable =
                         appsState.apps.any { it.installedApp.isUpdateAvailable } ||
                             appsState.showImportProposalBanner,
+                    hasUnreadAnnouncements = announcementsUnreadCount > 0,
                     isLiquidGlassEnabled = isLiquidGlassEnabled,
                     modifier =
                         Modifier

@@ -66,6 +66,7 @@ fun BottomNavigation(
     currentScreen: GithubStoreGraph,
     onNavigate: (GithubStoreGraph) -> Unit,
     isUpdateAvailable: Boolean,
+    hasUnreadAnnouncements: Boolean = false,
     isLiquidGlassEnabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
@@ -267,7 +268,9 @@ fun BottomNavigation(
                 BottomNavigationUtils.allowedScreens().forEachIndexed { index, item ->
                     LiquidGlassTabItem(
                         item = item,
-                        hasBadge = item.screen == GithubStoreGraph.AppsScreen && isUpdateAvailable,
+                        hasBadge =
+                            (item.screen == GithubStoreGraph.AppsScreen && isUpdateAvailable) ||
+                                (item.screen == GithubStoreGraph.ProfileScreen && hasUnreadAnnouncements),
                         isSelected = item.screen == currentScreen,
                         onSelect = { onNavigate(item.screen) },
                         onPositioned = { x, width ->

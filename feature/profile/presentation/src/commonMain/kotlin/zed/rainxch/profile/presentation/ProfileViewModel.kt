@@ -157,6 +157,14 @@ class ProfileViewModel(
             ProfileAction.OnWhatsNewLongClick -> {
                 // Handed in composable
             }
+
+            ProfileAction.OnAnnouncementsClick -> {
+                // Handed in composable
+            }
+
+            ProfileAction.OnAnnouncementsLongClick -> {
+                // Handed in composable
+            }
         }
     }
 }
