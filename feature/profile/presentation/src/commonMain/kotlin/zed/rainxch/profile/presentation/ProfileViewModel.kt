@@ -161,6 +161,10 @@ class ProfileViewModel(
             ProfileAction.OnAnnouncementsClick -> {
                 // Handed in composable
             }
+
+            ProfileAction.OnAnnouncementsLongClick -> {
+                // Handed in composable
+            }
         }
     }
 }

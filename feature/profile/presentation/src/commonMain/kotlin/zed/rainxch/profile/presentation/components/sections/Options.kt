@@ -100,6 +100,9 @@ fun LazyListScope.options(
             onClick = {
                 onAction(ProfileAction.OnAnnouncementsClick)
             },
+            onLongClick = {
+                onAction(ProfileAction.OnAnnouncementsLongClick)
+            },
         )
 
         Spacer(Modifier.height(4.dp))

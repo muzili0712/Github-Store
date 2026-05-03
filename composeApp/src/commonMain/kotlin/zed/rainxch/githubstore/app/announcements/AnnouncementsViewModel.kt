@@ -3,13 +3,18 @@ package zed.rainxch.githubstore.app.announcements
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import zed.rainxch.core.domain.model.Announcement
 import zed.rainxch.core.domain.model.AnnouncementCategory
+import zed.rainxch.core.domain.model.AnnouncementIconHint
+import zed.rainxch.core.domain.model.AnnouncementSeverity
 import zed.rainxch.core.domain.repository.AnnouncementsFeedSnapshot
 import zed.rainxch.core.domain.repository.AnnouncementsRepository
 import zed.rainxch.core.domain.utils.BrowserHelper
@@ -37,15 +42,25 @@ class AnnouncementsViewModel(
                     ),
             )
 
+    private val _previewItems = MutableStateFlow<List<Announcement>>(emptyList())
+    val previewItems: StateFlow<List<Announcement>> = _previewItems.asStateFlow()
+
+    val displayedItems: StateFlow<List<Announcement>> =
+        combine(feed, previewItems) { snapshot, preview ->
+            (preview + snapshot.visibleItems).distinctBy { it.id }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     val unreadCount: StateFlow<Int> =
         feed
             .map { it.unreadCount }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     val pendingCriticalAcknowledgment: StateFlow<Announcement?> =
-        feed
-            .map { it.pendingCriticalAcknowledgment }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+        combine(feed, previewItems) { snapshot, preview ->
+            preview.firstOrNull {
+                it.severity == AnnouncementSeverity.CRITICAL && it.requiresAcknowledgment
+            } ?: snapshot.pendingCriticalAcknowledgment
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     init {
         viewModelScope.launch {
@@ -68,6 +83,7 @@ class AnnouncementsViewModel(
     }
 
     fun dismiss(announcement: Announcement) {
+        if (removeFromPreview(announcement.id)) return
         viewModelScope.launch {
             try {
                 repository.dismiss(announcement.id)
@@ -81,6 +97,7 @@ class AnnouncementsViewModel(
     }
 
     fun acknowledge(announcement: Announcement) {
+        if (removeFromPreview(announcement.id)) return
         viewModelScope.launch {
             try {
                 repository.acknowledge(announcement.id)
@@ -88,6 +105,17 @@ class AnnouncementsViewModel(
                 logger.e(t) { "Failed to acknowledge ${announcement.id}" }
             }
         }
+    }
+
+    private fun removeFromPreview(id: String): Boolean {
+        val current = _previewItems.value
+        if (current.none { it.id == id }) return false
+        _previewItems.value = current.filterNot { it.id == id }
+        return true
+    }
+
+    fun previewSampleAnnouncements() {
+        _previewItems.value = SamplePreviewItems
     }
 
     fun openCta(announcement: Announcement) {
@@ -115,5 +143,71 @@ class AnnouncementsViewModel(
                 logger.e(t) { "Failed to toggle mute for $category" }
             }
         }
+    }
+
+    private companion object {
+        val SamplePreviewItems =
+            listOf(
+                Announcement(
+                    id = "preview-info-news",
+                    publishedAt = "2026-05-03T00:00:00Z",
+                    expiresAt = null,
+                    severity = AnnouncementSeverity.INFO,
+                    category = AnnouncementCategory.NEWS,
+                    title = "Preview: backing Keep Android Open",
+                    body =
+                        "GitHub Store supports the Keep Android Open initiative. " +
+                            "Google's proposed sideloading restrictions would make this app — " +
+                            "and Obtainium, F-Droid, and others — much harder to use.",
+                    ctaUrl = "https://github-store.org",
+                    ctaLabel = "Read more",
+                    dismissible = true,
+                    requiresAcknowledgment = false,
+                    minVersionCode = null,
+                    maxVersionCode = null,
+                    platforms = null,
+                    installerTypes = null,
+                    iconHint = AnnouncementIconHint.CHANGE,
+                ),
+                Announcement(
+                    id = "preview-important-survey",
+                    publishedAt = "2026-05-02T00:00:00Z",
+                    expiresAt = null,
+                    severity = AnnouncementSeverity.IMPORTANT,
+                    category = AnnouncementCategory.SURVEY,
+                    title = "Preview: five-minute survey shaping 1.9",
+                    body = "Mostly multiple choice. Your answers shape what ships next quarter.",
+                    ctaUrl = "https://github-store.org",
+                    ctaLabel = "Open survey",
+                    dismissible = true,
+                    requiresAcknowledgment = false,
+                    minVersionCode = null,
+                    maxVersionCode = null,
+                    platforms = null,
+                    installerTypes = null,
+                    iconHint = AnnouncementIconHint.INFO,
+                ),
+                Announcement(
+                    id = "preview-critical-security",
+                    publishedAt = "2026-05-01T00:00:00Z",
+                    expiresAt = null,
+                    severity = AnnouncementSeverity.CRITICAL,
+                    category = AnnouncementCategory.SECURITY,
+                    title = "Preview: critical security advisory",
+                    body =
+                        "This is a sample critical advisory for testing the modal flow. " +
+                            "In the real channel, only download-integrity, killswitch, or " +
+                            "credential-exposure events would carry this severity.",
+                    ctaUrl = "https://github-store.org",
+                    ctaLabel = "View advisory",
+                    dismissible = false,
+                    requiresAcknowledgment = true,
+                    minVersionCode = null,
+                    maxVersionCode = null,
+                    platforms = null,
+                    installerTypes = null,
+                    iconHint = AnnouncementIconHint.SECURITY,
+                ),
+            )
     }
 }

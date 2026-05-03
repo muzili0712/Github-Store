@@ -285,6 +285,10 @@ fun AppNavigation(
                         onNavigateToAnnouncements = {
                             navController.navigate(GithubStoreGraph.AnnouncementsScreen)
                         },
+                        onPreviewAnnouncements = {
+                            announcementsViewModel.previewSampleAnnouncements()
+                            navController.navigate(GithubStoreGraph.AnnouncementsScreen)
+                        },
                     )
                 }
 
@@ -332,12 +336,14 @@ fun AppNavigation(
 
                 composable<GithubStoreGraph.AnnouncementsScreen> {
                     val feed by announcementsViewModel.feed.collectAsStateWithLifecycle()
+                    val displayed by announcementsViewModel.displayedItems.collectAsStateWithLifecycle()
                     AnnouncementsRoot(
-                        items = feed.visibleItems,
+                        items = displayed,
                         acknowledgedIds = feed.acknowledgedIds,
                         mutedCategories = feed.mutedCategories,
                         refreshFailed = feed.lastRefreshFailed,
                         onNavigateBack = { navController.navigateUp() },
+                        onRefresh = { announcementsViewModel.refresh() },
                         onCtaClick = { announcementsViewModel.openCta(it) },
                         onDismissClick = { announcementsViewModel.dismiss(it) },
                         onAcknowledgeClick = { announcementsViewModel.acknowledge(it) },

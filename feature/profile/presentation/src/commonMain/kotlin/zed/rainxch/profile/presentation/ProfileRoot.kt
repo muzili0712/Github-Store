@@ -53,6 +53,7 @@ fun ProfileRoot(
     onNavigateToWhatsNew: () -> Unit,
     onPreviewWhatsNewSheet: () -> Unit,
     onNavigateToAnnouncements: () -> Unit,
+    onPreviewAnnouncements: () -> Unit,
     viewModel: ProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -145,6 +146,10 @@ fun ProfileRoot(
 
                 ProfileAction.OnAnnouncementsClick -> {
                     onNavigateToAnnouncements()
+                }
+
+                ProfileAction.OnAnnouncementsLongClick -> {
+                    onPreviewAnnouncements()
                 }
 
                 else -> {
