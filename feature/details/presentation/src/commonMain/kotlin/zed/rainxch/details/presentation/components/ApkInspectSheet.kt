@@ -1,25 +1,25 @@
 package zed.rainxch.details.presentation.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apartment
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.PrivacyTip
@@ -33,9 +33,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,6 +62,9 @@ import zed.rainxch.githubstore.core.presentation.res.apk_inspect_identity
 import zed.rainxch.githubstore.core.presentation.res.apk_inspect_min_sdk
 import zed.rainxch.githubstore.core.presentation.res.apk_inspect_permissions
 import zed.rainxch.githubstore.core.presentation.res.apk_inspect_permissions_empty
+import zed.rainxch.githubstore.core.presentation.res.apk_inspect_permissions_title
+import zed.rainxch.githubstore.core.presentation.res.apps_section_state_collapsed
+import zed.rainxch.githubstore.core.presentation.res.apps_section_state_expanded
 import zed.rainxch.githubstore.core.presentation.res.apk_inspect_protection_dangerous
 import zed.rainxch.githubstore.core.presentation.res.apk_inspect_protection_normal
 import zed.rainxch.githubstore.core.presentation.res.apk_inspect_protection_privileged
@@ -234,13 +245,45 @@ private fun CompatibilitySection(inspection: ApkInspection) {
 
 @Composable
 private fun PermissionsSection(permissions: List<ApkPermission>) {
-    InspectSection(
-        title = stringResource(
-            Res.string.apk_inspect_permissions,
-            permissions.size,
-        ),
-        icon = Icons.Default.PrivacyTip,
-    ) {
+    val grouped = permissions.groupBy { it.protectionLevel }
+    val orderedLevels =
+        listOf(
+            ProtectionLevel.DANGEROUS,
+            ProtectionLevel.PRIVILEGED,
+            ProtectionLevel.SIGNATURE,
+            ProtectionLevel.NORMAL,
+            ProtectionLevel.UNKNOWN,
+        )
+
+    val dangerousWord = stringResource(Res.string.apk_inspect_protection_dangerous).lowercase()
+    val privilegedWord = stringResource(Res.string.apk_inspect_protection_privileged).lowercase()
+    val signatureWord = stringResource(Res.string.apk_inspect_protection_signature).lowercase()
+    val normalWord = stringResource(Res.string.apk_inspect_protection_normal).lowercase()
+    val unknownWord = stringResource(Res.string.apk_inspect_protection_unknown).lowercase()
+    val baseTitle = stringResource(Res.string.apk_inspect_permissions_title)
+
+    val title =
+        if (permissions.isEmpty()) {
+            stringResource(Res.string.apk_inspect_permissions, 0)
+        } else {
+            val parts =
+                orderedLevels.mapNotNull { level ->
+                    val count = grouped[level]?.size ?: 0
+                    if (count == 0) return@mapNotNull null
+                    val word =
+                        when (level) {
+                            ProtectionLevel.DANGEROUS -> dangerousWord
+                            ProtectionLevel.PRIVILEGED -> privilegedWord
+                            ProtectionLevel.SIGNATURE -> signatureWord
+                            ProtectionLevel.NORMAL -> normalWord
+                            ProtectionLevel.UNKNOWN -> unknownWord
+                        }
+                    "$count $word"
+                }
+            "$baseTitle  ·  ${parts.joinToString("  ·  ")}"
+        }
+
+    InspectSection(title = title, icon = Icons.Default.PrivacyTip) {
         if (permissions.isEmpty()) {
             Text(
                 text = stringResource(Res.string.apk_inspect_permissions_empty),
@@ -249,14 +292,111 @@ private fun PermissionsSection(permissions: List<ApkPermission>) {
             )
             return@InspectSection
         }
-        // Sort by danger first so users see the spicy stuff up top.
-        val sorted =
-            permissions.sortedWith(
-                compareByDescending<ApkPermission> { it.protectionLevel.severity() }
-                    .thenBy { it.displayName },
+
+        // Per-group expand/collapse state lives in the sheet itself —
+        // not worth a VM round-trip. NORMAL / UNKNOWN buckets start
+        // collapsed because they're the long, low-signal lists; the
+        // spicy DANGEROUS / PRIVILEGED / SIGNATURE groups are open.
+        val expanded =
+            remember {
+                mutableStateMapOf<ProtectionLevel, Boolean>().apply {
+                    orderedLevels.forEach { put(it, defaultExpanded(it)) }
+                }
+            }
+
+        Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+            orderedLevels.forEach { level ->
+                val rows = grouped[level].orEmpty()
+                if (rows.isEmpty()) return@forEach
+                val isExpanded = expanded[level] ?: defaultExpanded(level)
+                val collapsible = isCollapsibleByDefault(level)
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    PermissionGroupHeader(
+                        level = level,
+                        count = rows.size,
+                        expanded = isExpanded,
+                        collapsible = collapsible,
+                        onToggle = { expanded[level] = !isExpanded },
+                    )
+                    if (isExpanded) {
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            rows
+                                .sortedBy { it.displayName }
+                                .forEach { perm -> PermissionRow(perm) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PermissionGroupHeader(
+    level: ProtectionLevel,
+    count: Int,
+    expanded: Boolean,
+    collapsible: Boolean,
+    onToggle: () -> Unit,
+) {
+    val (color, label) = protectionStyle(level)
+    val expandedDesc = stringResource(Res.string.apps_section_state_expanded)
+    val collapsedDesc = stringResource(Res.string.apps_section_state_collapsed)
+
+    val baseModifier =
+        Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 40.dp)
+
+    val gestureModifier =
+        if (collapsible) {
+            baseModifier
+                .clickable(onClick = onToggle)
+                .semantics(mergeDescendants = true) {
+                    role = Role.Button
+                    heading()
+                    contentDescription = "$label, $count"
+                    stateDescription = if (expanded) expandedDesc else collapsedDesc
+                }
+        } else {
+            baseModifier.semantics(mergeDescendants = true) {
+                heading()
+                contentDescription = "$label, $count"
+            }
+        }
+
+    Row(
+        modifier = gestureModifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Text(
+            text = label.uppercase(),
+            style = MaterialTheme.typography.labelMedium,
+            color = color,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f, fill = false),
+        )
+        Surface(
+            shape = RoundedCornerShape(50),
+            color = color.copy(alpha = 0.16f),
+        ) {
+            Text(
+                text = count.toString(),
+                style = MaterialTheme.typography.labelSmall,
+                color = color,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 1.dp),
             )
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            sorted.forEach { perm -> PermissionRow(perm) }
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        if (collapsible) {
+            Icon(
+                imageVector =
+                    if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
@@ -264,31 +404,22 @@ private fun PermissionsSection(permissions: List<ApkPermission>) {
 @Composable
 private fun PermissionRow(permission: ApkPermission) {
     val (chipColor, chipLabel) = protectionStyle(permission.protectionLevel)
+    val chipAlpha = if (permission.protectionLevel == ProtectionLevel.DANGEROUS) 0.22f else 0.16f
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Box(
-            modifier = Modifier
-                .padding(top = 6.dp)
-                .size(8.dp)
-                .background(chipColor, CircleShape),
-        )
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
             Text(
                 text = permission.displayName,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
-            )
-            Text(
-                text = permission.name,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontFamily = FontFamily.Monospace,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
             permission.description?.let { desc ->
                 Text(
@@ -297,10 +428,21 @@ private fun PermissionRow(permission: ApkPermission) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+            // Demoted to a footnote — small, lower-opacity, monospace.
+            // The technical name is useful for search and bug reports
+            // but it shouldn't compete with the human-readable label.
+            Text(
+                text = permission.name,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
+                fontFamily = FontFamily.Monospace,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
         Surface(
             shape = RoundedCornerShape(50),
-            color = chipColor.copy(alpha = 0.18f),
+            color = chipColor.copy(alpha = chipAlpha),
         ) {
             Text(
                 text = chipLabel,
@@ -312,6 +454,20 @@ private fun PermissionRow(permission: ApkPermission) {
         }
     }
 }
+
+private fun defaultExpanded(level: ProtectionLevel): Boolean =
+    when (level) {
+        ProtectionLevel.DANGEROUS,
+        ProtectionLevel.PRIVILEGED,
+        ProtectionLevel.SIGNATURE,
+        -> true
+        ProtectionLevel.NORMAL,
+        ProtectionLevel.UNKNOWN,
+        -> false
+    }
+
+private fun isCollapsibleByDefault(level: ProtectionLevel): Boolean =
+    level == ProtectionLevel.NORMAL || level == ProtectionLevel.UNKNOWN
 
 @Composable
 private fun ComponentsSection(inspection: ApkInspection) {
@@ -455,14 +611,6 @@ private fun protectionStyle(level: ProtectionLevel): Pair<Color, String> {
         ProtectionLevel.NORMAL -> neutral to stringResource(Res.string.apk_inspect_protection_normal)
         ProtectionLevel.UNKNOWN -> muted to stringResource(Res.string.apk_inspect_protection_unknown)
     }
-}
-
-private fun ProtectionLevel.severity(): Int = when (this) {
-    ProtectionLevel.DANGEROUS -> 4
-    ProtectionLevel.PRIVILEGED -> 3
-    ProtectionLevel.SIGNATURE -> 2
-    ProtectionLevel.NORMAL -> 1
-    ProtectionLevel.UNKNOWN -> 0
 }
 
 private fun formatBytes(bytes: Long): String =

@@ -981,6 +981,7 @@
     <string name="apk_inspect_identity">Identity</string>
     <string name="apk_inspect_compatibility">Compatibility</string>
     <string name="apk_inspect_permissions">Permissions (%1$d)</string>
+    <string name="apk_inspect_permissions_title">Permissions</string>
     <string name="apk_inspect_permissions_empty">No permissions declared.</string>
     <string name="apk_inspect_components">Components</string>
     <string name="apk_inspect_file_info">File</string>
