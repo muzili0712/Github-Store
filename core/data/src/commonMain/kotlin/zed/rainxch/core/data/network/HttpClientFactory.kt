@@ -10,7 +10,6 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.network.UnresolvedAddressException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.json.Json
 import zed.rainxch.core.data.data_source.TokenStore
@@ -29,7 +28,6 @@ fun createGitHubHttpClient(
     tokenStore: TokenStore,
     rateLimitRepository: RateLimitRepository,
     authenticationState: AuthenticationState? = null,
-    scope: CoroutineScope? = null,
     proxyConfig: ProxyConfig = ProxyConfig.System,
 ): HttpClient {
     val json =
@@ -43,10 +41,9 @@ fun createGitHubHttpClient(
             this.rateLimitRepository = rateLimitRepository
         }
 
-        if (authenticationState != null && scope != null) {
+        if (authenticationState != null) {
             install(UnauthorizedInterceptor) {
                 this.authenticationState = authenticationState
-                this.scope = scope
             }
         }
 

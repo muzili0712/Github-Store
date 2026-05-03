@@ -32,7 +32,6 @@ class GitHubClientProvider(
             tokenStore = tokenStore,
             rateLimitRepository = rateLimitRepository,
             authenticationState = authenticationState,
-            scope = scope,
             proxyConfig = proxyConfigFlow.value,
         )
 
@@ -50,7 +49,6 @@ class GitHubClientProvider(
                             tokenStore = tokenStore,
                             rateLimitRepository = rateLimitRepository,
                             authenticationState = authenticationState,
-                            scope = scope,
                             proxyConfig = proxyConfig,
                         )
                     val previous = currentClient
