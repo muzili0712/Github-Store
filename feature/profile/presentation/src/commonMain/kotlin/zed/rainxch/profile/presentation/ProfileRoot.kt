@@ -50,6 +50,7 @@ fun ProfileRoot(
     onNavigateToFavouriteRepos: () -> Unit,
     onNavigateToRecentlyViewed: () -> Unit,
     onNavigateToSponsor: () -> Unit,
+    onNavigateToWhatsNew: () -> Unit,
     viewModel: ProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -130,6 +131,10 @@ fun ProfileRoot(
 
                 ProfileAction.OnSponsorClick -> {
                     onNavigateToSponsor()
+                }
+
+                ProfileAction.OnWhatsNewClick -> {
+                    onNavigateToWhatsNew()
                 }
 
                 else -> {

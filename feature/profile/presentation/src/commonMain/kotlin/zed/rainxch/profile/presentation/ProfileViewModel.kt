@@ -149,6 +149,10 @@ class ProfileViewModel(
             ProfileAction.OnRecentlyViewedClick -> {
                 // Handed in composable
             }
+
+            ProfileAction.OnWhatsNewClick -> {
+                // Handed in composable
+            }
         }
     }
 }
