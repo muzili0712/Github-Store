@@ -1,6 +1,7 @@
 package zed.rainxch.core.data.repository
 
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -48,8 +49,12 @@ class AnnouncementsRepositoryImpl(
         ) { payload, dismissed, acknowledged, mutedCategories, lastFetched ->
             PersistedFeedState(payload, dismissed, acknowledged, mutedCategories, lastFetched)
         }
-        return combine(persistedFlow, lastRefreshFailed) { persisted, refreshFailed ->
-            val items = parseAndFilter(persisted.payload)
+        return combine(
+            persistedFlow,
+            lastRefreshFailed,
+            tweaksRepository.getInstallerType(),
+        ) { persisted, refreshFailed, installerType ->
+            val items = parseAndFilter(persisted.payload, installerType.name)
             AnnouncementsFeedSnapshot(
                 items = items,
                 dismissedIds = persisted.dismissed,
@@ -73,11 +78,18 @@ class AnnouncementsRepositoryImpl(
         val result = backendApiClient.getAnnouncements()
         return result.fold(
             onSuccess = { dto ->
-                val raw = json.encodeToString(AnnouncementsResponseDto.serializer(), dto)
-                cacheStore.setCachedPayload(raw)
-                tweaksRepository.setAnnouncementsLastFetchedAt(nowMillis())
-                lastRefreshFailed.value = false
-                Result.success(Unit)
+                try {
+                    val raw = json.encodeToString(AnnouncementsResponseDto.serializer(), dto)
+                    cacheStore.setCachedPayload(raw)
+                    tweaksRepository.setAnnouncementsLastFetchedAt(nowMillis())
+                    lastRefreshFailed.value = false
+                    Result.success(Unit)
+                } catch (t: Throwable) {
+                    if (t is CancellationException) throw t
+                    logger.w("Announcements cache write failed: ${t.message}")
+                    lastRefreshFailed.value = true
+                    Result.failure(t)
+                }
             },
             onFailure = { error ->
                 logger.w("Announcements refresh failed: ${error.message}")
@@ -91,6 +103,7 @@ class AnnouncementsRepositoryImpl(
         try {
             tweaksRepository.addAnnouncementDismissedId(id)
         } catch (t: Throwable) {
+            if (t is CancellationException) throw t
             logger.e(t) { "Failed to persist dismissed announcement $id" }
         }
     }
@@ -99,6 +112,7 @@ class AnnouncementsRepositoryImpl(
         try {
             tweaksRepository.addAnnouncementAcknowledgedId(id)
         } catch (t: Throwable) {
+            if (t is CancellationException) throw t
             logger.e(t) { "Failed to persist acknowledged announcement $id" }
         }
     }
@@ -108,11 +122,12 @@ class AnnouncementsRepositoryImpl(
         try {
             tweaksRepository.setAnnouncementCategoryMuted(category, muted)
         } catch (t: Throwable) {
+            if (t is CancellationException) throw t
             logger.e(t) { "Failed to persist mute toggle for $category" }
         }
     }
 
-    private fun parseAndFilter(payload: String?): List<Announcement> {
+    private fun parseAndFilter(payload: String?, installerTypeTag: String): List<Announcement> {
         if (payload.isNullOrBlank()) return emptyList()
         val parsed = runCatching {
             json.decodeFromString(AnnouncementsResponseDto.serializer(), payload)
@@ -135,7 +150,8 @@ class AnnouncementsRepositoryImpl(
                 val versionFloorOk = minVc == null || versionCode >= minVc
                 val versionCeilingOk = maxVc == null || versionCode <= maxVc
                 val platformOk = item.platforms?.contains(platformTag) ?: true
-                !expired && versionFloorOk && versionCeilingOk && platformOk
+                val installerOk = item.installerTypes?.contains(installerTypeTag) ?: true
+                !expired && versionFloorOk && versionCeilingOk && platformOk && installerOk
             }
             .sortedByDescending { it.publishedAt }
             .toList()
