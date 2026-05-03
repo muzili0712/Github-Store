@@ -103,6 +103,27 @@ sealed interface AppsAction {
         val app: InstalledAppUi,
     ) : AppsAction
 
+    /**
+     * User tapped the Discard affordance on a pending row — opens the
+     * confirmation dialog without doing anything destructive yet. The
+     * actual cleanup runs only after [OnConfirmDiscardPendingInstall].
+     */
+    data class OnDiscardPendingInstall(
+        val app: InstalledAppUi,
+    ) : AppsAction
+
+    /**
+     * User confirmed the Discard prompt. Cancels the orchestrator
+     * entry, deletes the parked APK file, and removes the DB row so
+     * the app stops appearing in the list.
+     */
+    data class OnConfirmDiscardPendingInstall(
+        val app: InstalledAppUi,
+    ) : AppsAction
+
+    /** User dismissed the Discard confirmation without confirming. */
+    data object OnDismissDiscardPendingDialog : AppsAction
+
     // External import banner (E1)
     data object OnImportProposalReview : AppsAction
 

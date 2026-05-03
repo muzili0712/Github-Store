@@ -43,6 +43,14 @@ class SyncInstalledAppsUseCase(
                 val toResolvePending = mutableListOf<InstalledApp>()
                 val toDeleteStalePending = mutableListOf<String>()
                 val toSyncVersions = mutableListOf<InstalledApp>()
+                // Rows that are confirmed-installed but still carry a
+                // stale `pendingInstallFilePath`. Happens when the user
+                // installed a parked file but the broadcast handler
+                // missed the cleanup (process killed mid-install,
+                // legacy rows from before the cleanup was wired in,
+                // etc.). Without this sweep the apps screen keeps
+                // rendering an "Install" CTA forever.
+                val toClearStaleParkedFile = mutableListOf<InstalledApp>()
 
                 appsInDb.forEach { app ->
                     val isOnSystem = installedPackageNames.contains(app.packageName)
@@ -68,6 +76,9 @@ class SyncInstalledAppsUseCase(
                         isOnSystem && platform == Platform.ANDROID -> {
                             toSyncVersions.add(app)
                         }
+                    }
+                    if (isOnSystem && !app.isPendingInstall && app.pendingInstallFilePath != null) {
+                        toClearStaleParkedFile.add(app)
                     }
                 }
 
@@ -110,8 +121,33 @@ class SyncInstalledAppsUseCase(
                                 installedAppsRepository.updatePendingStatus(app.packageName, false)
                                 logger.info("Resolved pending install (no system info): ${app.packageName}")
                             }
+                            // Resolution implies the system holds the
+                            // package — drop the parked-file metadata
+                            // so the apps row stops advertising an
+                            // Install CTA on a file the user already
+                            // installed.
+                            installedAppsRepository.setPendingInstallFilePath(
+                                packageName = app.packageName,
+                                path = null,
+                            )
                         } catch (e: Exception) {
                             logger.error("Failed to resolve pending ${app.packageName}: ${e.message}")
+                        }
+                    }
+
+                    toClearStaleParkedFile.forEach { app ->
+                        try {
+                            installedAppsRepository.setPendingInstallFilePath(
+                                packageName = app.packageName,
+                                path = null,
+                            )
+                            logger.info(
+                                "Cleared stale parked-file metadata for already-installed ${app.packageName}",
+                            )
+                        } catch (e: Exception) {
+                            logger.error(
+                                "Failed to clear stale parked-file for ${app.packageName}: ${e.message}",
+                            )
                         }
                     }
 
@@ -171,7 +207,8 @@ class SyncInstalledAppsUseCase(
                 logger.info(
                     "Sync completed: ${toDelete.size} deleted, ${toDeleteStalePending.size} stale pending removed, " +
                         "${toResolvePending.size} pending resolved, ${toMigrate.size} migrated, " +
-                        "${toSyncVersions.size} version-checked",
+                        "${toSyncVersions.size} version-checked, " +
+                        "${toClearStaleParkedFile.size} stale parked files cleared",
                 )
 
                 Result.success(Unit)

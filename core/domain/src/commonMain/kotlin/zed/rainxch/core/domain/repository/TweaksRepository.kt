@@ -98,4 +98,13 @@ interface TweaksRepository {
     fun getExternalImportBannerDismissedAtCount(): Flow<Int>
 
     suspend fun setExternalImportBannerDismissedAtCount(count: Int)
+
+    /**
+     * One-shot flag for the APK Inspect coachmark next to the install
+     * button on the details screen. `false` until the user has seen the
+     * coachmark at least once; flips permanently to `true` thereafter.
+     */
+    fun getApkInspectCoachmarkShown(): Flow<Boolean>
+
+    suspend fun setApkInspectCoachmarkShown(shown: Boolean)
 }

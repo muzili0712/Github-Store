@@ -6,6 +6,7 @@ import org.koin.dsl.module
 import zed.rainxch.core.data.local.data_store.createDataStore
 import zed.rainxch.core.data.local.db.AppDatabase
 import zed.rainxch.core.data.local.db.initDatabase
+import zed.rainxch.core.data.services.DesktopApkInspector
 import zed.rainxch.core.data.services.DesktopInstallerInfoExtractor
 import zed.rainxch.core.data.utils.DesktopAppLauncher
 import zed.rainxch.core.data.utils.DesktopBrowserHelper
@@ -32,6 +33,7 @@ import zed.rainxch.core.data.utils.DesktopShareManager
 import zed.rainxch.core.data.network.DesktopDigestVerifier
 import zed.rainxch.core.domain.network.DigestVerifier
 import zed.rainxch.core.domain.network.Downloader
+import zed.rainxch.core.domain.system.ApkInspector
 import zed.rainxch.core.domain.system.PackageMonitor
 import zed.rainxch.core.domain.utils.AppLauncher
 import zed.rainxch.core.domain.utils.BrowserHelper
@@ -61,6 +63,10 @@ actual val corePlatformModule = module {
 
     single<PackageMonitor> {
         DesktopPackageMonitor()
+    }
+
+    single<ApkInspector> {
+        DesktopApkInspector()
     }
 
     single<ExternalAppScanner> {

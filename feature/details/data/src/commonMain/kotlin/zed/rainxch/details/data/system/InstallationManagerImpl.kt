@@ -130,6 +130,11 @@ class InstallationManagerImpl(
                     pickedAssetIndex = pickedIndex,
                     pickedAssetSiblingCount = siblingCount,
                     includePreReleases = defaultIncludePreReleases,
+                    pendingInstallFilePath = params.pendingInstallFilePath,
+                    pendingInstallVersion =
+                        params.releaseTag.takeIf { params.pendingInstallFilePath != null },
+                    pendingInstallAssetName =
+                        params.assetName.takeIf { params.pendingInstallFilePath != null },
                 )
 
             installedAppsRepository.saveInstalledApp(installedApp)

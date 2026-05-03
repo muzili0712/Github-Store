@@ -116,6 +116,31 @@ class PackageEventReceiver() :
         }
     }
 
+    /**
+     * Wipes the parked-install metadata on the row and deletes the
+     * APK file from disk now that the system holds the real package.
+     * Best-effort throughout — DB write failures are logged but never
+     * thrown so the broadcast handler can continue to do its other work
+     * (delta-scan, etc.). Safe to call when no parked file exists.
+     */
+    private suspend fun clearParkedInstall(
+        repo: InstalledAppsRepository,
+        packageName: String,
+        parkedFilePath: String?,
+    ) {
+        runCatching {
+            repo.setPendingInstallFilePath(packageName = packageName, path = null)
+        }.onFailure {
+            Logger.w(it) { "Failed to clear parked install metadata for $packageName" }
+        }
+        if (parkedFilePath != null) {
+            runCatching { java.io.File(parkedFilePath).takeIf { it.exists() }?.delete() }
+                .onFailure {
+                    Logger.w(it) { "Failed to delete parked APK at $parkedFilePath" }
+                }
+        }
+    }
+
     private suspend fun onPackageInstalled(packageName: String) {
         try {
             val repo = getRepository()
@@ -170,6 +195,11 @@ class PackageEventReceiver() :
                         repo.updatePendingStatus(packageName, false)
                         Logger.i { "Resolved pending install via broadcast (no system info): $packageName" }
                     }
+                    // System has the package now — the parked APK on disk is
+                    // dead weight. Clear the path on the row (otherwise the
+                    // apps screen keeps rendering the "Install" CTA after a
+                    // successful install) and delete the file to free space.
+                    clearParkedInstall(repo, packageName, app.pendingInstallFilePath)
                 } else {
                     handleExternalInstall(packageName, app, repo, monitor)
                 }

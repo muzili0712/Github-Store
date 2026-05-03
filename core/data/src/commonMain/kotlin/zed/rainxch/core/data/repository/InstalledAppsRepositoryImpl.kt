@@ -455,6 +455,19 @@ class InstalledAppsRepositoryImpl(
                 lastUpdatedAt = System.currentTimeMillis(),
                 lastCheckedAt = System.currentTimeMillis(),
                 signingFingerprint = signingFingerprint,
+                // When this update settled (isPendingInstall = false),
+                // wipe any leftover parked-install pointer so the apps
+                // screen stops advertising an Install CTA on a file
+                // the system already swapped under the row. Caller
+                // (DetailsViewModel.saveInstalledAppToDatabase) re-sets
+                // these explicitly via setPendingInstallFilePath
+                // afterwards on the still-pending path.
+                pendingInstallFilePath =
+                    if (isPendingInstall) app.pendingInstallFilePath else null,
+                pendingInstallVersion =
+                    if (isPendingInstall) app.pendingInstallVersion else null,
+                pendingInstallAssetName =
+                    if (isPendingInstall) app.pendingInstallAssetName else null,
             ),
         )
     }

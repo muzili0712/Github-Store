@@ -259,6 +259,7 @@
     <string name="install_version">Install %1$s</string>
     <string name="failed_to_open_app">Failed to open %1$s</string>
     <string name="failed_to_uninstall">Failed to uninstall %1$s</string>
+    <string name="failed_to_discard_pending">Failed to discard pending install for %1$s</string>
 
     <!-- Install helpers -->
     <string name="open_in_obtainium">Open in Obtainium</string>
@@ -654,6 +655,8 @@
     <string name="include_pre_releases_description">Track pre-release versions when checking for updates. When disabled, only stable releases are considered.</string>
     <string name="confirm_uninstall_title">Uninstall app?</string>
     <string name="confirm_uninstall_message">Are you sure you want to uninstall %1$s? This action cannot be undone and app data may be lost.</string>
+    <string name="confirm_discard_pending_title">Discard pending install?</string>
+    <string name="confirm_discard_pending_message">Drop the parked installer for %1$s and remove the row from your apps list? The downloaded APK will be deleted.</string>
 
     <string name="invalid_github_url">Invalid GitHub URL. Use format: github.com/owner/repo</string>
     <string name="repo_not_found">Repository not found: %1$s/%2$s</string>
@@ -967,4 +970,37 @@
     <string name="apps_compact_status_variant_stale">variant stale, action needed</string>
     <string name="apps_compact_status_pending_install">pending install</string>
     <string name="apps_compact_status_ready_to_install">ready to install</string>
+    <string name="discard_pending_install">Discard</string>
+
+    <!-- APK Inspect feature -->
+    <string name="apk_inspect_title">APK Inspect</string>
+    <string name="apk_inspect_button_label">Inspect APK</string>
+    <string name="apk_inspect_coachmark_title">Peek inside before installing</string>
+    <string name="apk_inspect_coachmark_body">Permissions, signing, components — see exactly what an APK declares.</string>
+    <string name="apk_inspect_coachmark_dismiss">Got it</string>
+    <string name="apk_inspect_empty">Nothing to inspect for this app yet.</string>
+    <string name="apk_inspect_source_file">Parked file</string>
+    <string name="apk_inspect_source_installed">Installed package</string>
+    <string name="apk_inspect_identity">Identity</string>
+    <string name="apk_inspect_compatibility">Compatibility</string>
+    <string name="apk_inspect_permissions">Permissions (%1$d)</string>
+    <string name="apk_inspect_permissions_title">Permissions</string>
+    <string name="apk_inspect_permissions_empty">No permissions declared.</string>
+    <string name="apk_inspect_components">Components</string>
+    <string name="apk_inspect_file_info">File</string>
+    <string name="apk_inspect_version_code">Version</string>
+    <string name="apk_inspect_signing">Signing fingerprint</string>
+    <string name="apk_inspect_min_sdk">Minimum SDK</string>
+    <string name="apk_inspect_target_sdk">Target SDK</string>
+    <string name="apk_inspect_size">Size</string>
+    <string name="apk_inspect_section_activities">Activities</string>
+    <string name="apk_inspect_section_services">Services</string>
+    <string name="apk_inspect_section_receivers">Receivers</string>
+    <string name="apk_inspect_section_main_activity">Main activity</string>
+    <string name="apk_inspect_debuggable">Debuggable build — sketchy if this is a release.</string>
+    <string name="apk_inspect_protection_dangerous">Sensitive</string>
+    <string name="apk_inspect_protection_signature">Signature</string>
+    <string name="apk_inspect_protection_privileged">Privileged</string>
+    <string name="apk_inspect_protection_normal">Normal</string>
+    <string name="apk_inspect_protection_unknown">Unknown</string>
 </resources>

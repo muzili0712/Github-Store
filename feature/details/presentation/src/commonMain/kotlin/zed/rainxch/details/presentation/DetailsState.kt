@@ -1,5 +1,6 @@
 package zed.rainxch.details.presentation
 
+import zed.rainxch.core.domain.model.ApkInspection
 import zed.rainxch.core.domain.model.GithubAsset
 import zed.rainxch.core.domain.model.GithubRelease
 import zed.rainxch.core.domain.model.GithubRepoSummary
@@ -113,6 +114,18 @@ data class DetailsState(
      * silently no-op for releases that ship only source tarballs.
      */
     val latestStableHasInstallableAsset: Boolean = false,
+    /** APK inspection result currently driving the inspect bottom sheet. */
+    val apkInspection: ApkInspection? = null,
+    /** Whether the inspect bottom sheet is on screen. */
+    val isApkInspectSheetVisible: Boolean = false,
+    /** Loading state for the inspect sheet — set while the inspector runs. */
+    val isApkInspectLoading: Boolean = false,
+    /**
+     * One-shot flag from DataStore — `false` until the user has seen
+     * the discoverability coachmark for the inspect button. Drives the
+     * pulse + tooltip animation in the install button row.
+     */
+    val isApkInspectCoachmarkPending: Boolean = false,
 ) {
     val filteredReleases: List<GithubRelease>
         get() =

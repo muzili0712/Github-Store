@@ -30,9 +30,13 @@ import zed.rainxch.details.presentation.components.AppHeader
 import zed.rainxch.details.presentation.components.ReleaseAssetsPicker
 import zed.rainxch.details.presentation.components.ReleasesStatus
 import zed.rainxch.details.presentation.components.ReleasesStatusCard
+import zed.rainxch.core.domain.model.isReallyInstalled
+import zed.rainxch.details.presentation.components.ApkInspectSheet
+import zed.rainxch.details.presentation.components.InspectApkButton
 import zed.rainxch.details.presentation.components.SmartInstallButton
 import zed.rainxch.details.presentation.components.VersionPicker
 import zed.rainxch.details.presentation.components.VersionTypePicker
+import zed.rainxch.details.presentation.model.DownloadStage
 import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.githubstore.core.presentation.res.Res
 import zed.rainxch.githubstore.core.presentation.res.appmanager_description
@@ -136,18 +140,51 @@ fun LazyListScope.header(
         item {
             val liquidState = LocalTopbarLiquidState.current
 
+            // Inspect button only surfaces once the package is genuinely
+            // installed on device (`isReallyInstalled()` filters out
+            // pending-install rows whose `installedApp` is non-null but
+            // the system hasn't confirmed the install). This avoids
+            // popping the icon in at the exact frame the system install
+            // prompt appears, which is the user's peak-attention moment.
+            val canInspectApk = state.installedApp?.isReallyInstalled() == true
+            // Even when visible, the coachmark animation only fires
+            // during a calm moment — never while a download or install
+            // is mid-flight, never with the inspect sheet already open.
+            val coachmarkActive =
+                state.isApkInspectCoachmarkPending &&
+                    canInspectApk &&
+                    !state.isDownloading &&
+                    !state.isInstalling &&
+                    state.downloadStage == DownloadStage.IDLE &&
+                    !state.isApkInspectSheetVisible
             Box(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                SmartInstallButton(
-                    isDownloading = state.isDownloading,
-                    isInstalling = state.isInstalling,
-                    isLiquidGlassEnabled = state.isLiquidGlassEnabled,
-                    progress = state.downloadProgressPercent,
-                    primaryAsset = state.primaryAsset,
-                    state = state,
-                    onAction = onAction,
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    SmartInstallButton(
+                        isDownloading = state.isDownloading,
+                        isInstalling = state.isInstalling,
+                        isLiquidGlassEnabled = state.isLiquidGlassEnabled,
+                        progress = state.downloadProgressPercent,
+                        primaryAsset = state.primaryAsset,
+                        state = state,
+                        onAction = onAction,
+                        modifier = Modifier.weight(1f),
+                    )
+                    if (canInspectApk) {
+                        InspectApkButton(
+                            showCoachmark = coachmarkActive,
+                            onClick = { onAction(DetailsAction.OnInspectApk) },
+                            onCoachmarkDismiss = {
+                                onAction(DetailsAction.OnAcknowledgeApkInspectCoachmark)
+                            },
+                        )
+                    }
+                }
 
             DropdownMenu(
                 expanded = state.isInstallDropdownExpanded,

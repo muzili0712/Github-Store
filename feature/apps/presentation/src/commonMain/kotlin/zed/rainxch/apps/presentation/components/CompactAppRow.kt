@@ -64,6 +64,7 @@ import zed.rainxch.githubstore.core.presentation.res.install
 import zed.rainxch.githubstore.core.presentation.res.open
 import zed.rainxch.githubstore.core.presentation.res.pre_release_badge
 import zed.rainxch.githubstore.core.presentation.res.uninstall
+import zed.rainxch.githubstore.core.presentation.res.discard_pending_install
 import zed.rainxch.githubstore.core.presentation.res.variant_picker_open
 import kotlin.time.ExperimentalTime
 
@@ -83,6 +84,7 @@ fun CompactAppRow(
     appItem: AppItem,
     onOpenClick: () -> Unit,
     onInstallPendingClick: () -> Unit,
+    onDiscardPendingClick: () -> Unit,
     onAdvancedSettingsClick: () -> Unit,
     onPickVariantClick: () -> Unit,
     onUninstallClick: () -> Unit,
@@ -120,6 +122,7 @@ fun CompactAppRow(
                 Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(14.dp)),
+            apkFilePath = app.pendingInstallFilePath,
         )
 
         Column(modifier = Modifier.weight(1f)) {
@@ -172,6 +175,11 @@ fun CompactAppRow(
                 )
             }
             Spacer(Modifier.width(4.dp))
+        } else if (app.isPendingInstall) {
+            // Pending row whose file isn't (or is no longer) on disk.
+            // The app isn't installed; suppress the Open shortcut so we
+            // don't dead-end on a launch failure. Discard is reachable
+            // from the overflow.
         } else if (!isBusy) {
             // Subtle Open shortcut keeps the most-frequent action one tap
             // away even though the row itself opens the repo on tap.
@@ -191,12 +199,14 @@ fun CompactAppRow(
         CompactRowOverflow(
             appName = app.appName,
             isBusy = isBusy,
+            isPending = app.isPendingInstall,
             isUpdateAvailable = app.isUpdateAvailable,
             isPreReleaseEnabled = app.includePreReleases,
             onAdvancedSettingsClick = onAdvancedSettingsClick,
             onPickVariantClick = onPickVariantClick,
             onUninstallClick = onUninstallClick,
             onTogglePreReleases = onTogglePreReleases,
+            onDiscardPendingClick = onDiscardPendingClick,
         )
     }
 }
@@ -205,12 +215,14 @@ fun CompactAppRow(
 private fun CompactRowOverflow(
     appName: String,
     isBusy: Boolean,
+    isPending: Boolean,
     isUpdateAvailable: Boolean,
     isPreReleaseEnabled: Boolean,
     onAdvancedSettingsClick: () -> Unit,
     onPickVariantClick: () -> Unit,
     onUninstallClick: () -> Unit,
     onTogglePreReleases: (Boolean) -> Unit,
+    onDiscardPendingClick: () -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val moreActionsLabel = stringResource(Res.string.apps_compact_more_actions, appName)
@@ -261,25 +273,47 @@ private fun CompactRowOverflow(
                     onTogglePreReleases(!isPreReleaseEnabled)
                 },
             )
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = stringResource(Res.string.uninstall),
-                        color = MaterialTheme.colorScheme.error,
-                    )
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.DeleteOutline,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
-                    )
-                },
-                onClick = {
-                    expanded = false
-                    onUninstallClick()
-                },
-            )
+            if (isPending) {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(Res.string.discard_pending_install),
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteOutline,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onDiscardPendingClick()
+                    },
+                )
+            } else {
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(Res.string.uninstall),
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteOutline,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                    },
+                    onClick = {
+                        expanded = false
+                        onUninstallClick()
+                    },
+                )
+            }
         }
     }
     // Suppress unused-parameter warning; isUpdateAvailable reserved for

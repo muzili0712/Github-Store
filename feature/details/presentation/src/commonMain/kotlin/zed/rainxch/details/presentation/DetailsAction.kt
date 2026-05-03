@@ -131,4 +131,23 @@ sealed interface DetailsAction {
      * initiates the install flow on it (GitHub-Store release UX #3).
      */
     data object SwitchToStable : DetailsAction
+
+    /**
+     * Opens the APK Inspect bottom sheet. The ViewModel resolves the
+     * APK source automatically — installed package wins over parked
+     * file when both exist (installed manifest is the authoritative
+     * source on what's actually on the device).
+     */
+    data object OnInspectApk : DetailsAction
+
+    /** Closes the APK Inspect bottom sheet. */
+    data object OnDismissApkInspect : DetailsAction
+
+    /**
+     * Acknowledges the inspect-button discoverability coachmark — fired
+     * either when the coachmark is tapped/dismissed or when the user
+     * opens the inspect sheet for the first time. Persists so the
+     * coachmark only ever shows once.
+     */
+    data object OnAcknowledgeApkInspectCoachmark : DetailsAction
 }

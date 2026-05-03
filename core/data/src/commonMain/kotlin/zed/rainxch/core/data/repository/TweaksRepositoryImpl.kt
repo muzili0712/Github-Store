@@ -279,6 +279,17 @@ class TweaksRepositoryImpl(
         }
     }
 
+    override fun getApkInspectCoachmarkShown(): Flow<Boolean> =
+        preferences.data.map { prefs ->
+            prefs[APK_INSPECT_COACHMARK_SHOWN_KEY] ?: false
+        }
+
+    override suspend fun setApkInspectCoachmarkShown(shown: Boolean) {
+        preferences.edit { prefs ->
+            prefs[APK_INSPECT_COACHMARK_SHOWN_KEY] = shown
+        }
+    }
+
     companion object {
         private const val DEFAULT_UPDATE_CHECK_INTERVAL_HOURS = 6L
 
@@ -304,5 +315,6 @@ class TweaksRepositoryImpl(
         private val EXTERNAL_IMPORT_ENABLED_KEY = booleanPreferencesKey("external_import_enabled")
         private val EXTERNAL_MATCH_SEARCH_ENABLED_KEY = booleanPreferencesKey("external_match_search_enabled")
         private val EXTERNAL_IMPORT_BANNER_DISMISSED_AT_KEY = intPreferencesKey("external_import_banner_dismissed_at")
+        private val APK_INSPECT_COACHMARK_SHOWN_KEY = booleanPreferencesKey("apk_inspect_coachmark_shown")
     }
 }

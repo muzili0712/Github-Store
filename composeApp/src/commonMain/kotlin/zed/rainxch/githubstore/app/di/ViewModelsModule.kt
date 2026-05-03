@@ -54,6 +54,7 @@ val viewModelsModule =
                 downloadOrchestrator = get(),
                 telemetryRepository = get(),
                 externalImportRepository = get(),
+                apkInspector = get(),
             )
         }
         viewModelOf(::DeveloperProfileViewModel)

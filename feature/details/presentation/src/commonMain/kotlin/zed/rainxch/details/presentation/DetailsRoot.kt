@@ -72,6 +72,7 @@ import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
 import zed.rainxch.core.presentation.utils.arrowKeyScroll
 import zed.rainxch.core.presentation.utils.isLiquidFrostAvailable
+import zed.rainxch.details.presentation.components.ApkInspectSheet
 import zed.rainxch.details.presentation.components.LanguagePicker
 import zed.rainxch.details.presentation.components.sections.about
 import zed.rainxch.details.presentation.components.sections.author
@@ -367,6 +368,14 @@ fun DetailsRoot(
                     Text(text = stringResource(Res.string.dismiss))
                 }
             },
+        )
+    }
+
+    if (state.isApkInspectSheetVisible) {
+        ApkInspectSheet(
+            inspection = state.apkInspection,
+            isLoading = state.isApkInspectLoading,
+            onDismiss = { viewModel.onAction(DetailsAction.OnDismissApkInspect) },
         )
     }
 }

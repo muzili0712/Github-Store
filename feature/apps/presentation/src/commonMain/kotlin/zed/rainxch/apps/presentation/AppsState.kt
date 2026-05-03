@@ -82,6 +82,8 @@ data class AppsState(
     val isImporting: Boolean = false,
     // Uninstall confirmation
     val appPendingUninstall: InstalledAppUi? = null,
+    // Discard-pending-install confirmation
+    val appPendingDiscard: InstalledAppUi? = null,
     // External import banner (E1)
     val pendingExternalImportCount: Int = 0,
     val showImportProposalBanner: Boolean = false,

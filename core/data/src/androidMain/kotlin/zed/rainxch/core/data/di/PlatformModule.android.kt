@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import zed.rainxch.core.data.local.data_store.createDataStore
 import zed.rainxch.core.data.local.db.AppDatabase
 import zed.rainxch.core.data.local.db.initDatabase
+import zed.rainxch.core.data.services.AndroidApkInspector
 import zed.rainxch.core.data.services.AndroidDownloader
 import zed.rainxch.core.data.services.AndroidDownloadProgressNotifier
 import zed.rainxch.core.data.services.AndroidFileLocationsProvider
@@ -33,6 +34,7 @@ import zed.rainxch.core.data.utils.AndroidShareManager
 import zed.rainxch.core.data.network.AndroidDigestVerifier
 import zed.rainxch.core.domain.network.DigestVerifier
 import zed.rainxch.core.domain.network.Downloader
+import zed.rainxch.core.domain.system.ApkInspector
 import zed.rainxch.core.domain.system.DownloadOrchestrator
 import zed.rainxch.core.domain.system.DownloadProgressNotifier
 import zed.rainxch.core.domain.system.ExternalAppScanner
@@ -112,6 +114,10 @@ actual val corePlatformModule =
 
         single<PackageMonitor> {
             AndroidPackageMonitor(androidContext())
+        }
+
+        single<ApkInspector> {
+            AndroidApkInspector(androidContext())
         }
 
         single { ManifestHintExtractor() }
