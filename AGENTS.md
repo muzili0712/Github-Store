@@ -91,7 +91,7 @@ Type-safe navigation using `@Serializable` sealed interface `GithubStoreGraph` i
 ### Key Cross-Cutting Concerns
 
 - **Auth flow:** GitHub device-flow OAuth. Primary path goes through backend proxy (`/v1/auth/device/start`, `/v1/auth/device/poll`); falls back to direct GitHub only on infrastructure errors (5xx, timeouts). HTTP 4xx and GitHub's negative 200-bodies never trigger fallback. Backend rate limits (10 starts/hr, 200 polls/hr per IP) are hard — do not add retry loops.
-- **`X-GitHub-Token` header:** Only sent on `/v1/search` and `/v1/search/explore`. Never on other endpoints, never logged.
+- **`X-GitHub-Token` header:** Forwarded on every backend passthrough route — `/v1/search`, `/v1/search/explore`, `/v1/repo/{owner}/{name}`, `/v1/releases/{owner}/{name}`, `/v1/readme/{owner}/{name}`, `/v1/user/{username}`. Backend re-sends as `Authorization: token $token` so upstream GitHub calls run under the user's 5000/hr OAuth quota; without it the request falls back to the shared 60/hr anonymous bucket and a single 4xx can poison the backend's 15-min negative cache for everyone. DB-only routes (`/v1/categories`, `/v1/topics`, `/v1/events`, `/v1/auth/device/*`, `/v1/badge/*`) never get the header. Sourced via `BackendApiClient.currentUserGithubToken()` (`private`), never logged. 401 from passthrough routes ≠ session expired — `AuthenticationStateImpl` debounces consecutive 401s under the same token before clearing the session.
 - **Platform branching:** Source sets are `commonMain` (shared), `androidMain` (Android), `jvmMain` (Desktop). Some features (apps, installation, Shizuku) are Android-only.
 - **Shizuku (Android):** Optional silent install via AIDL service. Falls back to standard installer on failure.
 
