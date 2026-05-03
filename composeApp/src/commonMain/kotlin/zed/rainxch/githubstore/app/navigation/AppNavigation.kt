@@ -71,6 +71,7 @@ fun AppNavigation(
 
     val whatsNewViewModel = koinViewModel<WhatsNewViewModel>()
     val announcementsViewModel = koinViewModel<AnnouncementsViewModel>()
+    val announcementsUnreadCount by announcementsViewModel.unreadCount.collectAsStateWithLifecycle()
 
     CompositionLocalProvider(
         LocalBottomNavigationLiquid provides liquidState,
@@ -351,6 +352,7 @@ fun AppNavigation(
                             announcementsViewModel.setMuted(category, muted)
                         },
                         onLeavingScreen = { announcementsViewModel.clearPreview() },
+                        onEnteringScreen = { announcementsViewModel.markRoutineItemsSeen() },
                     )
                 }
 
@@ -442,6 +444,7 @@ fun AppNavigation(
                     isUpdateAvailable =
                         appsState.apps.any { it.installedApp.isUpdateAvailable } ||
                             appsState.showImportProposalBanner,
+                    hasUnreadAnnouncements = announcementsUnreadCount > 0,
                     isLiquidGlassEnabled = isLiquidGlassEnabled,
                     modifier =
                         Modifier
