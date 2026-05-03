@@ -10,5 +10,7 @@ interface AuthenticationState {
 
     val sessionExpiredEvent: SharedFlow<Unit>
 
-    suspend fun notifySessionExpired()
+    suspend fun notifySessionExpired(tokenKey: String?)
+
+    suspend fun notifyRequestSucceeded(tokenKey: String?)
 }

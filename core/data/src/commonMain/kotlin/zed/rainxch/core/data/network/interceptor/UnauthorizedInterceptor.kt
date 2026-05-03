@@ -3,6 +3,7 @@ package zed.rainxch.core.data.network.interceptor
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.statement.HttpReceivePipeline
+import io.ktor.http.HttpHeaders
 import io.ktor.util.AttributeKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -40,13 +41,35 @@ class UnauthorizedInterceptor(
             scope: HttpClient,
         ) {
             scope.receivePipeline.intercept(HttpReceivePipeline.After) {
-                if (subject.status.value == 401) {
-                    plugin.scope.launch {
-                        plugin.authenticationState.notifySessionExpired()
+                val tokenKey = extractBearerToken(subject.call.request.headers[HttpHeaders.Authorization])
+                val statusCode = subject.status.value
+                when {
+                    statusCode == 401 -> {
+                        plugin.scope.launch {
+                            plugin.authenticationState.notifySessionExpired(tokenKey)
+                        }
+                    }
+                    statusCode in 200..299 -> {
+                        plugin.scope.launch {
+                            plugin.authenticationState.notifyRequestSucceeded(tokenKey)
+                        }
                     }
                 }
                 proceedWith(subject)
             }
+        }
+
+        private fun extractBearerToken(headerValue: String?): String? {
+            if (headerValue.isNullOrEmpty()) return null
+            val trimmed = headerValue.trim()
+            val withoutScheme = when {
+                trimmed.startsWith("Bearer ", ignoreCase = true) ->
+                    trimmed.substring("Bearer ".length)
+                trimmed.startsWith("token ", ignoreCase = true) ->
+                    trimmed.substring("token ".length)
+                else -> trimmed
+            }
+            return withoutScheme.trim().takeIf { it.isNotEmpty() }
         }
     }
 }
