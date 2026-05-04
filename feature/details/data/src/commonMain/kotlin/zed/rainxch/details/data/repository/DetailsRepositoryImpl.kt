@@ -26,6 +26,11 @@ import zed.rainxch.core.data.mappers.toDomain
 import zed.rainxch.core.data.mappers.toSummary
 import zed.rainxch.core.data.network.BackendApiClient
 import zed.rainxch.core.data.network.BackendException
+import zed.rainxch.core.data.network.RateLimitedException
+import zed.rainxch.core.data.network.RefreshBudgetExhaustedException
+import zed.rainxch.core.data.network.RefreshCooldownException
+import zed.rainxch.core.data.network.RepoArchivedException
+import zed.rainxch.core.data.network.RepoNotFoundException
 import zed.rainxch.core.data.network.shouldFallbackToGithubOrRethrow as sharedShouldFallback
 import zed.rainxch.core.data.network.GitHubClientProvider
 import zed.rainxch.core.data.network.executeRequest
@@ -35,6 +40,8 @@ import zed.rainxch.core.domain.model.GithubRelease
 import zed.rainxch.core.domain.model.GithubRepoSummary
 import zed.rainxch.core.domain.model.GithubUser
 import zed.rainxch.core.domain.model.GithubUserProfile
+import zed.rainxch.core.domain.model.RefreshError
+import zed.rainxch.core.domain.model.RefreshException
 import zed.rainxch.details.data.utils.ReadmeLocalizationHelper
 import zed.rainxch.details.data.utils.preprocessMarkdown
 import zed.rainxch.details.domain.model.RepoStats
@@ -192,6 +199,42 @@ class DetailsRepositoryImpl(
             throw e
         }
     }
+
+    override suspend fun refreshRepository(
+        owner: String,
+        name: String,
+    ): GithubRepoSummary {
+        val outcome = backendApiClient.refreshRepo(owner, name)
+        outcome.exceptionOrNull()?.let { throw it.toRefreshException() }
+        val backendRepo = outcome.getOrThrow()
+        val result = backendRepo.toBackendSummary()
+        val cacheKey = "details:repo:$owner/$name"
+        cacheManager.put(cacheKey, result, REPO_DETAILS)
+        cacheManager.invalidate("details:repo_id:${result.id}")
+        cacheManager.invalidate("details:stats:$owner/$name")
+        cacheManager.invalidate("details:latest_release:$owner/$name")
+        cacheManager.invalidate("details:releases:$owner/$name")
+        return result
+    }
+
+    private fun Throwable.toRefreshException(): Throwable =
+        when (this) {
+            is CancellationException -> this
+            is RefreshCooldownException ->
+                RefreshException(RefreshError.COOLDOWN, retryAfterSeconds)
+            is RefreshBudgetExhaustedException ->
+                RefreshException(RefreshError.BUDGET_EXHAUSTED, retryAfterSeconds)
+            is RateLimitedException ->
+                RefreshException(RefreshError.COOLDOWN, retryAfterSeconds)
+            is RepoArchivedException ->
+                RefreshException(RefreshError.ARCHIVED)
+            is RepoNotFoundException ->
+                RefreshException(RefreshError.NOT_FOUND)
+            is BackendException -> RefreshException(
+                if (statusCode in 500..599) RefreshError.UPSTREAM else RefreshError.GENERIC,
+            )
+            else -> RefreshException(RefreshError.GENERIC)
+        }
 
     override suspend fun getLatestPublishedRelease(
         owner: String,

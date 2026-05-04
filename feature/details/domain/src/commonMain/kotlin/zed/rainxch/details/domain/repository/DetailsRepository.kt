@@ -17,6 +17,11 @@ interface DetailsRepository {
         name: String,
     ): GithubRepoSummary
 
+    suspend fun refreshRepository(
+        owner: String,
+        name: String,
+    ): GithubRepoSummary
+
     suspend fun getLatestPublishedRelease(
         owner: String,
         repo: String,
