@@ -58,6 +58,7 @@ val viewModelsModule =
                 telemetryRepository = get(),
                 externalImportRepository = get(),
                 apkInspector = get(),
+                authenticationState = get(),
             )
         }
         viewModelOf(::DeveloperProfileViewModel)

@@ -124,6 +124,7 @@ class DetailsViewModel(
     private val telemetryRepository: TelemetryRepository,
     private val externalImportRepository: ExternalImportRepository,
     private val apkInspector: ApkInspector,
+    private val authenticationState: zed.rainxch.core.domain.repository.AuthenticationState,
 ) : ViewModel() {
     private var hasLoadedInitialData = false
     private var currentDownloadJob: Job? = null
@@ -2572,12 +2573,16 @@ class DetailsViewModel(
             } catch (e: RateLimitException) {
                 logger.error("Rate limited: ${e.message}")
                 val seconds = e.rateLimitInfo.timeUntilReset().inWholeSeconds
-                val message = if (seconds > 0L) {
-                    getString(Res.string.rate_limit_exceeded_retry_in, seconds.toInt()) + " " +
-                        getString(Res.string.rate_limit_exceeded_signin_hint)
+                val signedIn = authenticationState.isCurrentlyUserLoggedIn()
+                val base = if (seconds > 0L) {
+                    getString(Res.string.rate_limit_exceeded_retry_in, seconds.toInt())
                 } else {
-                    getString(Res.string.rate_limit_exceeded) + " " +
-                        getString(Res.string.rate_limit_exceeded_signin_hint)
+                    getString(Res.string.rate_limit_exceeded)
+                }
+                val message = if (!signedIn) {
+                    base + " " + getString(Res.string.rate_limit_exceeded_signin_hint)
+                } else {
+                    base
                 }
                 _state.value =
                     _state.value.copy(
