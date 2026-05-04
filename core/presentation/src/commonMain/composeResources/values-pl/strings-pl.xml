@@ -845,6 +845,17 @@
     <string name="details_unlink_external_app_success">Odłączono. Zasugerujemy dopasowanie przy następnym skanowaniu.</string>
     <string name="details_unlink_external_app_failure">Nie udało się odłączyć — spróbuj ponownie.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">Odśwież</string>
+    <string name="details_refresh_cooldown">Odśwież (%1$ds)</string>
+    <string name="details_refresh_more_options">Więcej opcji</string>
+    <string name="details_refresh_snackbar_cooldown">Dopiero co odświeżyłeś — spróbuj ponownie za %1$d s.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">Usługa odświeżania jest zajęta — spróbuj ponownie za %1$d s.</string>
+    <string name="details_refresh_snackbar_archived">To repozytorium jest zarchiwizowane na GitHubie.</string>
+    <string name="details_refresh_snackbar_not_found">To repozytorium nie istnieje już na GitHubie.</string>
+    <string name="details_refresh_snackbar_upstream">Nie udało się odświeżyć. Spróbuj ponownie wkrótce.</string>
+    <string name="details_refresh_snackbar_generic">Odświeżanie nie powiodło się. Spróbuj ponownie.</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

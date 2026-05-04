@@ -824,6 +824,17 @@
     <string name="details_unlink_external_app_success">Desvinculado. Sugeriremos una coincidencia en el próximo análisis.</string>
     <string name="details_unlink_external_app_failure">No se pudo desvincular — inténtalo de nuevo.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">Actualizar</string>
+    <string name="details_refresh_cooldown">Actualizar (%1$ds)</string>
+    <string name="details_refresh_more_options">Más opciones</string>
+    <string name="details_refresh_snackbar_cooldown">Acabas de actualizar — vuelve a intentarlo en %1$d s.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">Servicio de actualización ocupado — vuelve a intentarlo en %1$d s.</string>
+    <string name="details_refresh_snackbar_archived">Este repositorio está archivado en GitHub.</string>
+    <string name="details_refresh_snackbar_not_found">Este repositorio ya no existe en GitHub.</string>
+    <string name="details_refresh_snackbar_upstream">No se pudo actualizar. Inténtalo de nuevo en breve.</string>
+    <string name="details_refresh_snackbar_generic">Error al actualizar. Inténtalo de nuevo.</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

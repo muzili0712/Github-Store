@@ -819,6 +819,17 @@
     <string name="details_unlink_external_app_success">リンクを解除しました。次回のスキャンで再度一致候補を提示します。</string>
     <string name="details_unlink_external_app_failure">リンクを解除できませんでした — もう一度お試しください。</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">更新</string>
+    <string name="details_refresh_cooldown">更新 (%1$d秒)</string>
+    <string name="details_refresh_more_options">その他のオプション</string>
+    <string name="details_refresh_snackbar_cooldown">今更新したばかりです — %1$d秒後に再度お試しください。</string>
+    <string name="details_refresh_snackbar_budget_exhausted">更新サービスが混雑しています — %1$d秒後に再度お試しください。</string>
+    <string name="details_refresh_snackbar_archived">このリポジトリはGitHubでアーカイブされています。</string>
+    <string name="details_refresh_snackbar_not_found">このリポジトリはGitHubに存在しません。</string>
+    <string name="details_refresh_snackbar_upstream">更新できませんでした。しばらくしてから再度お試しください。</string>
+    <string name="details_refresh_snackbar_generic">更新に失敗しました。再度お試しください。</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

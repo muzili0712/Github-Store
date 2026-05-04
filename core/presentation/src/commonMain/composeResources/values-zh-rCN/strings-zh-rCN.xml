@@ -821,6 +821,17 @@
     <string name="details_unlink_external_app_success">已取消关联。下次扫描时将重新建议匹配。</string>
     <string name="details_unlink_external_app_failure">无法取消关联 — 请重试。</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">刷新</string>
+    <string name="details_refresh_cooldown">刷新（%1$d 秒）</string>
+    <string name="details_refresh_more_options">更多操作</string>
+    <string name="details_refresh_snackbar_cooldown">刚刚刷新过 — 请在 %1$d 秒后重试。</string>
+    <string name="details_refresh_snackbar_budget_exhausted">刷新服务繁忙 — 请在 %1$d 秒后重试。</string>
+    <string name="details_refresh_snackbar_archived">此仓库已在 GitHub 上归档。</string>
+    <string name="details_refresh_snackbar_not_found">此仓库在 GitHub 上已不存在。</string>
+    <string name="details_refresh_snackbar_upstream">刷新失败，请稍后重试。</string>
+    <string name="details_refresh_snackbar_generic">刷新失败。请重试。</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

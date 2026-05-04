@@ -864,6 +864,17 @@
     <string name="details_unlink_external_app_success">Scollegata. Proporremo una corrispondenza alla prossima scansione.</string>
     <string name="details_unlink_external_app_failure">Impossibile scollegare — riprova.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">Aggiorna</string>
+    <string name="details_refresh_cooldown">Aggiorna (%1$ds)</string>
+    <string name="details_refresh_more_options">Altre opzioni</string>
+    <string name="details_refresh_snackbar_cooldown">Hai appena aggiornato — riprova tra %1$d s.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">Servizio di aggiornamento occupato — riprova tra %1$d s.</string>
+    <string name="details_refresh_snackbar_archived">Questo repository è archiviato su GitHub.</string>
+    <string name="details_refresh_snackbar_not_found">Questo repository non esiste più su GitHub.</string>
+    <string name="details_refresh_snackbar_upstream">Impossibile aggiornare. Riprova a breve.</string>
+    <string name="details_refresh_snackbar_generic">Aggiornamento fallito. Riprova.</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

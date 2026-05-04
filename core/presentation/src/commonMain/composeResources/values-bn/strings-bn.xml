@@ -856,6 +856,17 @@
     <string name="details_unlink_external_app_success">আনলিঙ্ক করা হয়েছে। পরবর্তী স্ক্যানে আবার মিল সাজেস্ট করব।</string>
     <string name="details_unlink_external_app_failure">আনলিঙ্ক করা যায়নি — আবার চেষ্টা করুন।</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">রিফ্রেশ</string>
+    <string name="details_refresh_cooldown">রিফ্রেশ (%1$dসে)</string>
+    <string name="details_refresh_more_options">আরও বিকল্প</string>
+    <string name="details_refresh_snackbar_cooldown">এইমাত্র রিফ্রেশ করেছেন — %1$d সেকেন্ড পরে আবার চেষ্টা করুন।</string>
+    <string name="details_refresh_snackbar_budget_exhausted">রিফ্রেশ সার্ভিস ব্যস্ত — %1$d সেকেন্ড পরে আবার চেষ্টা করুন।</string>
+    <string name="details_refresh_snackbar_archived">এই রিপোজিটরি GitHub-এ আর্কাইভ করা হয়েছে।</string>
+    <string name="details_refresh_snackbar_not_found">এই রিপোজিটরি GitHub-এ আর নেই।</string>
+    <string name="details_refresh_snackbar_upstream">রিফ্রেশ করা যায়নি। শীঘ্রই আবার চেষ্টা করুন।</string>
+    <string name="details_refresh_snackbar_generic">রিফ্রেশ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।</string>
+
     <!-- Feedback feature -->
     <string name="feedback_send">ফিডব্যাক পাঠান</string>
     <string name="feedback_title">ফিডব্যাক পাঠান</string>

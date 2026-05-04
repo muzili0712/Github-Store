@@ -14,7 +14,8 @@
         "Dhizuku silent install — bypass OEM install prompts on Xiaomi, OPPO, vivo, Huawei devices via Device Owner.",
         "Obtainium import/export — bring your library over from Obtainium with one tap, or export to Obtainium any time.",
         "Add from starred — surface APK-shipping repos from your GitHub stars and jump straight into installing.",
-        "Installer attribution — set what installer name silent installs claim, so apps that gate on installer source can be coaxed into running."
+        "Installer attribution — set what installer name silent installs claim, so apps that gate on installer source can be coaxed into running.",
+        "Manual refresh on details — pull-to-refresh on Android, overflow-menu Refresh on every platform, Ctrl/Cmd+R on desktop."
       ]
     },
     {

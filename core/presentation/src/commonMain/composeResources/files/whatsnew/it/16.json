@@ -14,7 +14,8 @@
         "Installazione silenziosa con Dhizuku: bypassa i prompt di installazione OEM su Xiaomi, OPPO, vivo e Huawei tramite il proprietario del dispositivo.",
         "Import/Export Obtainium: porta la tua libreria da Obtainium con un tocco, o esporta verso il formato Obtainium quando vuoi.",
         "Aggiungi dalle stelle: scopri i repo che spediscono APK fra le tue stelle GitHub e vai dritto all'installazione.",
-        "Attribuzione installatore: scegli quale nome di installatore dichiarano le installazioni silenziose, così le app che filtrano sull'origine funzionano."
+        "Attribuzione installatore: scegli quale nome di installatore dichiarano le installazioni silenziose, così le app che filtrano sull'origine funzionano.",
+        "Aggiornamento manuale nei dettagli: trascina per aggiornare su Android, voce «Aggiorna» nel menu su tutte le piattaforme, Ctrl/Cmd+R su desktop."
       ]
     },
     {

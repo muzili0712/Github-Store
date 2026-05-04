@@ -880,6 +880,17 @@
     <string name="details_unlink_external_app_success">تم إلغاء الربط. سنقترح تطابقاً مجدداً في الفحص التالي.</string>
     <string name="details_unlink_external_app_failure">تعذّر إلغاء الربط — حاول مجدداً.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">تحديث</string>
+    <string name="details_refresh_cooldown">تحديث (%1$dث)</string>
+    <string name="details_refresh_more_options">خيارات إضافية</string>
+    <string name="details_refresh_snackbar_cooldown">لقد قمت بالتحديث للتو — حاول مرة أخرى خلال %1$d ثانية.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">خدمة التحديث مشغولة — حاول مرة أخرى خلال %1$d ثانية.</string>
+    <string name="details_refresh_snackbar_archived">هذا المستودع مؤرشف على GitHub.</string>
+    <string name="details_refresh_snackbar_not_found">لم يعد هذا المستودع موجوداً على GitHub.</string>
+    <string name="details_refresh_snackbar_upstream">تعذر التحديث. حاول مرة أخرى لاحقاً.</string>
+    <string name="details_refresh_snackbar_generic">فشل التحديث. حاول مرة أخرى.</string>
+
     <!-- Feedback feature -->
     <string name="feedback_send">إرسال ملاحظات</string>
     <string name="feedback_title">إرسال ملاحظات</string>

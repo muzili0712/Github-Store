@@ -933,6 +933,17 @@
     <string name="details_unlink_external_app_success">Unlinked. We'll re-suggest a match next scan.</string>
     <string name="details_unlink_external_app_failure">Couldn't unlink — try again.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">Refresh</string>
+    <string name="details_refresh_cooldown">Refresh (%1$ds)</string>
+    <string name="details_refresh_more_options">More actions</string>
+    <string name="details_refresh_snackbar_cooldown">You just refreshed this — try again in %1$ds.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">Refresh service is busy — try again in %1$ds.</string>
+    <string name="details_refresh_snackbar_archived">This repository is archived on GitHub.</string>
+    <string name="details_refresh_snackbar_not_found">This repository no longer exists on GitHub.</string>
+    <string name="details_refresh_snackbar_upstream">Couldn't refresh. Try again shortly.</string>
+    <string name="details_refresh_snackbar_generic">Refresh failed. Try again.</string>
+
     <!-- Tweaks feature - Feedback -->
     <string name="feedback_send">Send feedback</string>
     <string name="feedback_title">Send feedback</string>

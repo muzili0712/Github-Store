@@ -861,6 +861,17 @@
     <string name="details_unlink_external_app_success">Bağlantı kesildi. Bir sonraki taramada eşleşme önereceğiz.</string>
     <string name="details_unlink_external_app_failure">Bağlantı kesilemedi — tekrar deneyin.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">Yenile</string>
+    <string name="details_refresh_cooldown">Yenile (%1$dsn)</string>
+    <string name="details_refresh_more_options">Diğer seçenekler</string>
+    <string name="details_refresh_snackbar_cooldown">Az önce yenilediniz — %1$d sn sonra tekrar deneyin.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">Yenileme hizmeti meşgul — %1$d sn sonra tekrar deneyin.</string>
+    <string name="details_refresh_snackbar_archived">Bu depo GitHub\'da arşivlenmiş.</string>
+    <string name="details_refresh_snackbar_not_found">Bu depo artık GitHub\'da bulunmuyor.</string>
+    <string name="details_refresh_snackbar_upstream">Yenileme başarısız. Birazdan tekrar deneyin.</string>
+    <string name="details_refresh_snackbar_generic">Yenileme başarısız. Tekrar deneyin.</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

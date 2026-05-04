@@ -854,6 +854,17 @@
     <string name="details_unlink_external_app_success">연결 해제되었습니다. 다음 스캔에서 매칭을 다시 제안합니다.</string>
     <string name="details_unlink_external_app_failure">연결 해제에 실패했습니다 — 다시 시도하세요.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">새로 고침</string>
+    <string name="details_refresh_cooldown">새로 고침 (%1$d초)</string>
+    <string name="details_refresh_more_options">추가 옵션</string>
+    <string name="details_refresh_snackbar_cooldown">방금 새로 고쳤습니다 — %1$d초 후에 다시 시도하세요.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">새로 고침 서비스가 사용 중입니다 — %1$d초 후에 다시 시도하세요.</string>
+    <string name="details_refresh_snackbar_archived">이 저장소는 GitHub에서 보관 처리되었습니다.</string>
+    <string name="details_refresh_snackbar_not_found">이 저장소는 더 이상 GitHub에 존재하지 않습니다.</string>
+    <string name="details_refresh_snackbar_upstream">새로 고칠 수 없습니다. 잠시 후 다시 시도하세요.</string>
+    <string name="details_refresh_snackbar_generic">새로 고침 실패. 다시 시도하세요.</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

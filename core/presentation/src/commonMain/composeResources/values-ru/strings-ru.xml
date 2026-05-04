@@ -845,6 +845,17 @@
     <string name="details_unlink_external_app_success">Отвязано. При следующем сканировании мы предложим совпадение.</string>
     <string name="details_unlink_external_app_failure">Не удалось отвязать — попробуйте ещё раз.</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">Обновить</string>
+    <string name="details_refresh_cooldown">Обновить (%1$dс)</string>
+    <string name="details_refresh_more_options">Дополнительно</string>
+    <string name="details_refresh_snackbar_cooldown">Только что обновлено — повторите через %1$d с.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">Сервис обновления занят — повторите через %1$d с.</string>
+    <string name="details_refresh_snackbar_archived">Этот репозиторий заархивирован на GitHub.</string>
+    <string name="details_refresh_snackbar_not_found">Этот репозиторий больше не существует на GitHub.</string>
+    <string name="details_refresh_snackbar_upstream">Не удалось обновить. Повторите попытку позже.</string>
+    <string name="details_refresh_snackbar_generic">Ошибка обновления. Повторите попытку.</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->

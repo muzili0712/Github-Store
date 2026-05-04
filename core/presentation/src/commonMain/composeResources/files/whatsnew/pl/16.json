@@ -14,7 +14,8 @@
         "Cicha instalacja przez Dhizuku — pomijaj okna instalacji OEM na urządzeniach Xiaomi, OPPO, vivo i Huawei dzięki uprawnieniom właściciela urządzenia.",
         "Import/Eksport Obtainium — przenieś bibliotekę z Obtainium jednym dotknięciem albo wyeksportuj do formatu Obtainium kiedy chcesz.",
         "Dodaj z oznaczonych gwiazdką — zobacz, które z twoich oznaczonych repo GitHub publikują APK, i przejdź wprost do instalacji.",
-        "Atrybucja instalatora — ustaw nazwę instalatora, którą deklarują ciche instalacje, by aplikacje filtrujące po źródle instalacji działały."
+        "Atrybucja instalatora — ustaw nazwę instalatora, którą deklarują ciche instalacje, by aplikacje filtrujące po źródle instalacji działały.",
+        "Ręczne odświeżanie w szczegółach — pociągnij, aby odświeżyć na Androidzie, pozycja „Odśwież” w menu na każdej platformie, Ctrl/Cmd+R na pulpicie."
       ]
     },
     {

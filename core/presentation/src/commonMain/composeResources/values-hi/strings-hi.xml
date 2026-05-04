@@ -863,6 +863,17 @@
     <string name="details_unlink_external_app_success">अनलिंक हो गया। अगले स्कैन में हम फिर से मेल सुझाएंगे।</string>
     <string name="details_unlink_external_app_failure">अनलिंक नहीं हो सका — फिर कोशिश करें।</string>
 
+    <!-- Details manual refresh -->
+    <string name="details_refresh">रीफ़्रेश</string>
+    <string name="details_refresh_cooldown">रीफ़्रेश (%1$dसे)</string>
+    <string name="details_refresh_more_options">अधिक विकल्प</string>
+    <string name="details_refresh_snackbar_cooldown">अभी रीफ़्रेश किया — %1$d सेकंड बाद पुनः प्रयास करें।</string>
+    <string name="details_refresh_snackbar_budget_exhausted">रीफ़्रेश सेवा व्यस्त है — %1$d सेकंड बाद पुनः प्रयास करें।</string>
+    <string name="details_refresh_snackbar_archived">यह रिपॉज़िटरी GitHub पर संग्रहीत है।</string>
+    <string name="details_refresh_snackbar_not_found">यह रिपॉज़िटरी GitHub पर अब मौजूद नहीं है।</string>
+    <string name="details_refresh_snackbar_upstream">रीफ़्रेश नहीं हो सका। शीघ्र ही पुनः प्रयास करें।</string>
+    <string name="details_refresh_snackbar_generic">रीफ़्रेश विफल। पुनः प्रयास करें।</string>
+
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
          ═══════════════════════════════════════════════════════════════ -->
