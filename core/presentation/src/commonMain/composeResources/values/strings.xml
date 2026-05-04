@@ -206,7 +206,7 @@
     <string name="error_state_subtitle_offline">Check your connection and try again.</string>
     <string name="error_state_subtitle_rate_limit">GitHub or our backend hit a quota. Try again in a moment.</string>
     <string name="error_state_subtitle_not_found">The repository may be private, renamed, or deleted.</string>
-    <string name="error_state_subtitle_generic">We couldn\'t load this repo. Pull to retry below.</string>
+    <string name="error_state_subtitle_generic">We couldn\'t load this repo. Use the Retry button below.</string>
     <string name="retry">Retry</string>
     <string name="error_state_go_back">Go back</string>
     <string name="no_description">No description provided.</string>
