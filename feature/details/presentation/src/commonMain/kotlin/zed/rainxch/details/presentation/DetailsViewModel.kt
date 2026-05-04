@@ -2631,29 +2631,42 @@ class DetailsViewModel(
             try {
                 val refreshed = detailsRepository.refreshRepository(owner, name)
                 val releasesDeferred = async {
-                    runCatching {
+                    try {
                         detailsRepository.getAllReleases(
                             owner = owner,
                             repo = name,
                             defaultBranch = refreshed.defaultBranch,
                         )
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (t: Throwable) {
+                        logger.warn("Refresh: getAllReleases failed: ${t.message}")
+                        null
                     }
                 }
                 val statsDeferred = async {
-                    runCatching {
+                    try {
                         detailsRepository.getRepoStats(owner, name)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (t: Throwable) {
+                        logger.warn("Refresh: getRepoStats failed: ${t.message}")
+                        null
                     }
                 }
-                val releasesResult = releasesDeferred.await()
-                val statsResult = statsDeferred.await()
+                val freshReleases = releasesDeferred.await()
+                val freshStats = statsDeferred.await()
 
-                val freshReleases = releasesResult.getOrNull()
-                val freshStats = statsResult.getOrNull()
-
+                val previousSelected = _state.value.selectedRelease
                 val selectedRelease = freshReleases?.let { list ->
-                    list.firstOrNull { !it.isEffectivelyPreRelease() }
+                    val carried = previousSelected?.let { prev ->
+                        list.firstOrNull { it.id == prev.id }
+                            ?: list.firstOrNull { it.tagName == prev.tagName }
+                    }
+                    carried
+                        ?: list.firstOrNull { !it.isEffectivelyPreRelease() }
                         ?: list.firstOrNull()
-                } ?: _state.value.selectedRelease
+                } ?: previousSelected
 
                 val (installable, primary) = recomputeAssetsForRelease(
                     selectedRelease,
