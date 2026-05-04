@@ -2658,15 +2658,25 @@ class DetailsViewModel(
                 val freshStats = statsDeferred.await()
 
                 val previousSelected = _state.value.selectedRelease
-                val selectedRelease = freshReleases?.let { list ->
-                    val carried = previousSelected?.let { prev ->
+                val previousCategory = _state.value.selectedReleaseCategory
+                val carried = freshReleases?.let { list ->
+                    previousSelected?.let { prev ->
                         list.firstOrNull { it.id == prev.id }
                             ?: list.firstOrNull { it.tagName == prev.tagName }
                     }
+                }
+                val selectedRelease = freshReleases?.let { list ->
                     carried
                         ?: list.firstOrNull { !it.isEffectivelyPreRelease() }
                         ?: list.firstOrNull()
                 } ?: previousSelected
+
+                val resolvedCategory = when {
+                    carried != null -> previousCategory
+                    selectedRelease?.isEffectivelyPreRelease() == true -> ReleaseCategory.PRE_RELEASE
+                    selectedRelease != null -> ReleaseCategory.STABLE
+                    else -> previousCategory
+                }
 
                 val (installable, primary) = recomputeAssetsForRelease(
                     selectedRelease,
@@ -2684,6 +2694,7 @@ class DetailsViewModel(
                         allReleases = freshReleases ?: it.allReleases,
                         releasesLoadFailed = freshReleases == null && it.releasesLoadFailed,
                         selectedRelease = selectedRelease,
+                        selectedReleaseCategory = resolvedCategory,
                         stats = freshStats ?: it.stats,
                         installableAssets = installable,
                         primaryAsset = primary,
