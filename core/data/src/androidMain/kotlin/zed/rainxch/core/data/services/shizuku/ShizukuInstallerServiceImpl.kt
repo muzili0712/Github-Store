@@ -33,13 +33,21 @@ class ShizukuInstallerServiceImpl() : IShizukuInstallerService.Stub() {
         private fun logE(msg: String, e: Throwable? = null) = android.util.Log.e(TAG, msg, e)
     }
 
-    override fun installPackage(pfd: ParcelFileDescriptor, fileSize: Long): Int {
-        log("installPackage() called — fileSize=$fileSize")
+    override fun installPackage(
+        pfd: ParcelFileDescriptor,
+        fileSize: Long,
+        installerPackageName: String?,
+    ): Int {
+        log("installPackage() called — fileSize=$fileSize, installer=$installerPackageName")
         log("Process UID: ${android.os.Process.myUid()}, PID: ${android.os.Process.myPid()}")
 
         return try {
-            // Use "pm install -S <size>" which reads the APK from stdin
-            val command = arrayOf("pm", "install", "-S", fileSize.toString())
+            val safeInstaller = installerPackageName?.takeIf { it.isNotBlank() }
+            val command = if (safeInstaller != null) {
+                arrayOf("pm", "install", "-i", safeInstaller, "-S", fileSize.toString())
+            } else {
+                arrayOf("pm", "install", "-S", fileSize.toString())
+            }
             log("Executing: ${command.joinToString(" ")}")
 
             val process = Runtime.getRuntime().exec(command)

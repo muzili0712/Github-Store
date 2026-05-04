@@ -11,7 +11,9 @@ import zed.rainxch.core.data.services.dhizuku.DhizukuServiceManager
 import zed.rainxch.core.data.services.dhizuku.model.DhizukuStatus
 import zed.rainxch.core.data.services.shizuku.ShizukuServiceManager
 import zed.rainxch.core.data.services.shizuku.model.ShizukuStatus
+import kotlinx.coroutines.flow.first
 import zed.rainxch.core.domain.model.GithubAsset
+import zed.rainxch.core.domain.model.InstallerAttribution
 import zed.rainxch.core.domain.model.InstallerType
 import zed.rainxch.core.domain.model.SystemArchitecture
 import zed.rainxch.core.domain.repository.TweaksRepository
@@ -35,11 +37,20 @@ class SilentInstallerDispatcher(
     @Volatile
     private var cachedInstallerType: InstallerType = InstallerType.DEFAULT
 
+    @Volatile
+    private var cachedInstallerAttribution: InstallerAttribution = InstallerAttribution.SystemDefault
+
     fun observeInstallerPreference() {
         scope.launch {
             tweaksRepository.getInstallerType().collect { type ->
                 cachedInstallerType = type
                 Logger.d(TAG) { "Installer type changed to: $type" }
+            }
+        }
+        scope.launch {
+            tweaksRepository.getInstallerAttribution().collect { attribution ->
+                cachedInstallerAttribution = attribution
+                Logger.d(TAG) { "Installer attribution changed to: $attribution" }
             }
         }
     }
@@ -118,6 +129,7 @@ class SilentInstallerDispatcher(
 
     private suspend fun trySilentInstall(filePath: String, backend: Backend): InstallOutcome? {
         Logger.d(TAG) { "Routing install through $backend" }
+        val installerAttribution = cachedInstallerAttribution.resolvePackageName()
         return try {
             val result = withContext(Dispatchers.IO) {
                 val file = File(filePath)
@@ -126,11 +138,11 @@ class SilentInstallerDispatcher(
                     when (backend) {
                         Backend.SHIZUKU -> {
                             val service = shizukuServiceManager.getService() ?: return@use null
-                            service.installPackage(pfd, file.length())
+                            service.installPackage(pfd, file.length(), installerAttribution)
                         }
                         Backend.DHIZUKU -> {
                             val service = dhizukuServiceManager.getService() ?: return@use null
-                            service.installPackage(pfd, file.length(), expectedPkg, expectedVc)
+                            service.installPackage(pfd, file.length(), expectedPkg, expectedVc, installerAttribution)
                         }
                         Backend.DEFAULT -> null
                     }

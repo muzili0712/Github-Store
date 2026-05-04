@@ -36,8 +36,9 @@ class DhizukuInstallerServiceImpl() : IDhizukuInstallerService.Stub() {
         fileSize: Long,
         expectedPackageName: String?,
         expectedVersionCode: Long,
+        installerPackageName: String?,
     ): Int {
-        log("installPackage() called — fileSize=$fileSize, expected=$expectedPackageName@$expectedVersionCode")
+        log("installPackage() called — fileSize=$fileSize, expected=$expectedPackageName@$expectedVersionCode, installer=$installerPackageName")
         log("Process UID: ${android.os.Process.myUid()}, PID: ${android.os.Process.myPid()}")
 
         val ctx: Context = currentApplicationOrNull() ?: run {
@@ -51,6 +52,13 @@ class DhizukuInstallerServiceImpl() : IDhizukuInstallerService.Stub() {
             params.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED)
         }
         if (fileSize > 0) params.setSize(fileSize)
+        installerPackageName?.takeIf { it.isNotBlank() }?.let { name ->
+            try {
+                params.setInstallerPackageName(name)
+            } catch (e: Exception) {
+                logW("setInstallerPackageName($name) failed: ${e.message}")
+            }
+        }
 
         var sessionId = -1
         var session: PackageInstaller.Session? = null
