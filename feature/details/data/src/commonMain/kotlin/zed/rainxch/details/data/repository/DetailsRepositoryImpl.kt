@@ -47,6 +47,7 @@ class DetailsRepositoryImpl(
     private val localizationManager: LocalizationManager,
     private val logger: GitHubStoreLogger,
     private val cacheManager: CacheManager,
+    private val tokenStore: zed.rainxch.core.data.data_source.TokenStore,
 ) : DetailsRepository {
     private val httpClient: HttpClient get() = clientProvider.client
 
@@ -489,10 +490,10 @@ class DetailsRepositoryImpl(
             onSuccess = { backendRepo ->
                 logger.debug("Backend hit for repo stats $owner/$repo")
 
-                // Explicit try/catch (not runCatching) so cancellation
-                // propagates — runCatching would swallow it and break
-                // structured concurrency.
-                val githubInfo =
+                val hasToken = runCatching {
+                    tokenStore.currentToken()?.accessToken?.isNotBlank() == true
+                }.getOrDefault(false)
+                val githubInfo = if (hasToken) {
                     try {
                         httpClient.executeRequest<RepoInfoNetwork> {
                             get("/repos/$owner/$repo") {
@@ -505,6 +506,9 @@ class DetailsRepositoryImpl(
                         logger.debug("GitHub enrichment failed for $owner/$repo: ${e.message}")
                         null
                     }
+                } else {
+                    null
+                }
 
                 // If the GitHub enrichment didn't land, reuse the stale
                 // cached openIssues/license from a previous successful
