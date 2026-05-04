@@ -75,5 +75,7 @@ interface AppsRepository {
 
     suspend fun exportApps(): String
 
+    suspend fun exportObtainium(): String
+
     suspend fun importApps(json: String): ImportResult
 }
