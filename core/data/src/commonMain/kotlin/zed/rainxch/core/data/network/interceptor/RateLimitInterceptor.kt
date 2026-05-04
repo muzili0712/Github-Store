@@ -42,9 +42,13 @@ class RateLimitInterceptor(
                 val response = subject
 
                 parseRateLimitFromHeaders(response.headers)?.let { rateLimitInfo ->
-                    plugin.rateLimitRepository.updateRateLimit(rateLimitInfo)
+                    val isErrorResponse = response.status.value == 403 || response.status.value == 429
+                    plugin.rateLimitRepository.updateRateLimit(
+                        rateLimitInfo = rateLimitInfo,
+                        notifyExhausted = isErrorResponse && rateLimitInfo.isExhausted,
+                    )
 
-                    if (response.status.value == 403 && rateLimitInfo.isExhausted) {
+                    if (isErrorResponse && rateLimitInfo.isExhausted) {
                         throw RateLimitException(rateLimitInfo)
                     }
                 }

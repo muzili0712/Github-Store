@@ -8,7 +8,10 @@ interface RateLimitRepository {
     val rateLimitState: StateFlow<RateLimitInfo?>
     val rateLimitExhaustedEvent: SharedFlow<RateLimitInfo>
 
-    fun updateRateLimit(rateLimitInfo: RateLimitInfo?)
+    fun updateRateLimit(
+        rateLimitInfo: RateLimitInfo?,
+        notifyExhausted: Boolean = rateLimitInfo?.isExhausted == true,
+    )
 
     fun getCurrentRateLimit(): RateLimitInfo?
 
