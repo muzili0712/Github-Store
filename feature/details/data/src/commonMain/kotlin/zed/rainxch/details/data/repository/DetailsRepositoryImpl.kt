@@ -524,9 +524,9 @@ class DetailsRepositoryImpl(
             return cached
         }
 
-        // Try backend first — provides stars/forks/downloadCount.
-        // Backend doesn't have openIssues/license, so supplement with a
-        // best-effort GitHub call for those fields. If GitHub is blocked
+        // Try backend first — provides stars/forks/openIssues/downloadCount.
+        // Backend doesn't have license yet, so supplement with a best-effort
+        // GitHub call for that field when signed in. If GitHub is blocked
         // (e.g. for users in China), we still show the backend data.
         val backendResult = backendApiClient.getRepo(owner, repo)
         backendResult.fold(
@@ -553,19 +553,22 @@ class DetailsRepositoryImpl(
                     null
                 }
 
-                // If the GitHub enrichment didn't land, reuse the stale
-                // cached openIssues/license from a previous successful
-                // resolve. Prevents a transient GitHub failure from
-                // clobbering real values with zeros/nulls.
-                val stale = if (githubInfo == null) cacheManager.getStale<RepoStats>(cacheKey) else null
+                // Preserve last-known license when GitHub enrichment didn't
+                // land — backend doesn't supply license yet, so a transient
+                // failure would otherwise clobber a real value with null.
+                val staleLicense = if (githubInfo == null) {
+                    cacheManager.getStale<RepoStats>(cacheKey)?.license
+                } else {
+                    null
+                }
 
                 val result = RepoStats(
                     stars = backendRepo.stargazersCount,
                     forks = backendRepo.forksCount,
-                    openIssues = githubInfo?.openIssues ?: stale?.openIssues ?: 0,
+                    openIssues = backendRepo.openIssuesCount,
                     license = githubInfo?.license?.spdxId
                         ?: githubInfo?.license?.name
-                        ?: stale?.license,
+                        ?: staleLicense,
                     totalDownloads = backendRepo.downloadCount,
                 )
                 cacheManager.put(cacheKey, result, REPO_STATS)

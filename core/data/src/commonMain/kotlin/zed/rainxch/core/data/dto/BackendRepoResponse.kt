@@ -13,6 +13,7 @@ data class BackendRepoResponse(
     val htmlUrl: String,
     val stargazersCount: Int,
     val forksCount: Int,
+    val openIssuesCount: Int = 0,
     val language: String? = null,
     val topics: List<String> = emptyList(),
     val releasesUrl: String? = null,
