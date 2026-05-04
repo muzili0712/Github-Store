@@ -828,13 +828,13 @@
     <!-- Details manual refresh -->
     <string name="details_refresh">Actualiser</string>
     <string name="details_refresh_cooldown">Actualiser (%1$ds)</string>
-    <string name="details_refresh_more_options">Plus d\'options</string>
-    <string name="details_refresh_snackbar_cooldown">Vous venez d\'actualiser — réessayez dans %1$d s.</string>
-    <string name="details_refresh_snackbar_budget_exhausted">Service d\'actualisation occupé — réessayez dans %1$d s.</string>
+    <string name="details_refresh_more_options">Plus d'options</string>
+    <string name="details_refresh_snackbar_cooldown">Vous venez d'actualiser — réessayez dans %1$d s.</string>
+    <string name="details_refresh_snackbar_budget_exhausted">Service d'actualisation occupé — réessayez dans %1$d s.</string>
     <string name="details_refresh_snackbar_archived">Ce dépôt est archivé sur GitHub.</string>
-    <string name="details_refresh_snackbar_not_found">Ce dépôt n\'existe plus sur GitHub.</string>
-    <string name="details_refresh_snackbar_upstream">Échec de l\'actualisation. Réessayez bientôt.</string>
-    <string name="details_refresh_snackbar_generic">Échec de l\'actualisation. Réessayez.</string>
+    <string name="details_refresh_snackbar_not_found">Ce dépôt n'existe plus sur GitHub.</string>
+    <string name="details_refresh_snackbar_upstream">Échec de l'actualisation. Réessayez bientôt.</string>
+    <string name="details_refresh_snackbar_generic">Échec de l'actualisation. Réessayez.</string>
 
     <!-- ═══════════════════════════════════════════════════════════════
          Feedback feature
