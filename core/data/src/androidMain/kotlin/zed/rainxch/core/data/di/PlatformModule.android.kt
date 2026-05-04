@@ -86,6 +86,7 @@ actual val corePlatformModule =
         // silent backend (Shizuku, Dhizuku) or falls back to the standard installer.
         single<Installer> {
             SilentInstallerDispatcher(
+                androidContext = androidContext(),
                 androidInstaller = get<AndroidInstaller>(),
                 shizukuServiceManager = get(),
                 dhizukuServiceManager = get(),

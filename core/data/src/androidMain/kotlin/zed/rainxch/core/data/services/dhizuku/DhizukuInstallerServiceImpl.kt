@@ -31,8 +31,13 @@ class DhizukuInstallerServiceImpl() : IDhizukuInstallerService.Stub() {
         private fun logE(msg: String, e: Throwable? = null) = android.util.Log.e(TAG, msg, e)
     }
 
-    override fun installPackage(pfd: ParcelFileDescriptor, fileSize: Long): Int {
-        log("installPackage() called — fileSize=$fileSize")
+    override fun installPackage(
+        pfd: ParcelFileDescriptor,
+        fileSize: Long,
+        expectedPackageName: String?,
+        expectedVersionCode: Long,
+    ): Int {
+        log("installPackage() called — fileSize=$fileSize, expected=$expectedPackageName@$expectedVersionCode")
         log("Process UID: ${android.os.Process.myUid()}, PID: ${android.os.Process.myPid()}")
 
         val ctx: Context = currentApplicationOrNull() ?: run {
@@ -103,7 +108,7 @@ class DhizukuInstallerServiceImpl() : IDhizukuInstallerService.Stub() {
             val finished = latch.await(INSTALL_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             if (!finished) {
                 logE("install timed out after ${INSTALL_TIMEOUT_SECONDS}s — verifying package state")
-                if (verifyInstallSucceeded(ctx, installer, sessionId)) {
+                if (verifyInstallSucceeded(ctx, installer, sessionId, expectedPackageName, expectedVersionCode)) {
                     log("post-timeout verification confirmed install succeeded")
                     STATUS_SUCCESS
                 } else {
@@ -202,25 +207,39 @@ class DhizukuInstallerServiceImpl() : IDhizukuInstallerService.Stub() {
         ctx: Context,
         installer: PackageInstaller,
         sessionId: Int,
+        expectedPackageName: String?,
+        expectedVersionCode: Long,
     ): Boolean {
-        if (sessionId < 0) return false
-        val targetPackage = try {
-            installer.getSessionInfo(sessionId)?.appPackageName
-        } catch (e: Exception) {
-            logE("getSessionInfo() failed during verification", e)
-            null
-        } ?: return false
-        return isPackageInstalled(ctx, targetPackage)
+        val targetPackage = expectedPackageName?.takeIf { it.isNotBlank() }
+            ?: runCatching { installer.getSessionInfo(sessionId)?.appPackageName }
+                .onFailure { logE("getSessionInfo() failed during verification", it) }
+                .getOrNull()
+            ?: return false
+        val info = packageInfoOrNull(ctx, targetPackage) ?: return false
+        if (expectedVersionCode <= 0L) return true
+        val installedVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            info.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            info.versionCode.toLong()
+        }
+        val matches = installedVersion >= expectedVersionCode
+        if (!matches) {
+            logW("installed $targetPackage@$installedVersion does not match expected@$expectedVersionCode")
+        }
+        return matches
     }
 
-    private fun isPackageInstalled(ctx: Context, packageName: String): Boolean = try {
+    private fun isPackageInstalled(ctx: Context, packageName: String): Boolean =
+        packageInfoOrNull(ctx, packageName) != null
+
+    private fun packageInfoOrNull(ctx: Context, packageName: String): android.content.pm.PackageInfo? = try {
         ctx.packageManager.getPackageInfo(packageName, 0)
-        true
     } catch (_: android.content.pm.PackageManager.NameNotFoundException) {
-        false
+        null
     } catch (e: Exception) {
         logE("getPackageInfo($packageName) failed", e)
-        false
+        null
     }
 
     private fun currentApplicationOrNull(): Context? {

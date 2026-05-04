@@ -1,5 +1,6 @@
 package zed.rainxch.core.data.services.installer
 
+import android.content.Context
 import android.os.ParcelFileDescriptor
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ import zed.rainxch.core.domain.system.InstallerInfoExtractor
 import java.io.File
 
 class SilentInstallerDispatcher(
+    private val androidContext: Context,
     private val androidInstaller: Installer,
     private val shizukuServiceManager: ShizukuServiceManager,
     private val dhizukuServiceManager: DhizukuServiceManager,
@@ -119,6 +121,7 @@ class SilentInstallerDispatcher(
         return try {
             val result = withContext(Dispatchers.IO) {
                 val file = File(filePath)
+                val (expectedPkg, expectedVc) = readApkIdentity(filePath)
                 ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY).use { pfd ->
                     when (backend) {
                         Backend.SHIZUKU -> {
@@ -127,7 +130,7 @@ class SilentInstallerDispatcher(
                         }
                         Backend.DHIZUKU -> {
                             val service = dhizukuServiceManager.getService() ?: return@use null
-                            service.installPackage(pfd, file.length())
+                            service.installPackage(pfd, file.length(), expectedPkg, expectedVc)
                         }
                         Backend.DEFAULT -> null
                     }
@@ -148,6 +151,22 @@ class SilentInstallerDispatcher(
             Logger.e(TAG) { "$backend install exception, falling back: ${e.javaClass.simpleName}: ${e.message}" }
             null
         }
+    }
+
+    private fun readApkIdentity(filePath: String): Pair<String?, Long> {
+        val info = try {
+            androidContext.packageManager.getPackageArchiveInfo(filePath, 0)
+        } catch (e: Exception) {
+            Logger.w(TAG) { "getPackageArchiveInfo($filePath) failed: ${e.message}" }
+            null
+        } ?: return null to -1L
+        val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            info.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            info.versionCode.toLong()
+        }
+        return info.packageName to versionCode
     }
 
     private suspend fun silentUninstall(packageName: String, backend: Backend) {
