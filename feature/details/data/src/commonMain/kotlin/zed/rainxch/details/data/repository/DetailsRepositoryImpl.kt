@@ -26,6 +26,7 @@ import zed.rainxch.core.data.mappers.toDomain
 import zed.rainxch.core.data.mappers.toSummary
 import zed.rainxch.core.data.network.BackendApiClient
 import zed.rainxch.core.data.network.BackendException
+import zed.rainxch.core.data.network.shouldFallbackToGithubOrRethrow as sharedShouldFallback
 import zed.rainxch.core.data.network.GitHubClientProvider
 import zed.rainxch.core.data.network.executeRequest
 import zed.rainxch.core.data.services.LocalizationManager
@@ -78,11 +79,7 @@ class DetailsRepositoryImpl(
      *     doesn't help and only burns more quota.
      */
     private fun shouldFallbackToGithubOrRethrow(cause: Throwable): Boolean =
-        when (cause) {
-            is CancellationException -> throw cause
-            is BackendException -> cause.statusCode in 500..599
-            else -> true
-        }
+        sharedShouldFallback(cause)
 
     private fun BackendRepoResponse.toBackendSummary(): GithubRepoSummary = toSummary()
 
