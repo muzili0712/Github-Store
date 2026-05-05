@@ -37,14 +37,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.compose.Markdown
-import io.github.fletchmckee.liquid.LiquidState
-import io.github.fletchmckee.liquid.liquefiable
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.core.domain.model.GithubRelease
 import zed.rainxch.details.presentation.components.TranslationControls
 import zed.rainxch.details.presentation.model.TranslationState
-import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.details.presentation.utils.MarkdownImageTransformer
 import zed.rainxch.details.presentation.utils.rememberMarkdownColors
 import zed.rainxch.details.presentation.utils.rememberMarkdownTypography
@@ -53,7 +50,6 @@ import zed.rainxch.githubstore.core.presentation.res.*
 fun LazyListScope.whatsNew(
     release: GithubRelease,
     isExpanded: Boolean,
-    isLiquidGlassEnabled: Boolean,
     onToggleExpanded: () -> Unit,
     collapsedHeight: Dp,
     translationState: TranslationState,
@@ -62,8 +58,6 @@ fun LazyListScope.whatsNew(
     onToggleTranslation: () -> Unit,
 ) {
     item {
-        val liquidState = LocalTopbarLiquidState.current
-
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Spacer(Modifier.height(16.dp))
@@ -80,14 +74,6 @@ fun LazyListScope.whatsNew(
                 text = stringResource(Res.string.whats_new),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier =
-                    Modifier.then(
-                        if (isLiquidGlassEnabled) {
-                            Modifier.liquefiable(liquidState)
-                        } else {
-                            Modifier
-                        },
-                    ),
                 fontWeight = FontWeight.Bold,
             )
 
@@ -123,28 +109,12 @@ fun LazyListScope.whatsNew(
                         release.tagName,
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier =
-                            Modifier.then(
-                                if (isLiquidGlassEnabled) {
-                                    Modifier.liquefiable(liquidState)
-                                } else {
-                                    Modifier
-                                },
-                            ),
                     )
 
                     Text(
                         release.publishedAt.take(10),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier =
-                            Modifier.then(
-                                if (isLiquidGlassEnabled) {
-                                    Modifier.liquefiable(liquidState)
-                                } else {
-                                    Modifier
-                                },
-                            ),
                     )
                 }
             }
@@ -152,8 +122,6 @@ fun LazyListScope.whatsNew(
     }
 
     item {
-        val liquidState = LocalTopbarLiquidState.current
-
         Spacer(Modifier.height(12.dp))
 
         ExpandableMarkdownContent(
@@ -161,8 +129,6 @@ fun LazyListScope.whatsNew(
             release = release,
             collapsedHeight = collapsedHeight,
             isExpanded = isExpanded,
-            isLiquidGlassEnabled = isLiquidGlassEnabled,
-            liquidState = liquidState,
             onToggleExpanded = onToggleExpanded,
         )
     }
@@ -174,8 +140,6 @@ private fun ExpandableMarkdownContent(
     release: GithubRelease,
     collapsedHeight: Dp,
     isExpanded: Boolean,
-    isLiquidGlassEnabled: Boolean,
-    liquidState: LiquidState,
     onToggleExpanded: () -> Unit,
 ) {
     val displayContent =
@@ -227,13 +191,6 @@ private fun ExpandableMarkdownContent(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .then(
-                                    if (isLiquidGlassEnabled) {
-                                        Modifier.liquefiable(liquidState)
-                                    } else {
-                                        Modifier
-                                    },
-                                )
                                 .onGloballyPositioned { coordinates ->
                                     val measured = coordinates.size.height.toFloat()
                                     if (measured > contentHeightPx) {

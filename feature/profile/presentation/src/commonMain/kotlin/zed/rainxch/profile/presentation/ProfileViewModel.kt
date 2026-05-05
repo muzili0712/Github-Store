@@ -11,11 +11,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import zed.rainxch.core.domain.repository.TweaksRepository
 import zed.rainxch.profile.domain.repository.ProfileRepository
 
 class ProfileViewModel(
-    private val tweaksRepository: TweaksRepository,
     private val profileRepository: ProfileRepository,
 ) : ViewModel() {
     private var userProfileJob: Job? = null
@@ -28,7 +26,6 @@ class ProfileViewModel(
             .onStart {
                 if (!hasLoadedInitialData) {
                     observeLoggedInStatus()
-                    loadLiquidGlassEnabled()
 
                     hasLoadedInitialData = true
                 }
@@ -80,16 +77,6 @@ class ProfileViewModel(
                     _state.update { it.copy(userProfile = profile) }
                 }
             }
-    }
-
-    private fun loadLiquidGlassEnabled() {
-        viewModelScope.launch {
-            tweaksRepository.getLiquidGlassEnabled().collect { enabled ->
-                _state.update {
-                    it.copy(isLiquidGlassEnabled = enabled)
-                }
-            }
-        }
     }
 
     fun onAction(action: ProfileAction) {

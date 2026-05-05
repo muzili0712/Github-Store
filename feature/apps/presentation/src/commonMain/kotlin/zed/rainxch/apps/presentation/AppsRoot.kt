@@ -81,7 +81,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.coil3.CoilImage
-import io.github.fletchmckee.liquid.liquefiable
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.coroutines.launch
@@ -103,7 +102,6 @@ import zed.rainxch.apps.presentation.model.UpdateState
 import zed.rainxch.core.presentation.components.ExpressiveCard
 import zed.rainxch.core.presentation.components.ScrollbarContainer
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationHeight
-import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
 import zed.rainxch.core.presentation.locals.LocalScrollbarEnabled
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
@@ -225,7 +223,6 @@ fun AppsScreen(
     onAction: (AppsAction) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
-    val liquidState = LocalBottomNavigationLiquid.current
     val bottomNavHeight = LocalBottomNavigationHeight.current
     var showOverflowMenu by remember { mutableStateOf(false) }
     var showSortMenu by remember { mutableStateOf(false) }
@@ -377,15 +374,6 @@ fun AppsScreen(
                 modifier = Modifier.padding(bottomNavHeight + 16.dp),
             )
         },
-        modifier =
-            Modifier
-                .then(
-                    if (state.isLiquidGlassEnabled) {
-                        Modifier.liquefiable(liquidState)
-                    } else {
-                        Modifier
-                    },
-                ),
     ) { innerPadding ->
 
         // Link app bottom sheet
@@ -690,15 +678,6 @@ fun AppsScreen(
                                                 onDiscardPendingClick = {
                                                     onAction(AppsAction.OnDiscardPendingInstall(appItem.installedApp))
                                                 },
-                                                modifier =
-                                                    Modifier
-                                                        .then(
-                                                            if (state.isLiquidGlassEnabled) {
-                                                                Modifier.liquefiable(liquidState)
-                                                            } else {
-                                                                Modifier
-                                                            },
-                                                        ),
                                             )
                                         }
                                     }

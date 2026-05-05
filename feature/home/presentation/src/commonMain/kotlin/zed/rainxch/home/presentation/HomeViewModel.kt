@@ -70,7 +70,6 @@ class HomeViewModel(
                     observeInstalledApps()
                     observeFavourites()
                     observeStarredRepos()
-                    observeLiquidGlassEnabled()
                     observeSeenRepos()
                     observeDiscoveryPlatforms()
                     observeHideSeenEnabled()
@@ -553,16 +552,6 @@ class HomeViewModel(
             Platform.MACOS -> DiscoveryPlatform.Macos
             Platform.LINUX -> DiscoveryPlatform.Linux
         }
-
-    private fun observeLiquidGlassEnabled() {
-        viewModelScope.launch {
-            tweaksRepository.getLiquidGlassEnabled().collect { enabled ->
-                _state.update {
-                    it.copy(isLiquidGlassEnabled = enabled)
-                }
-            }
-        }
-    }
 
     private fun observeSeenRepos() {
         viewModelScope.launch {

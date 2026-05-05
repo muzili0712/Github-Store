@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import io.github.fletchmckee.liquid.liquefiable
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.details.presentation.DetailsAction
 import zed.rainxch.details.presentation.DetailsState
@@ -37,7 +36,6 @@ import zed.rainxch.details.presentation.components.SmartInstallButton
 import zed.rainxch.details.presentation.components.VersionPicker
 import zed.rainxch.details.presentation.components.VersionTypePicker
 import zed.rainxch.details.presentation.model.DownloadStage
-import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.githubstore.core.presentation.res.Res
 import zed.rainxch.githubstore.core.presentation.res.appmanager_description
 import zed.rainxch.githubstore.core.presentation.res.external_installer_description
@@ -51,8 +49,6 @@ fun LazyListScope.header(
     onAction: (DetailsAction) -> Unit,
 ) {
     item {
-        val liquidState = LocalTopbarLiquidState.current
-
         if (state.repository != null) {
             AppHeader(
                 author = state.userProfile,
@@ -61,14 +57,6 @@ fun LazyListScope.header(
                 installedApp = state.installedApp,
                 downloadStage = state.downloadStage,
                 downloadProgress = state.downloadProgressPercent,
-                modifier =
-                    Modifier.then(
-                        if (state.isLiquidGlassEnabled) {
-                            Modifier.liquefiable(liquidState)
-                        } else {
-                            Modifier
-                        },
-                    ),
             )
         }
     }
@@ -138,8 +126,6 @@ fun LazyListScope.header(
         }
 
         item {
-            val liquidState = LocalTopbarLiquidState.current
-
             // Inspect button only surfaces once the package is genuinely
             // installed on device (`isReallyInstalled()` filters out
             // pending-install rows whose `installedApp` is non-null but
@@ -168,7 +154,6 @@ fun LazyListScope.header(
                     SmartInstallButton(
                         isDownloading = state.isDownloading,
                         isInstalling = state.isInstalling,
-                        isLiquidGlassEnabled = state.isLiquidGlassEnabled,
                         progress = state.downloadProgressPercent,
                         primaryAsset = state.primaryAsset,
                         state = state,
@@ -218,14 +203,6 @@ fun LazyListScope.header(
                             modifier = Modifier.size(24.dp),
                         )
                     },
-                    modifier =
-                        Modifier.then(
-                            if (state.isLiquidGlassEnabled) {
-                                Modifier.liquefiable(liquidState)
-                            } else {
-                                Modifier
-                            },
-                        ),
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -255,14 +232,6 @@ fun LazyListScope.header(
                             modifier = Modifier.size(24.dp),
                         )
                     },
-                    modifier =
-                        Modifier.then(
-                            if (state.isLiquidGlassEnabled) {
-                                Modifier.liquefiable(liquidState)
-                            } else {
-                                Modifier
-                            },
-                        ),
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -292,14 +261,6 @@ fun LazyListScope.header(
                             modifier = Modifier.size(24.dp),
                         )
                     },
-                    modifier =
-                        Modifier.then(
-                            if (state.isLiquidGlassEnabled) {
-                                Modifier.liquefiable(liquidState)
-                            } else {
-                                Modifier
-                            },
-                        ),
                 )
             }
         }

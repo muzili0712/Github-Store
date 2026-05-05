@@ -32,23 +32,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.coil3.CoilImage
-import io.github.fletchmckee.liquid.liquefiable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.core.domain.model.GithubUserProfile
 import zed.rainxch.details.presentation.DetailsAction
-import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.githubstore.core.presentation.res.*
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 fun LazyListScope.author(
-    isLiquidGlassEnabled: Boolean,
     author: GithubUserProfile?,
     onAction: (DetailsAction) -> Unit,
 ) {
     item {
-        val liquidState = LocalTopbarLiquidState.current
-
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Spacer(Modifier.height(16.dp))
@@ -57,16 +52,7 @@ fun LazyListScope.author(
             text = stringResource(Res.string.author),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier =
-                Modifier
-                    .padding(bottom = 12.dp)
-                    .then(
-                        if (isLiquidGlassEnabled) {
-                            Modifier.liquefiable(liquidState)
-                        } else {
-                            Modifier
-                        },
-                    ),
+            modifier = Modifier.padding(bottom = 12.dp),
             fontWeight = FontWeight.Bold,
         )
 
@@ -96,14 +82,7 @@ fun LazyListScope.author(
                     modifier =
                         Modifier
                             .size(80.dp)
-                            .clip(CircleShape)
-                            .then(
-                                if (isLiquidGlassEnabled) {
-                                    Modifier.liquefiable(liquidState)
-                                } else {
-                                    Modifier
-                                },
-                            ),
+                            .clip(CircleShape),
                     loading = {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -123,14 +102,6 @@ fun LazyListScope.author(
                             text = it,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface,
-                            modifier =
-                                Modifier.then(
-                                    if (isLiquidGlassEnabled) {
-                                        Modifier.liquefiable(liquidState)
-                                    } else {
-                                        Modifier
-                                    },
-                                ),
                         )
                     }
 
@@ -142,14 +113,6 @@ fun LazyListScope.author(
                             maxLines = 2,
                             softWrap = false,
                             overflow = TextOverflow.Ellipsis,
-                            modifier =
-                                Modifier.then(
-                                    if (isLiquidGlassEnabled) {
-                                        Modifier.liquefiable(liquidState)
-                                    } else {
-                                        Modifier
-                                    },
-                                ),
                         )
                     }
 

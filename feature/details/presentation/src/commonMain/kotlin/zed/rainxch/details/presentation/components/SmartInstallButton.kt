@@ -36,15 +36,12 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.fletchmckee.liquid.liquefiable
-import io.github.fletchmckee.liquid.rememberLiquidState
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.core.domain.model.GithubAsset
 import zed.rainxch.core.domain.model.GithubUser
@@ -53,7 +50,6 @@ import zed.rainxch.details.presentation.DetailsAction
 import zed.rainxch.details.presentation.DetailsState
 import zed.rainxch.details.presentation.model.AttestationStatus
 import zed.rainxch.details.presentation.model.DownloadStage
-import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.details.presentation.utils.extractArchitectureFromName
 import zed.rainxch.details.presentation.utils.isExactArchitectureMatch
 import zed.rainxch.githubstore.core.presentation.res.Res
@@ -80,15 +76,12 @@ import zed.rainxch.githubstore.core.presentation.res.verifying
 fun SmartInstallButton(
     isDownloading: Boolean,
     isInstalling: Boolean,
-    isLiquidGlassEnabled: Boolean,
     progress: Int?,
     primaryAsset: GithubAsset?,
     onAction: (DetailsAction) -> Unit,
     modifier: Modifier = Modifier,
     state: DetailsState,
 ) {
-    val liquidState = LocalTopbarLiquidState.current
-
     val installedApp = state.installedApp
     val isInstalled = installedApp != null && !installedApp.isPendingInstall
     val isUpdateAvailable =
@@ -131,14 +124,7 @@ fun SmartInstallButton(
                     modifier =
                         Modifier
                             .weight(1f)
-                            .height(52.dp)
-                            .then(
-                                if (isLiquidGlassEnabled) {
-                                    Modifier.liquefiable(liquidState)
-                                } else {
-                                    Modifier
-                                },
-                            ),
+                            .height(52.dp),
                     colors =
                         CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -180,14 +166,7 @@ fun SmartInstallButton(
                     modifier =
                         Modifier
                             .weight(1f)
-                            .height(52.dp)
-                            .then(
-                                if (isLiquidGlassEnabled) {
-                                    Modifier.liquefiable(liquidState)
-                                } else {
-                                    Modifier
-                                },
-                            ),
+                            .height(52.dp),
                     colors =
                         CardDefaults.elevatedCardColors(
                             containerColor = MaterialTheme.colorScheme.primary,
@@ -299,12 +278,6 @@ fun SmartInstallButton(
                                     onAction(DetailsAction.InstallPrimary)
                                 }
                             }
-                        },
-                    ).then(
-                        if (isLiquidGlassEnabled) {
-                            Modifier.liquefiable(liquidState)
-                        } else {
-                            Modifier
                         },
                     ),
             colors =
@@ -666,35 +639,31 @@ private fun formatFileSize(bytes: Long): String =
 @Preview
 @Composable
 fun SmartInstallButtonDownloadingPreview() {
-    val liquidState = rememberLiquidState()
-    CompositionLocalProvider(LocalTopbarLiquidState provides liquidState) {
-        SmartInstallButton(
-            isDownloading = true,
-            isInstalling = false,
-            progress = 45,
-            primaryAsset =
-                GithubAsset(
-                    id = 1L,
-                    name = "app-arm64-v8a.apk",
-                    contentType = "application/vnd.android.package-archive",
-                    size = 50_000_000L,
-                    downloadUrl = "https://example.com/app.apk",
-                    uploader =
-                        GithubUser(
-                            id = 1L,
-                            login = "developer",
-                            avatarUrl = "",
-                            htmlUrl = "",
-                        ),
-                ),
-            onAction = {},
-            isLiquidGlassEnabled = true,
-            state =
-                DetailsState(
-                    isDownloading = true,
-                    downloadStage = DownloadStage.DOWNLOADING,
-                    downloadProgressPercent = 45,
-                ),
-        )
-    }
+    SmartInstallButton(
+        isDownloading = true,
+        isInstalling = false,
+        progress = 45,
+        primaryAsset =
+            GithubAsset(
+                id = 1L,
+                name = "app-arm64-v8a.apk",
+                contentType = "application/vnd.android.package-archive",
+                size = 50_000_000L,
+                downloadUrl = "https://example.com/app.apk",
+                uploader =
+                    GithubUser(
+                        id = 1L,
+                        login = "developer",
+                        avatarUrl = "",
+                        htmlUrl = "",
+                    ),
+            ),
+        onAction = {},
+        state =
+            DetailsState(
+                isDownloading = true,
+                downloadStage = DownloadStage.DOWNLOADING,
+                downloadProgressPercent = 45,
+            ),
+    )
 }

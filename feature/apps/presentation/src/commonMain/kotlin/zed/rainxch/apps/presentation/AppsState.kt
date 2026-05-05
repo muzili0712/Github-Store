@@ -26,7 +26,6 @@ data class AppsState(
     val isCheckingForUpdates: Boolean = false,
     val lastCheckedTimestamp: Long? = null,
     val isRefreshing: Boolean = false,
-    val isLiquidGlassEnabled: Boolean = true,
     /**
      * Whether the "Up to date" section is expanded. Default expanded so
      * users with no updates pending still see their apps. Collapses

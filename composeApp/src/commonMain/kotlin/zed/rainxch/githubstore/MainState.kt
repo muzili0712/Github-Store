@@ -13,6 +13,5 @@ data class MainState(
     val isAmoledTheme: Boolean = false,
     val isDarkTheme: Boolean? = null,
     val currentFontTheme: FontTheme = FontTheme.CUSTOM,
-    val isLiquidGlassEnabled: Boolean = true,
     val isScrollbarEnabled: Boolean = false,
 )

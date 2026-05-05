@@ -46,7 +46,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -75,9 +74,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.fletchmckee.liquid.LiquidState
-import io.github.fletchmckee.liquid.liquefiable
-import io.github.fletchmckee.liquid.rememberLiquidState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -87,7 +83,6 @@ import zed.rainxch.core.presentation.components.GithubStoreButton
 import zed.rainxch.core.presentation.components.RepositoryCard
 import zed.rainxch.core.presentation.components.ScrollbarContainer
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationHeight
-import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
 import zed.rainxch.core.presentation.locals.LocalScrollbarEnabled
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
@@ -98,7 +93,6 @@ import zed.rainxch.githubstore.core.presentation.res.*
 import zed.rainxch.home.domain.model.HomeCategory
 import zed.rainxch.home.domain.model.TopicCategory
 import zed.rainxch.home.presentation.components.LiquidGlassCategoryChips
-import zed.rainxch.home.presentation.locals.LocalHomeTopBarLiquid
 import zed.rainxch.home.presentation.utils.displayText
 import zed.rainxch.home.presentation.utils.icon
 
@@ -174,7 +168,6 @@ fun HomeScreen(
     onAction: (HomeAction) -> Unit,
     listState: LazyStaggeredGridState,
 ) {
-    val liquidState = LocalBottomNavigationLiquid.current
     val bottomNavHeight = LocalBottomNavigationHeight.current
 
     val shouldLoadMore by remember {
@@ -203,91 +196,74 @@ fun HomeScreen(
     // upward scroll re-reveals the header instantly. See #440.
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    val homeTopbarLiquidState = rememberLiquidState()
-
-    CompositionLocalProvider(
-        LocalHomeTopBarLiquid provides homeTopbarLiquidState,
-    ) {
-        Scaffold(
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackbarHost,
-                    modifier = Modifier.padding(bottom = bottomNavHeight + 16.dp),
-                )
-            },
-            containerColor = MaterialTheme.colorScheme.background,
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        ) { innerPadding ->
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(horizontal = 8.dp)
-                        .then(
-                            if (state.isLiquidGlassEnabled) {
-                                Modifier
-                                    .liquefiable(liquidState)
-                                    .liquefiable(homeTopbarLiquidState)
-                            } else {
-                                Modifier
-                            },
-                        ),
-            ) {
-                CollapsibleHeader(scrollBehavior = scrollBehavior) {
-                    HomeTopAppBar(
-                        selectedPlatforms = state.selectedPlatforms,
-                        onTogglePlatformPopup = {
-                            onAction(HomeAction.OnTogglePlatformPopup)
-                        },
-                    )
-
-                    FilterChips(state, onAction)
-
-                    TopicChips(
-                        selectedTopics = state.selectedTopics,
-                        onTopicSelected = { topic ->
-                            onAction(HomeAction.SwitchTopic(topic))
-                        },
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-
-                Box(Modifier.fillMaxSize()) {
-                    LoadingState(state)
-
-                    ErrorState(state, onAction)
-
-                    MainState(
-                        state = state,
-                        listState = listState,
-                        onAction = onAction,
-                        bottomNavLiquidState = liquidState,
-                        homeTopBarLiquidState = homeTopbarLiquidState,
-                    )
-                }
-            }
-
-            // Popup is hoisted out of the TopAppBar so its parent's
-            // `LayoutCoordinates` are the (stable) Scaffold root rather
-            // than the (resizing) icons row. Without this, every icon
-            // count change during multi-select toggles the parent layout
-            // pass and the Popup window briefly tears down and re-creates.
-            if (state.isPlatformPopupVisible) {
-                PlatformsPopup(
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHost,
+                modifier = Modifier.padding(bottom = bottomNavHeight + 16.dp),
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.background,
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    ) { innerPadding ->
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 8.dp),
+        ) {
+            CollapsibleHeader(scrollBehavior = scrollBehavior) {
+                HomeTopAppBar(
+                    selectedPlatforms = state.selectedPlatforms,
                     onTogglePlatformPopup = {
                         onAction(HomeAction.OnTogglePlatformPopup)
                     },
-                    onTogglePlatform = {
-                        onAction(HomeAction.TogglePlatform(it))
+                )
+
+                FilterChips(state, onAction)
+
+                TopicChips(
+                    selectedTopics = state.selectedTopics,
+                    onTopicSelected = { topic ->
+                        onAction(HomeAction.SwitchTopic(topic))
                     },
-                    onSelectAllPlatforms = {
-                        onAction(HomeAction.OnSelectAllPlatforms)
-                    },
-                    selectedPlatforms = state.selectedPlatforms,
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
+            Box(Modifier.fillMaxSize()) {
+                LoadingState(state)
+
+                ErrorState(state, onAction)
+
+                MainState(
+                    state = state,
+                    listState = listState,
+                    onAction = onAction,
                 )
             }
+        }
+
+        // Popup is hoisted out of the TopAppBar so its parent's
+        // `LayoutCoordinates` are the (stable) Scaffold root rather
+        // than the (resizing) icons row. Without this, every icon
+        // count change during multi-select toggles the parent layout
+        // pass and the Popup window briefly tears down and re-creates.
+        if (state.isPlatformPopupVisible) {
+            PlatformsPopup(
+                onTogglePlatformPopup = {
+                    onAction(HomeAction.OnTogglePlatformPopup)
+                },
+                onTogglePlatform = {
+                    onAction(HomeAction.TogglePlatform(it))
+                },
+                onSelectAllPlatforms = {
+                    onAction(HomeAction.OnSelectAllPlatforms)
+                },
+                selectedPlatforms = state.selectedPlatforms,
+            )
         }
     }
 }
@@ -419,8 +395,6 @@ private fun MainState(
     state: HomeState,
     listState: LazyStaggeredGridState,
     onAction: (HomeAction) -> Unit,
-    bottomNavLiquidState: LiquidState,
-    homeTopBarLiquidState: LiquidState,
 ) {
     val bottomNavHeight = LocalBottomNavigationHeight.current
     val visibleRepos by remember(state.repos, state.isHideSeenEnabled, state.seenRepoIds) {
@@ -470,18 +444,7 @@ private fun MainState(
                     onShareClick = {
                         onAction(HomeAction.OnShareClick(discoveryRepository.repository))
                     },
-                    modifier =
-                        Modifier
-                            .animateItem()
-                            .then(
-                                if (state.isLiquidGlassEnabled) {
-                                    Modifier
-                                        .liquefiable(bottomNavLiquidState)
-                                        .liquefiable(homeTopBarLiquidState)
-                                } else {
-                                    Modifier
-                                },
-                            ),
+                    modifier = Modifier.animateItem(),
                 )
             }
 
@@ -600,7 +563,6 @@ private fun FilterChips(
         onCategorySelected = { category ->
             onAction(HomeAction.SwitchCategory(category))
         },
-        isLiquidGlassEnabled = state.isLiquidGlassEnabled,
     )
 }
 
@@ -787,17 +749,11 @@ private class WindowAnchoredTopEndPopupPositionProvider(
 @Composable
 private fun Preview() {
     GithubStoreTheme {
-        val liquidState = rememberLiquidState()
-
-        CompositionLocalProvider(
-            value = LocalBottomNavigationLiquid provides liquidState,
-        ) {
-            HomeScreen(
-                state = HomeState(),
-                onAction = {},
-                snackbarHost = SnackbarHostState(),
-                listState = rememberLazyStaggeredGridState(),
-            )
-        }
+        HomeScreen(
+            state = HomeState(),
+            onAction = {},
+            snackbarHost = SnackbarHostState(),
+            listState = rememberLazyStaggeredGridState(),
+        )
     }
 }

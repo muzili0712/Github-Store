@@ -38,12 +38,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.compose.Markdown
 import com.mikepenz.markdown.model.ImageTransformer
-import io.github.fletchmckee.liquid.liquefiable
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.details.presentation.components.TranslationControls
 import zed.rainxch.details.presentation.model.TranslationState
-import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.details.presentation.utils.MarkdownImageTransformer
 import zed.rainxch.details.presentation.utils.rememberMarkdownColors
 import zed.rainxch.details.presentation.utils.rememberMarkdownTypography
@@ -53,7 +51,6 @@ fun LazyListScope.about(
     readmeMarkdown: String,
     readmeLanguage: String?,
     isExpanded: Boolean,
-    isLiquidGlassEnabled: Boolean,
     onToggleExpanded: () -> Unit,
     collapsedHeight: Dp,
     translationState: TranslationState,
@@ -62,8 +59,6 @@ fun LazyListScope.about(
     onToggleTranslation: () -> Unit,
 ) {
     item {
-        val liquidState = LocalTopbarLiquidState.current
-
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Spacer(Modifier.height(16.dp))
@@ -85,13 +80,6 @@ fun LazyListScope.about(
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.then(
-                        if (isLiquidGlassEnabled) {
-                            Modifier.liquefiable(liquidState)
-                        } else {
-                            Modifier
-                        },
-                    ),
                 )
 
                 readmeLanguage?.let {
@@ -99,13 +87,6 @@ fun LazyListScope.about(
                         text = it,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.then(
-                            if (isLiquidGlassEnabled) {
-                                Modifier.liquefiable(liquidState)
-                            } else {
-                                Modifier
-                            },
-                        ),
                     )
                 }
             }
@@ -120,8 +101,6 @@ fun LazyListScope.about(
     }
 
     item {
-        val liquidState = LocalTopbarLiquidState.current
-
         val displayContent =
             if (translationState.isShowingTranslation && translationState.translatedText != null) {
                 translationState.translatedText
@@ -144,13 +123,6 @@ fun LazyListScope.about(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .then(
-                            if (isLiquidGlassEnabled) {
-                                Modifier.liquefiable(liquidState)
-                            } else {
-                                Modifier
-                            },
-                        )
                         .animateContentSize(),
             )
         }

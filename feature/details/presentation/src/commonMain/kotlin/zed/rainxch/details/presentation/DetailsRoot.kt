@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
@@ -45,7 +44,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -71,10 +69,6 @@ import kotlinx.coroutines.delay
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.fletchmckee.liquid.LiquidState
-import io.github.fletchmckee.liquid.liquefiable
-import io.github.fletchmckee.liquid.liquid
-import io.github.fletchmckee.liquid.rememberLiquidState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -85,7 +79,6 @@ import zed.rainxch.core.presentation.locals.LocalScrollbarEnabled
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
 import zed.rainxch.core.presentation.utils.arrowKeyScroll
-import zed.rainxch.core.presentation.utils.isLiquidFrostAvailable
 import zed.rainxch.core.presentation.utils.isPullToRefreshSupported
 import zed.rainxch.core.domain.model.RefreshError
 import zed.rainxch.details.presentation.components.ApkInspectSheet
@@ -100,7 +93,6 @@ import zed.rainxch.details.presentation.components.sections.releaseChannel
 import zed.rainxch.details.presentation.components.sections.whatsNew
 import zed.rainxch.details.presentation.components.states.ErrorState
 import zed.rainxch.details.presentation.model.TranslationTarget
-import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.githubstore.core.presentation.res.Res
 import zed.rainxch.githubstore.core.presentation.res.add_to_favourites
 import zed.rainxch.githubstore.core.presentation.res.cancel
@@ -432,34 +424,20 @@ fun DetailsScreen(
     onAction: (DetailsAction) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
-    val liquidTopbarState = rememberLiquidState()
-
-    CompositionLocalProvider(
-        value = LocalTopbarLiquidState provides liquidTopbarState,
-    ) {
-        Scaffold(
-            topBar = {
-                DetailsTopbar(
-                    state = state,
-                    onAction = onAction,
-                    liquidTopbarState = liquidTopbarState,
-                )
-            },
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                )
-            },
-            containerColor = MaterialTheme.colorScheme.background,
-            modifier =
-                Modifier.then(
-                    if (state.isLiquidGlassEnabled) {
-                        Modifier.liquefiable(liquidTopbarState)
-                    } else {
-                        Modifier
-                    },
-                ),
-        ) { innerPadding ->
+    Scaffold(
+        topBar = {
+            DetailsTopbar(
+                state = state,
+                onAction = onAction,
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.background,
+    ) { innerPadding ->
 
             LanguagePicker(
                 isVisible = state.isLanguagePickerVisible,
@@ -542,14 +520,7 @@ fun DetailsScreen(
                                 } else {
                                     false
                                 }
-                            }
-                            .then(
-                                if (state.isLiquidGlassEnabled) {
-                                    Modifier.liquefiable(liquidTopbarState)
-                                } else {
-                                    Modifier
-                                },
-                            ).padding(innerPadding)
+                            }.padding(innerPadding)
 
                     PullToRefreshHost(
                         enabled = pullEnabled,
@@ -569,7 +540,6 @@ fun DetailsScreen(
 
                     state.stats?.let { stats ->
                         stats(
-                            isLiquidGlassEnabled = state.isLiquidGlassEnabled,
                             repoStats = stats,
                         )
                     }
@@ -584,7 +554,6 @@ fun DetailsScreen(
                             whatsNew(
                                 release = release,
                                 isExpanded = state.isWhatsNewExpanded,
-                                isLiquidGlassEnabled = state.isLiquidGlassEnabled,
                                 onToggleExpanded = { onAction(DetailsAction.ToggleWhatsNewExpanded) },
                                 collapsedHeight = collapsedSectionHeight,
                                 translationState = state.whatsNewTranslation,
@@ -605,7 +574,6 @@ fun DetailsScreen(
                                 readmeMarkdown = state.readmeMarkdown,
                                 readmeLanguage = state.readmeLanguage,
                                 isExpanded = state.isAboutExpanded,
-                                isLiquidGlassEnabled = state.isLiquidGlassEnabled,
                                 onToggleExpanded = { onAction(DetailsAction.ToggleAboutExpanded) },
                                 collapsedHeight = collapsedSectionHeight,
                                 translationState = state.aboutTranslation,
@@ -626,7 +594,6 @@ fun DetailsScreen(
                                 readmeMarkdown = state.readmeMarkdown,
                                 readmeLanguage = state.readmeLanguage,
                                 isExpanded = state.isAboutExpanded,
-                                isLiquidGlassEnabled = state.isLiquidGlassEnabled,
                                 onToggleExpanded = { onAction(DetailsAction.ToggleAboutExpanded) },
                                 collapsedHeight = collapsedSectionHeight,
                                 translationState = state.aboutTranslation,
@@ -646,7 +613,6 @@ fun DetailsScreen(
                             whatsNew(
                                 release = release,
                                 isExpanded = state.isWhatsNewExpanded,
-                                isLiquidGlassEnabled = state.isLiquidGlassEnabled,
                                 onToggleExpanded = { onAction(DetailsAction.ToggleWhatsNewExpanded) },
                                 collapsedHeight = collapsedSectionHeight,
                                 translationState = state.whatsNewTranslation,
@@ -671,7 +637,6 @@ fun DetailsScreen(
 
                     state.userProfile?.let { userProfile ->
                         author(
-                            isLiquidGlassEnabled = state.isLiquidGlassEnabled,
                             author = userProfile,
                             onAction = onAction,
                         )
@@ -685,7 +650,6 @@ fun DetailsScreen(
                 }
             }
         }
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -714,7 +678,6 @@ private fun PullToRefreshHost(
 private fun DetailsTopbar(
     state: DetailsState,
     onAction: (DetailsAction) -> Unit,
-    liquidTopbarState: LiquidState,
 ) {
     TopAppBar(
         title = { },
@@ -862,19 +825,7 @@ private fun DetailsTopbar(
                         0.5f to MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
                         1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
                     ),
-                ).then(
-                    if (state.isLiquidGlassEnabled && isLiquidFrostAvailable()) {
-                        Modifier.liquid(liquidTopbarState) {
-                            this.shape = CutCornerShape(0.dp)
-                            this.frost = 5.dp
-                            this.curve = .25f
-                            this.refraction = .05f
-                            this.dispersion = .1f
-                        }
-                    } else {
-                        Modifier.background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    },
-                ),
+                ).background(MaterialTheme.colorScheme.surfaceContainerHighest),
     )
 }
 
