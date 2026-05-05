@@ -36,7 +36,8 @@
         "L’aggiornamento automatico non lascia più app bloccate su «Preparazione all’installazione».",
         "Il desktop ora si fida dei certificati radice installati dal sistema — Watt Toolkit, FastGithub, Fiddler e i proxy MITM aziendali funzionano senza manovre con keytool.",
         "L’avvio dell’installer su Windows non fallisce più per account con nomi utente non ASCII o nomi file insoliti.",
-        "Effetto vetro liquido rimosso — le icone in modalità scura potevano diventare invisibili su sfondi trasparenti. Interfaccia più pulita e con maggior contrasto ovunque."
+        "Effetto vetro liquido rimosso — le icone in modalità scura potevano diventare invisibili su sfondi trasparenti. Interfaccia più pulita e con maggior contrasto ovunque.",
+        "Lo store non segnala più un aggiornamento disponibile per sé stesso dopo che lo hai già aggiornato."
       ]
     }
   ]

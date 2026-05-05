@@ -36,7 +36,8 @@
         "Self-update no longer leaves apps stuck on \"Preparing to install\".",
         "Desktop now trusts OS-installed root certificates — Watt Toolkit, FastGithub, Fiddler, and corporate MITM proxies just work without keytool gymnastics.",
         "Windows installer launch no longer fails on accounts with non-ASCII usernames or unusual filename characters.",
-        "Liquid Glass effect removed — icons in dark mode could become invisible against transparent backgrounds. Cleaner, higher-contrast UI everywhere."
+        "Liquid Glass effect removed — icons in dark mode could become invisible against transparent backgrounds. Cleaner, higher-contrast UI everywhere.",
+        "Store no longer claims an update is available for itself after you've already updated it."
       ]
     }
   ]
