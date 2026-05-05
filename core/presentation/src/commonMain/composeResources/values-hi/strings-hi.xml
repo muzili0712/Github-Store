@@ -83,6 +83,7 @@
     <string name="sort_most_stars">सबसे अधिक स्टार</string>
     <string name="sort_most_forks">सबसे अधिक फोर्क्स</string>
     <string name="sort_best_match">सबसे अच्छा मिलान</string>
+    <string name="sort_recently_released">हाल ही में रिलीज़</string>
 
     <string name="sort_order_descending">अवरोही</string>
     <string name="sort_order_ascending">आरोही</string>

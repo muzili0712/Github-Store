@@ -16,7 +16,7 @@
         "Yıldızlananlardan ekle — GitHub'da yıldızladıklarınız arasından APK gönderenleri görüp doğrudan kuruluma geçin.",
         "Yükleyici atfı — sessiz kurulumların hangi yükleyici adını taşıyacağını ayarlayın; kurulum kaynağını kontrol eden uygulamalar yine çalışsın.",
         "Detaylar ekranında manuel yenileme — Android'de aşağı çek-yenile, her platformda taşma menüsünde 'Yenile' seçeneği, masaüstünde Ctrl/Cmd+R.",
-        "Arama artık 'Yeni Güncellenmiş' sırasıyla sıralanabiliyor — en yeni kararlı sürümlere sahip depoları önce görün."
+        "Arama artık 'Yeni Güncellenmiş' ve 'Yeni Yayımlanmış' sırasıyla sıralanabiliyor — taze etkinliği veya en yeni kararlı sürümleri olan depoları önce görün."
       ]
     },
     {
@@ -24,7 +24,8 @@
       "bullets": [
         "Manuel yeniden tarama, cihazdaki tüm GitHub tipi uygulamaları görünür kılıyor.",
         "Daha sağlam kimlik doğrulama: geçici 401 yanıtları artık yanlışlıkla oturumu kapatmıyor.",
-        "Açık konu sayısı artık oturum açmamış kullanıcılar dahil herkese gösteriliyor — backend'den geliyor, GitHub kotası harcamıyor."
+        "Açık konu sayısı artık oturum açmamış kullanıcılar dahil herkese gösteriliyor — backend'den geliyor, GitHub kotası harcamıyor.",
+        "Lisans artık oturum durumundan bağımsız olarak her depo için gösteriliyor — backend'den geliyor, Detayları açarken GitHub kotası harcanmıyor."
       ]
     },
     {

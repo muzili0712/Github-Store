@@ -68,6 +68,7 @@
     <string name="sort_most_stars">Más estrellas</string>
     <string name="sort_most_forks">Más forks</string>
     <string name="sort_best_match">Mejor coincidencia</string>
+    <string name="sort_recently_released">Lanzados recientemente</string>
 
     <string name="sort_order_descending">Descendente</string>
     <string name="sort_order_ascending">Ascendente</string>

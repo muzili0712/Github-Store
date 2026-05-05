@@ -68,6 +68,7 @@
     <string name="sort_most_stars">Le plus d’étoiles</string>
     <string name="sort_most_forks">Le plus de forks</string>
     <string name="sort_best_match">Meilleure correspondance</string>
+    <string name="sort_recently_released">Récemment publiés</string>
 
     <string name="sort_order_descending">Décroissant</string>
     <string name="sort_order_ascending">Croissant</string>

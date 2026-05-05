@@ -68,6 +68,7 @@
     <string name="sort_most_stars">スター数順</string>
     <string name="sort_most_forks">フォーク数順</string>
     <string name="sort_best_match">最適な一致</string>
+    <string name="sort_recently_released">最近リリース</string>
 
     <string name="sort_order_descending">降順</string>
     <string name="sort_order_ascending">昇順</string>

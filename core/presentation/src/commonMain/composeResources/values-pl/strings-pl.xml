@@ -69,6 +69,7 @@
     <string name="sort_most_stars">Najwięcej gwiazdek</string>
     <string name="sort_most_forks">Najwięcej forków</string>
     <string name="sort_best_match">Najlepsze dopasowanie</string>
+    <string name="sort_recently_released">Niedawno wydane</string>
 
     <string name="sort_order_descending">Malejąco</string>
     <string name="sort_order_ascending">Rosnąco</string>

@@ -82,6 +82,7 @@
     <string name="sort_most_stars">En Çok Yıldız</string>
     <string name="sort_most_forks">En Çok Fork</string>
     <string name="sort_best_match">En İyi Eşleşme</string>
+    <string name="sort_recently_released">Yeni Yayımlanmış</string>
 
     <string name="sort_order_descending">Azalan</string>
     <string name="sort_order_ascending">Artan</string>

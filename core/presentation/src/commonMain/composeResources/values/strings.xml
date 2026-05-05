@@ -86,6 +86,7 @@
     <string name="sort_most_stars">Most Stars</string>
     <string name="sort_most_forks">Most Forks</string>
     <string name="sort_best_match">Best Match</string>
+    <string name="sort_recently_released">Recently Released</string>
 
     <string name="sort_order_descending">Descending</string>
     <string name="sort_order_ascending">Ascending</string>

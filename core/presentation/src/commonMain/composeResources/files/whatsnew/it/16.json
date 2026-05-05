@@ -16,7 +16,7 @@
         "Aggiungi dalle stelle: scopri i repo che spediscono APK fra le tue stelle GitHub e vai dritto all'installazione.",
         "Attribuzione installatore: scegli quale nome di installatore dichiarano le installazioni silenziose, così le app che filtrano sull'origine funzionano.",
         "Aggiornamento manuale nei dettagli: trascina per aggiornare su Android, voce «Aggiorna» nel menu su tutte le piattaforme, Ctrl/Cmd+R su desktop.",
-        "La ricerca può ora ordinare per «Aggiornati di recente» — trova prima i repo con le release stabili più recenti."
+        "La ricerca può ora ordinare per «Aggiornati di recente» e «Rilasciati di recente» — trova prima i repo con attività fresca o release stabili più recenti."
       ]
     },
     {
@@ -24,7 +24,8 @@
       "bullets": [
         "La rilevazione manuale mostra tutte le app di tipo GitHub presenti sul dispositivo.",
         "Gestione dell’autenticazione più solida: i 401 transitori non causano più disconnessioni indebite.",
-        "Il conteggio delle issue aperte ora è visibile a tutti, anche agli utenti non autenticati — arriva dal backend, senza costi di quota GitHub."
+        "Il conteggio delle issue aperte ora è visibile a tutti, anche agli utenti non autenticati — arriva dal backend, senza costi di quota GitHub.",
+        "La licenza ora è mostrata per ogni repo indipendentemente dallo stato di accesso — arriva dal backend, senza costi di quota GitHub all’apertura dei Dettagli."
       ]
     },
     {

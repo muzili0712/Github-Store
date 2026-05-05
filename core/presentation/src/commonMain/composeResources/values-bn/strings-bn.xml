@@ -83,6 +83,7 @@
     <string name="sort_most_stars">সবচেয়ে বেশি স্টার</string>
     <string name="sort_most_forks">সবচেয়ে বেশি ফর্ক</string>
     <string name="sort_best_match">সেরা মিল</string>
+    <string name="sort_recently_released">সাম্প্রতিক রিলিজ</string>
 
     <string name="sort_order_descending">অধোগামী</string>
     <string name="sort_order_ascending">ঊর্ধ্বগামী</string>

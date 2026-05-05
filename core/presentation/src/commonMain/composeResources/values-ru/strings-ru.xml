@@ -68,6 +68,7 @@
     <string name="sort_most_stars">Больше звёзд</string>
     <string name="sort_most_forks">Больше форков</string>
     <string name="sort_best_match">Лучшее совпадение</string>
+    <string name="sort_recently_released">Недавно выпущенные</string>
 
     <string name="sort_order_descending">По убыванию</string>
     <string name="sort_order_ascending">По возрастанию</string>

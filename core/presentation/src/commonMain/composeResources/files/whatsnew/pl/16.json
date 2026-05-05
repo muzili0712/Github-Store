@@ -16,7 +16,7 @@
         "Dodaj z oznaczonych gwiazdką — zobacz, które z twoich oznaczonych repo GitHub publikują APK, i przejdź wprost do instalacji.",
         "Atrybucja instalatora — ustaw nazwę instalatora, którą deklarują ciche instalacje, by aplikacje filtrujące po źródle instalacji działały.",
         "Ręczne odświeżanie w szczegółach — pociągnij, aby odświeżyć na Androidzie, pozycja „Odśwież” w menu na każdej platformie, Ctrl/Cmd+R na pulpicie.",
-        "Wyszukiwarka sortuje teraz po „Ostatnio zaktualizowane” — najpierw repozytoria z najświeższymi stabilnymi wydaniami."
+        "Wyszukiwarka sortuje teraz po „Ostatnio zaktualizowane” i „Niedawno wydane” — najpierw repozytoria z świeżą aktywnością albo najświeższymi stabilnymi wydaniami."
       ]
     },
     {
@@ -24,7 +24,8 @@
       "bullets": [
         "Ręczne ponowne skanowanie pokazuje wszystkie aplikacje z GitHuba obecne na urządzeniu.",
         "Stabilniejsza obsługa autoryzacji — przejściowe 401 nie powodują już fałszywych wylogowań.",
-        "Liczba otwartych zgłoszeń jest teraz pokazywana wszystkim, także użytkownikom niezalogowanym — pochodzi z backendu, bez kosztów limitu GitHuba."
+        "Liczba otwartych zgłoszeń jest teraz pokazywana wszystkim, także użytkownikom niezalogowanym — pochodzi z backendu, bez kosztów limitu GitHuba.",
+        "Licencja jest teraz pokazywana dla każdego repo niezależnie od stanu zalogowania — pochodzi z backendu, bez kosztów limitu GitHuba przy otwieraniu Szczegółów."
       ]
     },
     {

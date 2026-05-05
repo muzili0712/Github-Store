@@ -70,6 +70,7 @@
     <string name="sort_most_stars">最多星标</string>
     <string name="sort_most_forks">最多分叉</string>
     <string name="sort_best_match">最佳匹配</string>
+    <string name="sort_recently_released">最新发布</string>
 
     <string name="sort_order_descending">降序</string>
     <string name="sort_order_ascending">升序</string>

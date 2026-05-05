@@ -83,6 +83,7 @@
     <string name="sort_most_stars">الأكثر نجوماً</string>
     <string name="sort_most_forks">الأكثر تفرعاً</string>
     <string name="sort_best_match">الأفضل تطابقاً</string>
+    <string name="sort_recently_released">الأحدث إصداراً</string>
 
     <string name="sort_order_descending">تنازلي</string>
     <string name="sort_order_ascending">تصاعدي</string>

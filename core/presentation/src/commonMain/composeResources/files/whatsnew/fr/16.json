@@ -16,7 +16,7 @@
         "Ajouter depuis les étoiles : repérez parmi vos repos étoilés sur GitHub ceux qui livrent un APK, puis installez-les directement.",
         "Attribution de l’installateur : choisissez le nom d’installateur que les installations silencieuses revendiquent, pour que les apps qui filtrent par source d’installation fonctionnent.",
         "Actualisation manuelle dans les détails : tirer pour actualiser sur Android, entrée « Actualiser » dans le menu sur toutes les plateformes, Ctrl/Cmd+R sur le bureau.",
-        "La recherche peut désormais trier par « Récemment mis à jour » — trouvez d’abord les dépôts avec les releases stables les plus récentes."
+        "La recherche peut désormais trier par « Récemment mis à jour » et « Récemment publiés » — trouvez d’abord les dépôts avec une activité récente ou les releases stables les plus récentes."
       ]
     },
     {
@@ -24,7 +24,8 @@
       "bullets": [
         "Le rescan manuel fait remonter toutes les apps de type GitHub présentes sur l’appareil.",
         "Gestion d’authentification renforcée : les 401 transitoires ne déconnectent plus à tort.",
-        "Le nombre d’issues ouvertes s’affiche désormais pour tout le monde, y compris les utilisateurs déconnectés — fourni par le backend, sans coût de quota GitHub."
+        "Le nombre d’issues ouvertes s’affiche désormais pour tout le monde, y compris les utilisateurs déconnectés — fourni par le backend, sans coût de quota GitHub.",
+        "La licence s’affiche désormais pour chaque dépôt, peu importe l’état de connexion — fournie par le backend, sans coût de quota GitHub à l’ouverture des Détails."
       ]
     },
     {
