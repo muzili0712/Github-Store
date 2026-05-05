@@ -22,7 +22,8 @@
       "type": "IMPROVED",
       "bullets": [
         "La rilevazione manuale mostra tutte le app di tipo GitHub presenti sul dispositivo.",
-        "Gestione dell’autenticazione più solida: i 401 transitori non causano più disconnessioni indebite."
+        "Gestione dell’autenticazione più solida: i 401 transitori non causano più disconnessioni indebite.",
+        "Il conteggio delle issue aperte ora è visibile a tutti, anche agli utenti non autenticati — arriva dal backend, senza costi di quota GitHub."
       ]
     },
     {

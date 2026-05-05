@@ -22,7 +22,8 @@
       "type": "IMPROVED",
       "bullets": [
         "El reescaneo manual muestra todas las apps tipo GitHub presentes en el dispositivo.",
-        "Mejor manejo de autenticación: los 401 transitorios ya no provocan cierres de sesión espurios."
+        "Mejor manejo de autenticación: los 401 transitorios ya no provocan cierres de sesión espurios.",
+        "El número de incidencias abiertas ahora se muestra a todos, incluidos los usuarios sin sesión — viene del backend, sin coste de cuota de GitHub."
       ]
     },
     {

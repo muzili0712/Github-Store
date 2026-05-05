@@ -22,7 +22,8 @@
       "type": "IMPROVED",
       "bullets": [
         "Manual rescan surfaces every GitHub-style app on device.",
-        "Tighter auth handling — transient 401s no longer trigger spurious sign-outs."
+        "Tighter auth handling — transient 401s no longer trigger spurious sign-outs.",
+        "Open-issues count now shown to everyone, including signed-out users — the count now comes from the backend."
       ]
     },
     {

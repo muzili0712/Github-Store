@@ -22,7 +22,8 @@
       "type": "IMPROVED",
       "bullets": [
         "Le rescan manuel fait remonter toutes les apps de type GitHub présentes sur l’appareil.",
-        "Gestion d’authentification renforcée : les 401 transitoires ne déconnectent plus à tort."
+        "Gestion d’authentification renforcée : les 401 transitoires ne déconnectent plus à tort.",
+        "Le nombre d’issues ouvertes s’affiche désormais pour tout le monde, y compris les utilisateurs déconnectés — fourni par le backend, sans coût de quota GitHub."
       ]
     },
     {

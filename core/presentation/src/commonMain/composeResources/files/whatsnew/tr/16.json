@@ -22,7 +22,8 @@
       "type": "IMPROVED",
       "bullets": [
         "Manuel yeniden tarama, cihazdaki tüm GitHub tipi uygulamaları görünür kılıyor.",
-        "Daha sağlam kimlik doğrulama: geçici 401 yanıtları artık yanlışlıkla oturumu kapatmıyor."
+        "Daha sağlam kimlik doğrulama: geçici 401 yanıtları artık yanlışlıkla oturumu kapatmıyor.",
+        "Açık konu sayısı artık oturum açmamış kullanıcılar dahil herkese gösteriliyor — backend'den geliyor, GitHub kotası harcamıyor."
       ]
     },
     {

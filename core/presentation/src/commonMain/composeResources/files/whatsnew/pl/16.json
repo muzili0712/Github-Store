@@ -22,7 +22,8 @@
       "type": "IMPROVED",
       "bullets": [
         "Ręczne ponowne skanowanie pokazuje wszystkie aplikacje z GitHuba obecne na urządzeniu.",
-        "Stabilniejsza obsługa autoryzacji — przejściowe 401 nie powodują już fałszywych wylogowań."
+        "Stabilniejsza obsługa autoryzacji — przejściowe 401 nie powodują już fałszywych wylogowań.",
+        "Liczba otwartych zgłoszeń jest teraz pokazywana wszystkim, także użytkownikom niezalogowanym — pochodzi z backendu, bez kosztów limitu GitHuba."
       ]
     },
     {
