@@ -31,7 +31,8 @@
       "bullets": [
         "Las descargas multi-origen ya no se sobrescriben entre sí.",
         "Las instalaciones con respaldo Shizuku ya no marcan apps como «instaladas» antes de tiempo.",
-        "La auto-actualización ya no deja apps atascadas en «Preparando para instalar»."
+        "La auto-actualización ya no deja apps atascadas en «Preparando para instalar».",
+        "El escritorio ahora confía en los certificados raíz instalados en el sistema — Watt Toolkit, FastGithub, Fiddler y proxies MITM corporativos funcionan sin tener que usar keytool."
       ]
     }
   ]

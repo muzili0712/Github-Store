@@ -31,7 +31,8 @@
       "bullets": [
         "Pobierania z wielu źródeł nie nadpisują już swoich plików APK.",
         "Instalacje z trybem awaryjnym Shizuku nie oznaczają już aplikacji jako „zainstalowanych” przedwcześnie.",
-        "Auto-aktualizacja nie zostawia już aplikacji w stanie „Przygotowywanie instalacji”."
+        "Auto-aktualizacja nie zostawia już aplikacji w stanie „Przygotowywanie instalacji”.",
+        "Wersja desktopowa ufa teraz certyfikatom głównym zainstalowanym w systemie — Watt Toolkit, FastGithub, Fiddler i firmowe proxy MITM działają bez kombinowania z keytool."
       ]
     }
   ]

@@ -31,7 +31,8 @@
       "bullets": [
         "Les téléchargements multi-source ne s’écrasent plus entre eux.",
         "Les installations en repli Shizuku ne marquent plus les apps comme « installées » trop tôt.",
-        "L’auto-mise à jour ne laisse plus d’apps bloquées sur « Préparation de l’installation »."
+        "L’auto-mise à jour ne laisse plus d’apps bloquées sur « Préparation de l’installation ».",
+        "Le bureau fait désormais confiance aux certificats racine installés par l’OS — Watt Toolkit, FastGithub, Fiddler et les proxys MITM d’entreprise fonctionnent sans manip keytool."
       ]
     }
   ]

@@ -31,7 +31,8 @@
       "bullets": [
         "Çoklu kaynaklı indirmeler artık birbirinin APK dosyasını ezmez.",
         "Shizuku yedekli kurulumlar uygulamaları artık erkenden “kuruldu” olarak işaretlemez.",
-        "Otomatik güncelleme uygulamaları artık “Yüklemeye hazırlanıyor” durumunda asılı bırakmaz."
+        "Otomatik güncelleme uygulamaları artık “Yüklemeye hazırlanıyor” durumunda asılı bırakmaz.",
+        "Masaüstü artık işletim sistemine yüklü kök sertifikalara güveniyor — Watt Toolkit, FastGithub, Fiddler ve kurumsal MITM proxy'leri keytool uğraşı olmadan çalışıyor."
       ]
     }
   ]

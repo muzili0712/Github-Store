@@ -31,7 +31,8 @@
       "bullets": [
         "Multi-source downloads no longer clobber each other's APK file.",
         "Shizuku-fallback installs no longer flip rows to \"installed\" prematurely.",
-        "Self-update no longer leaves apps stuck on \"Preparing to install\"."
+        "Self-update no longer leaves apps stuck on \"Preparing to install\".",
+        "Desktop now trusts OS-installed root certificates — Watt Toolkit, FastGithub, Fiddler, and corporate MITM proxies just work without keytool gymnastics."
       ]
     }
   ]
