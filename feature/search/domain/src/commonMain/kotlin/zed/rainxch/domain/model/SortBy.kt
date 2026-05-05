@@ -4,6 +4,7 @@ enum class SortBy {
     MostStars,
     MostForks,
     BestMatch,
+    RecentlyUpdated,
     ;
 
     fun toGithubSortParam(): String? =
@@ -11,5 +12,6 @@ enum class SortBy {
             MostStars -> "stars"
             MostForks -> "forks"
             BestMatch -> null
+            RecentlyUpdated -> "updated"
         }
 }

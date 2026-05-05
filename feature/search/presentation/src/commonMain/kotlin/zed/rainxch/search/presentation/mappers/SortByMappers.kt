@@ -9,5 +9,6 @@ fun SortByUi.toDomain(): SortBy {
         SortByUi.MostStars -> MostStars
         SortByUi.MostForks -> MostForks
         SortByUi.BestMatch -> BestMatch
+        SortByUi.RecentlyUpdated -> RecentlyUpdated
     }
 }
