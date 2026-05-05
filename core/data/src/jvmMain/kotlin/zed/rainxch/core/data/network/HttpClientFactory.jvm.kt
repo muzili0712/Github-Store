@@ -14,6 +14,16 @@ actual fun createPlatformHttpClient(proxyConfig: ProxyConfig): HttpClient =
     HttpClient(OkHttp) {
         engine {
             config {
+                // Trust OS-installed root certificates in addition to the
+                // JVM cacerts bundle. Lets users behind TLS-intercepting
+                // tools (Watt Toolkit, Fiddler, corporate MITM) keep using
+                // the app without manually injecting certs into the JDK.
+                // Silently skipped on platforms where no OS keystore is
+                // available — default trust still applies.
+                buildOsTrustChainOrNull()?.let { chain ->
+                    sslSocketFactory(chain.socketFactory, chain.trustManager)
+                }
+
                 // Reset any inherited global SOCKS authenticator before
                 // deciding what this client needs — prevents a stale
                 // Authenticator from a previous [ProxyConfig.Socks] client
