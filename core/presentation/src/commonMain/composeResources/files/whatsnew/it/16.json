@@ -32,7 +32,8 @@
         "I download multi-sorgente non si sovrascrivono più a vicenda.",
         "Le installazioni con fallback Shizuku non segnano più le app come «installate» troppo presto.",
         "L’aggiornamento automatico non lascia più app bloccate su «Preparazione all’installazione».",
-        "Il desktop ora si fida dei certificati radice installati dal sistema — Watt Toolkit, FastGithub, Fiddler e i proxy MITM aziendali funzionano senza manovre con keytool."
+        "Il desktop ora si fida dei certificati radice installati dal sistema — Watt Toolkit, FastGithub, Fiddler e i proxy MITM aziendali funzionano senza manovre con keytool.",
+        "L’avvio dell’installer su Windows non fallisce più per account con nomi utente non ASCII o nomi file insoliti."
       ]
     }
   ]

@@ -32,7 +32,8 @@
         "修复多源下载相互覆盖 APK 文件的问题。",
         "修复 Shizuku 回退安装时,应用提前被标记为「已安装」的问题。",
         "修复自动更新后应用卡在「准备安装」状态的问题。",
-        "桌面端现在信任系统已安装的根证书 — Watt Toolkit、FastGithub、Fiddler 以及企业 MITM 代理无需折腾 keytool 即可使用。"
+        "桌面端现在信任系统已安装的根证书 — Watt Toolkit、FastGithub、Fiddler 以及企业 MITM 代理无需折腾 keytool 即可使用。",
+        "修复 Windows 安装器在用户名包含非 ASCII 字符或文件名特殊的账户上无法启动的问题。"
       ]
     }
   ]
