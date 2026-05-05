@@ -211,7 +211,7 @@ class DetailsRepositoryImpl(
         val cacheKey = "details:repo:$owner/$name"
         cacheManager.put(cacheKey, result, REPO_DETAILS)
         cacheManager.invalidate("details:repo_id:${result.id}")
-        cacheManager.invalidate("details:stats:$owner/$name")
+        cacheManager.invalidate("details:stats:v2:$owner/$name")
         cacheManager.invalidate("details:latest_release:$owner/$name")
         cacheManager.invalidate("details:releases:$owner/$name")
         return result
