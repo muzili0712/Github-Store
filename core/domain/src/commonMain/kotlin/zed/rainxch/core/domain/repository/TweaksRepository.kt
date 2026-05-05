@@ -49,10 +49,6 @@ interface TweaksRepository {
 
     suspend fun setIncludePreReleases(enabled: Boolean)
 
-    fun getLiquidGlassEnabled(): Flow<Boolean>
-
-    suspend fun setLiquidGlassEnabled(enabled: Boolean)
-
     fun getHideSeenEnabled(): Flow<Boolean>
 
     suspend fun setHideSeenEnabled(enabled: Boolean)

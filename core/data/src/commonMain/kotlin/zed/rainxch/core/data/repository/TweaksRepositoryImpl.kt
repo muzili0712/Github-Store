@@ -178,17 +178,6 @@ class TweaksRepositoryImpl(
         }
     }
 
-    override fun getLiquidGlassEnabled(): Flow<Boolean> =
-        preferences.data.map { prefs ->
-            prefs[LIQUID_GLASS_ENABLED_KEY] ?: true
-        }
-
-    override suspend fun setLiquidGlassEnabled(enabled: Boolean) {
-        preferences.edit { prefs ->
-            prefs[LIQUID_GLASS_ENABLED_KEY] = enabled
-        }
-    }
-
     override fun getHideSeenEnabled(): Flow<Boolean> =
         preferences.data.map { prefs ->
             prefs[HIDE_SEEN_ENABLED_KEY] ?: false
@@ -422,7 +411,6 @@ class TweaksRepositoryImpl(
         private val AUTO_UPDATE_KEY = booleanPreferencesKey("auto_update_enabled")
         private val UPDATE_CHECK_INTERVAL_KEY = longPreferencesKey("update_check_interval_hours")
         private val INCLUDE_PRE_RELEASES_KEY = booleanPreferencesKey("include_pre_releases")
-        private val LIQUID_GLASS_ENABLED_KEY = booleanPreferencesKey("liquid_glass_enabled")
         private val HIDE_SEEN_ENABLED_KEY = booleanPreferencesKey("hide_seen_enabled")
         private val SCROLLBAR_ENABLED_KEY = booleanPreferencesKey("scrollbar_enabled")
         private val TELEMETRY_ENABLED_KEY = booleanPreferencesKey("telemetry_enabled")

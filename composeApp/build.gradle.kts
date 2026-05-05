@@ -69,7 +69,6 @@ kotlin {
 
             implementation(libs.jetbrains.compose.navigation)
             implementation(libs.bundles.koin.common)
-            implementation(libs.liquid)
             implementation(libs.jetbrains.compose.material.icons.extended)
 
             implementation(libs.touchlab.kermit)

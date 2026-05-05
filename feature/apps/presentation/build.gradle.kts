@@ -16,7 +16,6 @@ kotlin {
                 implementation(libs.jetbrains.compose.components.resources)
 
                 implementation(libs.bundles.landscapist)
-                implementation(libs.liquid)
 
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.datetime)

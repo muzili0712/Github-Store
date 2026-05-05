@@ -83,7 +83,6 @@ class SearchViewModel(
                     observeInstalledApps()
                     observeFavouriteApps()
                     observeStarredRepos()
-                    observeLiquidGlassEnabled()
                     observeSeenRepos()
                     observeHideSeenEnabled()
                     observeClipboardSetting()
@@ -106,18 +105,6 @@ class SearchViewModel(
         } else {
             state.repositories
         }
-
-    private fun observeLiquidGlassEnabled() {
-        viewModelScope.launch {
-            tweaksRepository.getLiquidGlassEnabled().collect { enabled ->
-                _state.update {
-                    it.copy(
-                        isLiquidGlassEnabled = enabled,
-                    )
-                }
-            }
-        }
-    }
 
     private fun observeSeenRepos() {
         viewModelScope.launch {

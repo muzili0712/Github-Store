@@ -69,7 +69,6 @@ data class DetailsState(
     val isTrackingApp: Boolean = false,
     val isAboutExpanded: Boolean = false,
     val isWhatsNewExpanded: Boolean = false,
-    val isLiquidGlassEnabled: Boolean = true,
     val aboutTranslation: TranslationState = TranslationState(),
     val whatsNewTranslation: TranslationState = TranslationState(),
     val isLanguagePickerVisible: Boolean = false,

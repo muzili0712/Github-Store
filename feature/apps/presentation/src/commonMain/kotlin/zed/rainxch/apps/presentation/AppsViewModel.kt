@@ -89,7 +89,6 @@ class AppsViewModel(
             .onStart {
                 if (!hasLoadedInitialData) {
                     loadApps()
-                    observeLiquidGlassEnabled()
                     observePendingExternalImports()
                     hasLoadedInitialData = true
                 }
@@ -98,18 +97,6 @@ class AppsViewModel(
                 started = SharingStarted.WhileSubscribed(5_000L),
                 initialValue = AppsState(),
             )
-
-    private fun observeLiquidGlassEnabled() {
-        viewModelScope.launch {
-            tweaksRepository.getLiquidGlassEnabled().collect { enabled ->
-                _state.update {
-                    it.copy(
-                        isLiquidGlassEnabled = enabled,
-                    )
-                }
-            }
-        }
-    }
 
     private fun observePendingExternalImports() {
         viewModelScope.launch {

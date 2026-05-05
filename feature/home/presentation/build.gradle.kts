@@ -12,7 +12,6 @@ kotlin {
                 implementation(projects.core.presentation)
                 implementation(projects.feature.home.domain)
 
-                implementation(libs.liquid)
                 implementation(libs.kotlinx.collections.immutable)
 
                 implementation(libs.jetbrains.compose.components.resources)

@@ -140,7 +140,6 @@ class DetailsViewModel(
             .onStart {
                 if (!hasLoadedInitialData) {
                     loadInitial()
-                    observeLiquidGlassEnabled()
                     observeApkInspectCoachmark()
 
                     hasLoadedInitialData = true
@@ -793,11 +792,6 @@ class DetailsViewModel(
                         "${installedApp.packageName}: ${e.message}",
                 )
             }
-        }
-    }
-
-    private fun observeLiquidGlassEnabled() {
-        viewModelScope.launch {
         }
     }
 
@@ -2533,8 +2527,6 @@ class DetailsViewModel(
                 val isObtainiumAvailable = installer.isObtainiumInstalled()
                 val isAppManagerAvailable = installer.isAppManagerInstalled()
 
-                val liquidGlassEnabled = tweaksRepository.getLiquidGlassEnabled().first()
-
                 logger.debug("Loaded repo: ${repo.name}, installedApp: ${installedApp?.packageName}")
 
                 val insights = computeReleaseInsights(allReleases, installedApp)
@@ -2563,7 +2555,6 @@ class DetailsViewModel(
                         installedApp = installedApp,
                         deviceLanguageCode = translationRepository.getDeviceLanguageCode(),
                         isComingFromUpdate = isComingFromUpdate,
-                        isLiquidGlassEnabled = liquidGlassEnabled,
                         stalledStableSinceDays = insights.stalledStableSinceDays,
                         mergedChangelog = insights.mergedChangelog,
                         mergedChangelogBaseTag = insights.mergedChangelogBaseTag,

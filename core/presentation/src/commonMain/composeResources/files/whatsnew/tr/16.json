@@ -33,7 +33,8 @@
         "Shizuku yedekli kurulumlar uygulamaları artık erkenden “kuruldu” olarak işaretlemez.",
         "Otomatik güncelleme uygulamaları artık “Yüklemeye hazırlanıyor” durumunda asılı bırakmaz.",
         "Masaüstü artık işletim sistemine yüklü kök sertifikalara güveniyor — Watt Toolkit, FastGithub, Fiddler ve kurumsal MITM proxy'leri keytool uğraşı olmadan çalışıyor.",
-        "Windows'ta yükleyici başlatma, ASCII dışı kullanıcı adları veya alışılmadık dosya adlarına sahip hesaplarda artık başarısız olmuyor."
+        "Windows'ta yükleyici başlatma, ASCII dışı kullanıcı adları veya alışılmadık dosya adlarına sahip hesaplarda artık başarısız olmuyor.",
+        "Sıvı cam efekti kaldırıldı — koyu modda ikonlar şeffaf arka planlarda görünmez olabiliyordu. Her yerde daha temiz, daha kontrastlı bir arayüz."
       ]
     }
   ]

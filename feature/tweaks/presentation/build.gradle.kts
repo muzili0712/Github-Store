@@ -18,7 +18,6 @@ kotlin {
 
                 api(libs.ktor.client.core)
 
-                implementation(libs.liquid)
             }
         }
 

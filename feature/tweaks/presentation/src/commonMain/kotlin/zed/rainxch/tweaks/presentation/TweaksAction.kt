@@ -26,10 +26,6 @@ sealed interface TweaksAction {
         val fontTheme: FontTheme,
     ) : TweaksAction
 
-    data class OnLiquidGlassEnabledChange(
-        val enabled: Boolean,
-    ) : TweaksAction
-
     data class OnScrollbarToggled(
         val enabled: Boolean,
     ) : TweaksAction

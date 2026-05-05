@@ -70,7 +70,6 @@ class TweaksViewModel(
                     loadAutoUpdatePreference()
                     loadUpdateCheckInterval()
                     loadIncludePreReleases()
-                    loadLiquidGlassEnabled()
                     loadHideSeenEnabled()
                     loadScrollbarEnabled()
                     loadTelemetryEnabled()
@@ -368,16 +367,6 @@ class TweaksViewModel(
         }
     }
 
-    private fun loadLiquidGlassEnabled() {
-        viewModelScope.launch {
-            tweaksRepository.getLiquidGlassEnabled().collect { enabled ->
-                _state.update {
-                    it.copy(isLiquidGlassEnabled = enabled)
-                }
-            }
-        }
-    }
-
     private fun loadHideSeenEnabled() {
         viewModelScope.launch {
             tweaksRepository.getHideSeenEnabled().collect { enabled ->
@@ -471,12 +460,6 @@ class TweaksViewModel(
             is TweaksAction.OnFontThemeSelected -> {
                 viewModelScope.launch {
                     tweaksRepository.setFontTheme(action.fontTheme)
-                }
-            }
-
-            is TweaksAction.OnLiquidGlassEnabledChange -> {
-                viewModelScope.launch {
-                    tweaksRepository.setLiquidGlassEnabled(action.enabled)
                 }
             }
 

@@ -39,7 +39,6 @@ jetbrains-savedstate = "1.4.0"
 moko = "0.20.1"
 buildkonfig = "0.17.1"
 markdownRenderer = "0.39.2"
-liquid = "1.1.1"
 landscapist = "2.9.5"
 shizuku = "13.1.5"
 dhizuku = "2.5.4"
@@ -161,9 +160,6 @@ hidden-api-stub = { module = "dev.rikka.hidden:stub", version.ref = "hidden-api"
 
 # Dhizuku
 dhizuku-api = { module = "io.github.iamr0s:Dhizuku-API", version.ref = "dhizuku" }
-
-# Liquid effect
-liquid = { module = "io.github.fletchmckee.liquid:liquid", version.ref = "liquid" }
 
 ktlint-gradlePlugin = { group = "org.jlleitschuh.gradle", name="ktlint-gradle", version.ref = "ktlint-gradle" }
 

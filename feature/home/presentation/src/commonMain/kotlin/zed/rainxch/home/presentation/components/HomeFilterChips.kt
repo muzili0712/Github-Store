@@ -47,11 +47,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import io.github.fletchmckee.liquid.liquid
 import kotlinx.coroutines.launch
-import zed.rainxch.core.presentation.utils.isLiquidFrostAvailable
 import zed.rainxch.home.domain.model.HomeCategory
-import zed.rainxch.home.presentation.locals.LocalHomeTopBarLiquid
 import zed.rainxch.home.presentation.utils.displayText
 
 @Composable
@@ -59,10 +56,8 @@ fun LiquidGlassCategoryChips(
     categories: List<HomeCategory>,
     selectedCategory: HomeCategory,
     onCategorySelected: (HomeCategory) -> Unit,
-    isLiquidGlassEnabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
-    val liquidState = LocalHomeTopBarLiquid.current
     val density = LocalDensity.current
 
     val isDarkTheme =
@@ -120,40 +115,17 @@ fun LiquidGlassCategoryChips(
     val borderColor = if (isDarkTheme) Color.White.copy(alpha = .10f) else Color.Transparent
 
     val containerShape = RoundedCornerShape(20.dp)
-    val useLiquid = isLiquidGlassEnabled && isLiquidFrostAvailable()
 
     Box(
         modifier =
             modifier
                 .fillMaxWidth()
                 .clip(containerShape)
-                .then(
-                    if (useLiquid) {
-                        Modifier
-                            .background(
-                                if (isDarkTheme) {
-                                    MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = .30f)
-                                } else {
-                                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = .45f)
-                                },
-                            ).liquid(liquidState) {
-                                this.shape = containerShape
-                                this.frost = if (isDarkTheme) 14.dp else 12.dp
-                                this.curve = if (isDarkTheme) .30f else .40f
-                                this.refraction = if (isDarkTheme) .06f else .10f
-                                this.dispersion = if (isDarkTheme) .15f else .22f
-                                this.saturation = if (isDarkTheme) .35f else .50f
-                                this.contrast = if (isDarkTheme) 1.7f else 1.5f
-                            }
-                    } else {
-                        Modifier
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                shape = containerShape,
-                            )
-                    },
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = containerShape,
                 ),
     ) {
         Box(

@@ -18,7 +18,6 @@ data class SearchState(
     val selectedSortOrder: SortOrderUi = SortOrderUi.Descending,
     val selectedLanguage: ProgrammingLanguageUi = ProgrammingLanguageUi.All,
     val isLoading: Boolean = false,
-    val isLiquidGlassEnabled: Boolean = true,
     val isHideSeenEnabled: Boolean = false,
     val seenRepoIds: Set<Long> = emptySet(),
     val isLoadingMore: Boolean = false,

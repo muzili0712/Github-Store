@@ -75,12 +75,6 @@ class MainViewModel(
         }
 
         viewModelScope.launch {
-            tweaksRepository.getLiquidGlassEnabled().collect { enabled ->
-                _state.update { it.copy(isLiquidGlassEnabled = enabled) }
-            }
-        }
-
-        viewModelScope.launch {
             tweaksRepository.getScrollbarEnabled().collect { enabled ->
                 _state.update { it.copy(isScrollbarEnabled = enabled) }
             }

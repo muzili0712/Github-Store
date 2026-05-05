@@ -135,7 +135,6 @@ fun App(deepLinkUri: String? = null) {
 
         AppNavigation(
             navController = navController,
-            isLiquidGlassEnabled = state.isLiquidGlassEnabled,
             isScrollbarEnabled = state.isScrollbarEnabled,
         )
 

@@ -10,41 +10,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import io.github.fletchmckee.liquid.liquefiable
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.details.presentation.DetailsState
 import zed.rainxch.details.presentation.model.LogResult
-import zed.rainxch.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.details.presentation.utils.asText
 import zed.rainxch.githubstore.core.presentation.res.*
 
 fun LazyListScope.logs(state: DetailsState) {
     item {
-        val liquidState = LocalTopbarLiquidState.current
-
         HorizontalDivider()
 
         Text(
             text = stringResource(Res.string.install_logs),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier =
-                Modifier
-                    .padding(vertical = 8.dp)
-                    .then(
-                        if (state.isLiquidGlassEnabled) {
-                            Modifier.liquefiable(liquidState)
-                        } else {
-                            Modifier
-                        },
-                    ),
+            modifier = Modifier.padding(vertical = 8.dp),
             fontWeight = FontWeight.Bold,
         )
     }
 
     items(state.installLogs) { log ->
-        val liquidState = LocalTopbarLiquidState.current
-
         Text(
             text = "> ${log.result.asText()}: ${log.assetName}",
             style =
@@ -57,14 +42,6 @@ fun LazyListScope.logs(state: DetailsState) {
                 } else {
                     MaterialTheme.colorScheme.outline
                 },
-            modifier =
-                Modifier.then(
-                    if (state.isLiquidGlassEnabled) {
-                        Modifier.liquefiable(liquidState)
-                    } else {
-                        Modifier
-                    },
-                ),
         )
     }
 }

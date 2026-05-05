@@ -16,7 +16,6 @@ kotlin {
                 implementation(libs.markdown.renderer.coil3)
 
                 implementation(libs.jetbrains.compose.components.resources)
-                implementation(libs.liquid)
                 implementation(libs.kotlinx.datetime)
 
                 implementation(libs.androidx.compose.ui.tooling.preview)

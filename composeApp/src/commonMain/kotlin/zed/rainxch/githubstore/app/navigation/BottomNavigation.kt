@@ -24,7 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,15 +50,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.fletchmckee.liquid.liquid
-import io.github.fletchmckee.liquid.rememberLiquidState
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.core.domain.getPlatform
 import zed.rainxch.core.domain.model.Platform
-import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
-import zed.rainxch.core.presentation.utils.isLiquidFrostAvailable
 
 @Composable
 fun BottomNavigation(
@@ -67,11 +62,8 @@ fun BottomNavigation(
     onNavigate: (GithubStoreGraph) -> Unit,
     isUpdateAvailable: Boolean,
     hasUnreadAnnouncements: Boolean = false,
-    isLiquidGlassEnabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
-    val liquidState = LocalBottomNavigationLiquid.current
-
     if (currentScreen !in BottomNavigationUtils.allowedScreens().map { it.screen }) return
 
     val selectedIndex = BottomNavigationUtils.allowedScreens().indexOfFirst { it.screen == currentScreen }
@@ -124,37 +116,15 @@ fun BottomNavigation(
         modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
-        val useLiquid = isLiquidGlassEnabled && isLiquidFrostAvailable()
-
         Box(
             modifier =
                 Modifier
                     .clip(CircleShape)
-                    .then(
-                        if (useLiquid) {
-                            Modifier
-                                .background(
-                                    MaterialTheme.colorScheme.surfaceContainerHighest.copy(
-                                        alpha = if (isDarkTheme) .25f else .15f,
-                                    ),
-                                ).liquid(liquidState) {
-                                    this.shape = CircleShape
-                                    this.frost = if (isDarkTheme) 12.dp else 10.dp
-                                    this.curve = if (isDarkTheme) .35f else .45f
-                                    this.refraction = if (isDarkTheme) .08f else .12f
-                                    this.dispersion = if (isDarkTheme) .18f else .25f
-                                    this.saturation = if (isDarkTheme) .40f else .55f
-                                    this.contrast = if (isDarkTheme) 1.8f else 1.6f
-                                }
-                        } else {
-                            Modifier
-                                .background(MaterialTheme.colorScheme.surfaceContainer)
-                                .border(
-                                    width = 1.dp,
-                                    color = MaterialTheme.colorScheme.outlineVariant,
-                                    shape = CircleShape,
-                                )
-                        },
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        shape = CircleShape,
                     ).pointerInput(Unit) { },
         ) {
             val glassHighColor =
@@ -453,15 +423,11 @@ private fun LiquidGlassTabItem(
 @Composable
 fun BottomNavigationPreview() {
     GithubStoreTheme {
-        CompositionLocalProvider(
-            LocalBottomNavigationLiquid provides rememberLiquidState(),
-        ) {
-            BottomNavigation(
-                currentScreen = GithubStoreGraph.HomeScreen,
-                onNavigate = {
-                },
-                isUpdateAvailable = true,
-            )
-        }
+        BottomNavigation(
+            currentScreen = GithubStoreGraph.HomeScreen,
+            onNavigate = {
+            },
+            isUpdateAvailable = true,
+        )
     }
 }

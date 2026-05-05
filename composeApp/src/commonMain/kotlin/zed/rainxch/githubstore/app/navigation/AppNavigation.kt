@@ -24,7 +24,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
-import io.github.fletchmckee.liquid.rememberLiquidState
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import zed.rainxch.apps.presentation.AppsRoot
@@ -34,7 +33,6 @@ import zed.rainxch.auth.presentation.AuthenticationRoot
 import zed.rainxch.core.presentation.components.announcements.AnnouncementsRoot
 import zed.rainxch.core.presentation.components.whatsnew.WhatsNewHistoryScreen
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationHeight
-import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
 import zed.rainxch.core.presentation.locals.LocalScrollbarEnabled
 import zed.rainxch.details.presentation.DetailsRoot
 import zed.rainxch.devprofile.presentation.DeveloperProfileRoot
@@ -59,10 +57,8 @@ private const val EXTERNAL_IMPORT_OPEN_LINK_SHEET_KEY = "external_import_open_li
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    isLiquidGlassEnabled: Boolean = true,
     isScrollbarEnabled: Boolean = false,
 ) {
-    val liquidState = rememberLiquidState()
     var bottomNavigationHeight by remember { mutableStateOf(0.dp) }
     val density = LocalDensity.current
 
@@ -74,7 +70,6 @@ fun AppNavigation(
     val announcementsUnreadCount by announcementsViewModel.unreadCount.collectAsStateWithLifecycle()
 
     CompositionLocalProvider(
-        LocalBottomNavigationLiquid provides liquidState,
         LocalBottomNavigationHeight provides bottomNavigationHeight,
         LocalScrollbarEnabled provides isScrollbarEnabled,
     ) {
@@ -466,7 +461,6 @@ fun AppNavigation(
                         appsState.apps.any { it.installedApp.isUpdateAvailable } ||
                             appsState.showImportProposalBanner,
                     hasUnreadAnnouncements = announcementsUnreadCount > 0,
-                    isLiquidGlassEnabled = isLiquidGlassEnabled,
                     modifier =
                         Modifier
                             .align(Alignment.BottomCenter)

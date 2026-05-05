@@ -31,7 +31,6 @@ data class TweaksState(
     val autoUpdateEnabled: Boolean = false,
     val updateCheckIntervalHours: Long = 6L,
     val includePreReleases: Boolean = false,
-    val isLiquidGlassEnabled: Boolean = true,
     val isHideSeenEnabled: Boolean = false,
     val isScrollbarEnabled: Boolean = false,
     val isTelemetryEnabled: Boolean = false,

@@ -11,7 +11,6 @@ kotlin {
                 implementation(projects.core.domain)
 
                 implementation(libs.bundles.landscapist)
-                implementation(libs.liquid)
 
                 implementation(libs.jetbrains.lifecycle.compose)
                 implementation(libs.kotlinx.datetime)

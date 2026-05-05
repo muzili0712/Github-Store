@@ -33,7 +33,8 @@
         "Instalacje z trybem awaryjnym Shizuku nie oznaczają już aplikacji jako „zainstalowanych” przedwcześnie.",
         "Auto-aktualizacja nie zostawia już aplikacji w stanie „Przygotowywanie instalacji”.",
         "Wersja desktopowa ufa teraz certyfikatom głównym zainstalowanym w systemie — Watt Toolkit, FastGithub, Fiddler i firmowe proxy MITM działają bez kombinowania z keytool.",
-        "Uruchamianie instalatora w Windows nie zawodzi już na kontach z nazwami użytkownika zawierającymi znaki spoza ASCII lub nietypowymi nazwami plików."
+        "Uruchamianie instalatora w Windows nie zawodzi już na kontach z nazwami użytkownika zawierającymi znaki spoza ASCII lub nietypowymi nazwami plików.",
+        "Efekt płynnego szkła usunięty — w trybie ciemnym ikony na przezroczystym tle mogły stawać się niewidoczne. Wszędzie czystszy, bardziej kontrastowy interfejs."
       ]
     }
   ]

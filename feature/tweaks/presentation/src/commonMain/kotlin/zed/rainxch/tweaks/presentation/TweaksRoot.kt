@@ -26,13 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.fletchmckee.liquid.liquefiable
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationHeight
-import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
 import zed.rainxch.core.presentation.utils.arrowKeyScroll
@@ -213,7 +211,6 @@ fun TweaksScreen(
     onAction: (TweaksAction) -> Unit,
     snackbarState: SnackbarHostState,
 ) {
-    val liquidState = LocalBottomNavigationLiquid.current
     val bottomNavHeight = LocalBottomNavigationHeight.current
     Scaffold(
         snackbarHost = {
@@ -226,14 +223,6 @@ fun TweaksScreen(
             TopAppBar()
         },
         containerColor = MaterialTheme.colorScheme.background,
-        modifier =
-            Modifier.then(
-                if (state.isLiquidGlassEnabled) {
-                    Modifier.liquefiable(liquidState)
-                } else {
-                    Modifier
-                },
-            ),
     ) { innerPadding ->
         val listState = rememberLazyListState()
         LazyColumn(

@@ -79,7 +79,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.fletchmckee.liquid.liquefiable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -89,7 +88,6 @@ import zed.rainxch.core.presentation.components.GithubStoreButton
 import zed.rainxch.core.presentation.components.RepositoryCard
 import zed.rainxch.core.presentation.components.ScrollbarContainer
 import zed.rainxch.core.presentation.locals.LocalBottomNavigationHeight
-import zed.rainxch.core.presentation.locals.LocalBottomNavigationLiquid
 import zed.rainxch.core.presentation.locals.LocalScrollbarEnabled
 import zed.rainxch.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.core.presentation.utils.ObserveAsEvents
@@ -193,7 +191,6 @@ fun SearchScreen(
 ) {
     val focusRequester = remember { FocusRequester() }
     val listState = rememberLazyStaggeredGridState()
-    val liquidState = LocalBottomNavigationLiquid.current
     val bottomNavHeight = LocalBottomNavigationHeight.current
 
     val shouldLoadMore by remember {
@@ -301,13 +298,6 @@ fun SearchScreen(
             }
         },
         containerColor = MaterialTheme.colorScheme.background,
-        modifier = Modifier.then(
-            if (state.isLiquidGlassEnabled) {
-                Modifier.liquefiable(liquidState)
-            } else {
-                Modifier
-            },
-        ),
     ) { innerPadding ->
         Column(
             modifier =
@@ -596,14 +586,7 @@ fun SearchScreen(
                             modifier =
                                 Modifier
                                     .fillMaxSize()
-                                    .arrowKeyScroll(listState, autoFocus = false)
-                                    .then(
-                                        if (state.isLiquidGlassEnabled) {
-                                            Modifier.liquefiable(liquidState)
-                                        } else {
-                                            Modifier
-                                        },
-                                    ),
+                                    .arrowKeyScroll(listState, autoFocus = false),
                         ) {
                             items(
                                 items = state.visibleRepos,
@@ -620,16 +603,7 @@ fun SearchScreen(
                                     onShareClick = {
                                         onAction(SearchAction.OnShareClick(discoveryRepository.repository))
                                     },
-                                    modifier =
-                                        Modifier
-                                            .animateItem()
-                                            .then(
-                                                if (state.isLiquidGlassEnabled) {
-                                                    Modifier.liquefiable(liquidState)
-                                                } else {
-                                                    Modifier
-                                                },
-                                            ),
+                                    modifier = Modifier.animateItem(),
                                 )
                             }
 

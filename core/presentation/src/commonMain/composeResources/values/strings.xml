@@ -738,8 +738,6 @@
     <string name="update_package_mismatch">Package mismatch: the APK is %1$s, but the installed app is %2$s. Update blocked.</string>
     <string name="update_signing_key_mismatch">Signing key mismatch: the update was signed by a different developer. Update blocked.</string>
 
-    <string name="liquid_glass_option_title">Liquid Glass Effect</string>
-    <string name="liquid_glass_option_description">Enhance the interface with a smooth glass-like appearance</string>
 
     <string name="scrollbar_option_title">Scrollbar</string>
     <string name="scrollbar_option_description">Show scrollbar on scrollable lists (desktop)</string>
