@@ -19,7 +19,6 @@ val detailsModule =
                 backendApiClient = get(),
                 localizationManager = get(),
                 cacheManager = get(),
-                tokenStore = get(),
             )
         }
 

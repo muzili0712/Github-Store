@@ -54,7 +54,6 @@ class DetailsRepositoryImpl(
     private val localizationManager: LocalizationManager,
     private val logger: GitHubStoreLogger,
     private val cacheManager: CacheManager,
-    private val tokenStore: zed.rainxch.core.data.data_source.TokenStore,
 ) : DetailsRepository {
     private val httpClient: HttpClient get() = clientProvider.client
 
@@ -211,7 +210,7 @@ class DetailsRepositoryImpl(
         val cacheKey = "details:repo:$owner/$name"
         cacheManager.put(cacheKey, result, REPO_DETAILS)
         cacheManager.invalidate("details:repo_id:${result.id}")
-        cacheManager.invalidate("details:stats:v2:$owner/$name")
+        cacheManager.invalidate("details:stats:v3:$owner/$name")
         cacheManager.invalidate("details:latest_release:$owner/$name")
         cacheManager.invalidate("details:releases:$owner/$name")
         return result
@@ -517,61 +516,28 @@ class DetailsRepositoryImpl(
         owner: String,
         repo: String,
     ): RepoStats {
-        // v2 — backend now supplies openIssues; pre-PR entries had it pinned
-        // to 0 for anon users. Bumping the key forces re-fetch instead of
-        // serving stale zeros for the remainder of the 6h TTL after upgrade.
-        val cacheKey = "details:stats:v2:$owner/$repo"
+        // v3 — backend now supplies license. Bumping the key forces re-fetch
+        // so post-upgrade users get a populated license instead of waiting
+        // 6h for the stale v2 entry (license=null) to expire.
+        val cacheKey = "details:stats:v3:$owner/$repo"
 
         cacheManager.get<RepoStats>(cacheKey)?.let { cached ->
             logger.debug("Cache hit for repo stats $owner/$repo")
             return cached
         }
 
-        // Try backend first — provides stars/forks/openIssues/downloadCount.
-        // Backend doesn't have license yet, so supplement with a best-effort
-        // GitHub call for that field when signed in. If GitHub is blocked
-        // (e.g. for users in China), we still show the backend data.
+        // Try backend first — provides stars/forks/openIssues/license/downloadCount.
+        // No more direct GitHub enrichment for license (was 1 quota hit per
+        // signed-in user per stats fetch); backend is now authoritative.
         val backendResult = backendApiClient.getRepo(owner, repo)
         backendResult.fold(
             onSuccess = { backendRepo ->
                 logger.debug("Backend hit for repo stats $owner/$repo")
-
-                val hasToken = runCatching {
-                    tokenStore.currentToken()?.accessToken?.isNotBlank() == true
-                }.getOrDefault(false)
-                val githubInfo = if (hasToken) {
-                    try {
-                        httpClient.executeRequest<RepoInfoNetwork> {
-                            get("/repos/$owner/$repo") {
-                                header(HttpHeaders.Accept, "application/vnd.github+json")
-                            }
-                        }.getOrNull()
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Exception) {
-                        logger.debug("GitHub enrichment failed for $owner/$repo: ${e.message}")
-                        null
-                    }
-                } else {
-                    null
-                }
-
-                // Preserve last-known license when GitHub enrichment didn't
-                // land — backend doesn't supply license yet, so a transient
-                // failure would otherwise clobber a real value with null.
-                val staleLicense = if (githubInfo == null) {
-                    cacheManager.getStale<RepoStats>(cacheKey)?.license
-                } else {
-                    null
-                }
-
                 val result = RepoStats(
                     stars = backendRepo.stargazersCount,
                     forks = backendRepo.forksCount,
                     openIssues = backendRepo.openIssuesCount,
-                    license = githubInfo?.license?.spdxId
-                        ?: githubInfo?.license?.name
-                        ?: staleLicense,
+                    license = backendRepo.license?.spdxId ?: backendRepo.license?.name,
                     totalDownloads = backendRepo.downloadCount,
                 )
                 cacheManager.put(cacheKey, result, REPO_STATS)

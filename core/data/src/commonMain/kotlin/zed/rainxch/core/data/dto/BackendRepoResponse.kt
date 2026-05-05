@@ -14,6 +14,7 @@ data class BackendRepoResponse(
     val stargazersCount: Int,
     val forksCount: Int,
     val openIssuesCount: Int = 0,
+    val license: BackendLicense? = null,
     val language: String? = null,
     val topics: List<String> = emptyList(),
     val releasesUrl: String? = null,
@@ -36,4 +37,10 @@ data class BackendRepoResponse(
 data class BackendRepoOwner(
     val login: String,
     val avatarUrl: String? = null,
+)
+
+@Serializable
+data class BackendLicense(
+    val spdxId: String? = null,
+    val name: String? = null,
 )
